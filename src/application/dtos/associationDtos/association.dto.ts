@@ -10,7 +10,7 @@ class AssociationDTO {
   public isSharedWithAResidence: boolean;
   public hasOwnedHeadquarters: boolean;
   public isLegalEntity: boolean;
-  public cnpj: string;
+  public cnpj: string | null;
   public canIssueOwnReceipts: boolean;
   public associationHistoryNotes: string;
   public createdBy: string;

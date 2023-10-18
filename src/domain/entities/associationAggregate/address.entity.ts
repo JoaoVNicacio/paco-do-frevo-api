@@ -18,7 +18,7 @@ class AssociationAddress implements IAddress {
   @Column('text')
   public addressSite: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   public number: string;
 
   @Column('text')
