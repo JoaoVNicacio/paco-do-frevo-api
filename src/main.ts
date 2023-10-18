@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
 import * as dotenv from 'dotenv';
+import { AppModule } from './infra/modules/app.module';
 
 dotenv.config();
 
