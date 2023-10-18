@@ -5,7 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
+import Association from './association.entity';
 
 @Entity({ name: 'AssociationAddresses' })
 class AssociationAddress implements IAddress {
@@ -55,6 +58,10 @@ class AssociationAddress implements IAddress {
   setUpdateStamps(userId: string): void {
     this.updatedBy = userId;
   }
+
+  @OneToOne(() => Association, (address) => address.address)
+  @JoinColumn()
+  public association: Association;
 
   isValid(): boolean {
     throw new Error('Method not implemented.');

@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
+import AssociationAddress from './address.entity';
 
 @Entity({ name: 'Associations' })
 class Association {
@@ -58,6 +61,12 @@ class Association {
 
   @Column('uuid')
   public updatedBy: string;
+  @OneToOne(() => AssociationAddress, (address) => address.association, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  public address: AssociationAddress;
 
   public get getCnpj(): string {
     return this.cnpj;
