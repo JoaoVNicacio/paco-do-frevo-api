@@ -1,7 +1,9 @@
 import AssociationAddress from 'src/domain/entities/associationAggregate/address.entity';
 import AssociationAddressDTO from '../dtos/associationDtos/address.dto';
 import IMapper from './ientity.mapper';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 // eslint-disable-next-line prettier/prettier
 class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO>{
   public entityToDTO(entity: AssociationAddress): AssociationAddressDTO {

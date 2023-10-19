@@ -2,7 +2,9 @@ import Association from 'src/domain/entities/associationAggregate/association.en
 import AssociationDTO from '../dtos/associationDtos/association.dto';
 import IMapper from './ientity.mapper';
 import AddressMapper from './address.mapper';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 class AssociationMapper implements IMapper<Association, AssociationDTO> {
   constructor(private readonly _addressMapper: AddressMapper) {}
 
