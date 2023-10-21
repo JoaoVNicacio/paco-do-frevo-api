@@ -14,7 +14,7 @@ import AssociationService from 'src/application/useCases/services/association.se
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 
 @Controller('associations')
-export class AssociationController {
+class AssociationController {
   constructor(private readonly associationService: AssociationService) {}
 
   @Post()
@@ -102,3 +102,5 @@ export class AssociationController {
     }
   }
 }
+
+export default AssociationController;
