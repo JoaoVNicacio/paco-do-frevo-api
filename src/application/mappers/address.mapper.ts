@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 // eslint-disable-next-line prettier/prettier
-class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO>{
+class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO> {
   public entityToDTO(entity: AssociationAddress): AssociationAddressDTO {
     const dto = new AssociationAddressDTO();
 
