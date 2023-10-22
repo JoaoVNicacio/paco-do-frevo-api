@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import AssociationAddress from './address.entity';
+import Member from './member.entity';
 
 @Entity({ name: 'Associations' })
 class Association {
@@ -68,6 +70,10 @@ class Association {
   })
   @JoinColumn()
   public address: AssociationAddress;
+
+  @OneToMany(() => Member, (member) => member.association)
+  @JoinColumn()
+  public members: Member[];
 
   public get getCnpj(): string {
     return this.cnpj;
