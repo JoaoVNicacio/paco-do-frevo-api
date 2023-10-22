@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import AssociationAddress from 'src/domain/entities/associationAggregate/address.entity';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
+import { AssociationModule } from './association.module';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ dotenv.config();
       migrations: ['src/migration/**/*.ts'],
       subscribers: ['src/subscriber/**/*.ts'],
     }),
+    AssociationModule,
   ],
   controllers: [],
   providers: [],
