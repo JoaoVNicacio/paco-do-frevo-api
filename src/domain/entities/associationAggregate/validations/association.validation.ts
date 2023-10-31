@@ -1,6 +1,8 @@
 import * as Joi from 'joi';
+import Association from '../association.entity';
+import IEntityValidation from '../../entityInterfaces/validations/ientity.validation';
 
-class AssociationValidation {
+class AssociationValidation implements IEntityValidation<Association> {
   private schema: Joi.ObjectSchema;
 
   constructor() {
@@ -23,8 +25,8 @@ class AssociationValidation {
     });
   }
 
-  public validate(associationData: Record<string, any>): Joi.ValidationResult {
-    return this.schema.validate(associationData);
+  public validate(entity: Association): Joi.ValidationResult {
+    return this.schema.validate(entity);
   }
 }
 
