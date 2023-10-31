@@ -1,4 +1,4 @@
-import { ValidationResult } from "joi";
+import { ValidationResult } from 'joi';
 
 interface IEntityValidation<TEntity> {
   validate(entity: TEntity): ValidationResult;
