@@ -2,15 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
+  ManyToOne,
   //OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
 //import PhoneNumber from './phone-number.entity'; // Importe a entidade PhoneNumber
-
 import Association from './association.entity';
 
 @Entity({ name: 'Contacts' })
@@ -39,8 +36,7 @@ class Contact {
   @Column('uuid')
   public updatedBy: string;
 
-  @OneToOne(() => Association)
-  @JoinColumn()
+  @ManyToOne(() => Association, (association) => association.contacts)
   public association: Association;
 
   @Column('uuid')

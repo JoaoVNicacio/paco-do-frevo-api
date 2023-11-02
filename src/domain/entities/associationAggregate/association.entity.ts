@@ -6,10 +6,12 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import AssociationAddress from './address.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
+import Contact from './contact.entity';
 
 @Entity({ name: 'Associations' })
 class Association {
@@ -70,6 +72,12 @@ class Association {
   })
   @JoinColumn()
   public address: AssociationAddress;
+
+  @OneToMany(() => Contact, (contact) => contact.association, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  public contacts: Array<Contact>;
 
   public get getCnpj(): string {
     return this.cnpj;
