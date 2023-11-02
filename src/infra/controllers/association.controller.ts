@@ -8,8 +8,10 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
+import PagedResults from 'src/application/responseObjects/paged.results';
 import AssociationService from 'src/application/useCases/services/association.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 
@@ -42,6 +44,28 @@ class AssociationController {
       const associations = await this.associationService.getAllAssociations();
 
       return associations;
+      // eslint-disable-next-line prettier/prettier
+    } 
+    catch (error) {
+      throw new HttpException(
+        'Erro ao buscar associações',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get('paged')
+  public async getPagedAssociations(
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ): Promise<PagedResults<Association>> {
+    try {
+      const result = await this.associationService.getPagedAssociations(
+        page,
+        pageSize,
+      );
+
+      return result;
       // eslint-disable-next-line prettier/prettier
     } 
     catch (error) {

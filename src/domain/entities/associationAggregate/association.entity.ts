@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import AssociationAddress from './address.entity';
 import Member from './member.entity';
+import { ValidationResult } from 'joi';
+import AssociationValidation from './validations/association.validation';
 
 @Entity({ name: 'Associations' })
 class Association {
@@ -81,6 +83,10 @@ class Association {
 
   public set setCnpj(value: string) {
     this.cnpj = value;
+  }
+
+  public isValid(): ValidationResult {
+    return new AssociationValidation().validate(this);
   }
 }
 

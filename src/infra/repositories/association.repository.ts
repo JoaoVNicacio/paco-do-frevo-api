@@ -14,14 +14,32 @@ class AssociationRepository implements IAssociationRepository {
   public async createResume(association: Association): Promise<Association> {
     const createdAssociation = this._associationRepository.create(association);
 
-    return this._associationRepository.save(createdAssociation);
+    return await this._associationRepository.save(createdAssociation);
   }
 
-  public async findAll(): Promise<Association[]> {
+  public async getAll(): Promise<Array<Association>> {
     return this._associationRepository.find();
   }
 
-  public async findById(id: string): Promise<Association> {
+  public async getPagedAssociations(
+    page: number,
+    pageSize: number,
+  ): Promise<{
+    associations: Array<Association>;
+    total: number;
+  }> {
+    // eslint-disable-next-line prettier/prettier
+    const queryBuilder = this._associationRepository.createQueryBuilder('association');
+
+    const [associations, total] = await queryBuilder
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
+
+    return { associations, total };
+  }
+
+  public async getById(id: string): Promise<Association> {
     return this._associationRepository.findOne({
       where: { id },
       relations: ['address'],
@@ -32,7 +50,7 @@ class AssociationRepository implements IAssociationRepository {
     id: string,
     association: Association,
   ): Promise<Association> {
-    const existingAssociation = await this.findById(id);
+    const existingAssociation = await this.getById(id);
 
     if (!existingAssociation) {
       throw new Error('Associação não encontrada.');
