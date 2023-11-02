@@ -74,7 +74,6 @@ class Association {
   public address: AssociationAddress;
 
   @OneToMany(() => Member, (member) => member.association)
-  @JoinColumn()
   public members: Member[];
 
   public get getCnpj(): string {
