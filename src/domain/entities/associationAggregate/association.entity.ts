@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import AssociationAddress from './address.entity';
+import Event from './event.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
 
@@ -58,10 +60,10 @@ class Association {
   @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public createdBy: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public updatedBy: string;
 
   @OneToOne(() => AssociationAddress, (address) => address.association, {
@@ -71,12 +73,25 @@ class Association {
   @JoinColumn()
   public address: AssociationAddress;
 
+  @OneToMany(() => Event, (event) => event.association, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  public events: Array<Event>;
+
   public get getCnpj(): string {
     return this.cnpj;
   }
 
   public set setCnpj(value: string) {
     this.cnpj = value;
+  }
+  setCreationStamps(userId: string): void {
+    this.createdBy = userId;
+  }
+
+  setUpdateStamps(userId: string): void {
+    this.updatedBy = userId;
   }
 
   public isValid(): ValidationResult {

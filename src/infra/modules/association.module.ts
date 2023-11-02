@@ -7,9 +7,10 @@ import AssociationController from '../controllers/association.controller';
 import AssociationRepository from '../repositories/association.repository';
 import AssociationMapper from 'src/application/mappers/association.mapper';
 import AddressMapper from 'src/application/mappers/address.mapper';
+import Event from 'src/domain/entities/associationAggregate/event.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Association, AssociationAddress])],
+  imports: [TypeOrmModule.forFeature([Association, AssociationAddress, Event])],
   controllers: [AssociationController],
   providers: [
     AssociationService,
