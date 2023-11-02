@@ -5,7 +5,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
   OneToOne,
 } from 'typeorm';
 import Association from './association.entity';
@@ -18,7 +17,7 @@ class AssociationAddress implements IAddress {
   @Column('text')
   public addressSite: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   public number: string;
 
   @Column('text')
@@ -45,10 +44,10 @@ class AssociationAddress implements IAddress {
   @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public createdBy: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public updatedBy: string;
 
   setCreationStamps(userId: string): void {
@@ -60,7 +59,6 @@ class AssociationAddress implements IAddress {
   }
 
   @OneToOne(() => Association, (address) => address.address)
-  @JoinColumn()
   public association: Association;
 
   isValid(): boolean {
