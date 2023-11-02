@@ -6,10 +6,12 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import AssociationAddress from './address.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
+import SocialNetwork from './social_network.entity';
 
 @Entity({ name: 'Associations' })
 class Association {
@@ -70,6 +72,10 @@ class Association {
   })
   @JoinColumn()
   public address: AssociationAddress;
+
+  @OneToMany(() => SocialNetwork, (social) => social.association)
+  @JoinColumn()
+  public social_network: SocialNetwork;
 
   public get getCnpj(): string {
     return this.cnpj;
