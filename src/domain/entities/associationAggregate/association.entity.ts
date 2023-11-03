@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import AssociationAddress from './address.entity';
 import Event from './event.entity';
+import Member from './member.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
 
@@ -78,6 +79,9 @@ class Association {
     onDelete: 'CASCADE',
   })
   public events: Array<Event>;
+
+  @OneToMany(() => Member, (member) => member.association)
+  public members: Member[];
 
   public get getCnpj(): string {
     return this.cnpj;
