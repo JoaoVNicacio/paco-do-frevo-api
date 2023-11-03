@@ -53,15 +53,15 @@ class AssociationAddress implements IAddress {
   @Column('uuid', { nullable: true })
   public updatedBy: string;
 
-  setCreationStamps(userId: string): void {
+  public setCreationStamps(userId: string): void {
     this.createdBy = userId;
   }
 
-  setUpdateStamps(userId: string): void {
+  public setUpdateStamps(userId: string): void {
     this.updatedBy = userId;
   }
 
-  isValid(): boolean {
+  public isValid(): boolean {
     throw new Error('Method not implemented.');
   }
 }

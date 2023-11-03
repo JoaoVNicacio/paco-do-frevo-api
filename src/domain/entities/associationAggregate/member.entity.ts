@@ -7,7 +7,7 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import ERoles from './enums/Roles';
+import ERoles from './enums/eroles.enum';
 import Association from './association.entity';
 
 @Entity({ name: 'Members' })
@@ -43,11 +43,11 @@ class Member {
   @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
-  @Column('uuid')
-  public CreatedBy: string;
+  @Column('uuid', { nullable: true })
+  public createdBy: string;
 
-  @Column('uuid')
-  public UpdatedBy: string;
+  @Column('uuid', { nullable: true })
+  public updatedBy: string;
 }
 
 export default Member;

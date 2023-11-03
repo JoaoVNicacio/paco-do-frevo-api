@@ -8,9 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
 //import PhoneNumber from './phone-number.entity'; // Importe a entidade PhoneNumber
-
 import Association from './association.entity';
 
 @Entity({ name: 'Contacts' })
@@ -33,10 +31,10 @@ class Contact {
   @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public createdBy: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public updatedBy: string;
 
   @OneToOne(() => Association)

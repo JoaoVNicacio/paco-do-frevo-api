@@ -81,7 +81,7 @@ class Association {
   public events: Array<Event>;
 
   @OneToMany(() => Member, (member) => member.association)
-  public members: Member[];
+  public members: Array<Member>;
 
   public get getCnpj(): string {
     return this.cnpj;
@@ -90,15 +90,19 @@ class Association {
   public set setCnpj(value: string) {
     this.cnpj = value;
   }
-  setCreationStamps(userId: string): void {
+  public setCreationStamps(userId: string): void {
     this.createdBy = userId;
   }
 
-  setUpdateStamps(userId: string): void {
+  public setUpdateStamps(userId: string): void {
     this.updatedBy = userId;
   }
 
-  public isValid(): ValidationResult {
+  public isValid(): boolean {
+    return this.validateCreation().error.details.length === 0;
+  }
+
+  public validateCreation(): ValidationResult {
     return new AssociationValidation().validate(this);
   }
 }
