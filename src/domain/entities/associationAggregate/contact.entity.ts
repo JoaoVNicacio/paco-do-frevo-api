@@ -3,13 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  //OneToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-//import PhoneNumber from './phone-number.entity'; // Importe a entidade PhoneNumber
+import PhoneNumber from './phoneNumber.entity'; // Importe a entidade PhoneNumber
 
 import Association from './association.entity';
 
@@ -24,8 +24,8 @@ class Contact {
   @Column('text')
   public email: string;
 
-  //@OneToMany(() => PhoneNumber, (phoneNumber: PhoneNumber) => phoneNumber.contact)
-  //public phoneNumbers: PhoneNumber[];
+  @OneToMany(() => PhoneNumber, (phoneNumber: PhoneNumber) => phoneNumber.contact)
+  public phoneNumbers: PhoneNumber[];
 
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt: Date;
