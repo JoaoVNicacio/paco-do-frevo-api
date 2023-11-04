@@ -7,7 +7,6 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import ERoles from './enums/eroles.enum';
 import Association from './association.entity';
 
 @Entity({ name: 'Members' })
@@ -21,8 +20,8 @@ class Member {
   @Column('text')
   public surName: string;
 
-  @Column('enum')
-  public role: ERoles;
+  @Column('text')
+  public role: string;
 
   @Column('text')
   public actuationTimeInMonths: string;
