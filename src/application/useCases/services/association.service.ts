@@ -39,7 +39,7 @@ class AssociationService implements IAssociationService {
     return new PagedResults(results.associations, hasNextPage, page, pageSize);
   }
 
-  async getAssociationById(id: string): Promise<Association> {
+  public async getAssociationById(id: string): Promise<Association> {
     return this._associationRepository.getById(id);
   }
 
