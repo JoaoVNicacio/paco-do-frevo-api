@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import PhoneNumber from './phoneNumber.entity'; // Importe a entidade PhoneNumber
+import PhoneNumber from './phoneNumber.entity';
 import Association from './association.entity';
 
 @Entity({ name: 'Contacts' })
@@ -26,7 +26,7 @@ class Contact {
     () => PhoneNumber,
     (phoneNumber: PhoneNumber) => phoneNumber.contact,
   )
-  public phoneNumbers: PhoneNumber[];
+  public phoneNumbers: Array<PhoneNumber>;
 
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt: Date;

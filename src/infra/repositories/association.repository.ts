@@ -42,7 +42,7 @@ class AssociationRepository implements IAssociationRepository {
   public async getById(id: string): Promise<Association> {
     return await this._associationRepository.findOne({
       where: { id },
-      relations: ['address'],
+      relations: ['address', 'events', 'members', 'members.phoneNumbers'],
     });
   }
 
