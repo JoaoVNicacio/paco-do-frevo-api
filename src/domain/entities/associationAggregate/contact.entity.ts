@@ -24,7 +24,10 @@ class Contact {
   @Column('text')
   public email: string;
 
-  @OneToMany(() => PhoneNumber, (phoneNumber: PhoneNumber) => phoneNumber.contact)
+  @OneToMany(
+    () => PhoneNumber,
+    (phoneNumber: PhoneNumber) => phoneNumber.contact,
+  )
   public phoneNumbers: PhoneNumber[];
 
   @CreateDateColumn({ type: 'timestamp' })
