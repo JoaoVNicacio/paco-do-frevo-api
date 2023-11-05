@@ -24,7 +24,7 @@ class SocialNetwork {
   @Column('uuid')
   public updatedBy: string;
 
-  @ManyToOne(() => Association, (association) => association.social_network)
+  @ManyToOne(() => Association, (association) => association.socialNetworks)
   @JoinColumn()
   public association: Association;
 
