@@ -6,7 +6,7 @@ interface ISocialNetowrkService {
     socialNetowrkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork>;
   getAllSocialNetwork(): Promise<Array<SocialNetwork>>;
-  getAssociationById(id: string): Promise<SocialNetwork>;
+  getSocialNetworkById(id: string): Promise<SocialNetwork>;
   updateSocialNetwork(
     id: string,
     socialNetworkDTO: SocialNetworkDTO,

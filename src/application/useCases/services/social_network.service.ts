@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
+import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
 import ISocialNetowrkService from 'src/domain/services/Isocial_network.service';
 import SocialNetowrkRepository from 'src/infra/repositories/social_network.repository';
@@ -11,53 +10,59 @@ import SocialNetowrkRepository from 'src/infra/repositories/social_network.repos
 class SocialNetWorkService implements ISocialNetowrkService {
   constructor(
     private readonly _socialNetworkRepository: SocialNetowrkRepository,
+    private readonly _socialNetworkMapper: SocialNetworkMapper,
   ) {}
 
   public async createSocialNetwork(
     socialNetworkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
-    const phoneNumber =
-      this._socialNetworkRepository.dtoToEntity(socialNetworkDTO);
+    const socialNetwork =
+      this._socialNetworkMapper.dtoToEntity(socialNetworkDTO);
 
-    return this._socialNetworkRepository.createResume(phoneNumber);
+    return this._socialNetworkRepository.createResume(socialNetwork);
   }
 
-  public async getAllAssociations(): Promise<Array<Association>> {
-    return await this._associationRepository.getAll();
+  public async getAllSocialNetwork(): Promise<Array<SocialNetwork>> {
+    return await this._socialNetworkRepository.getAll();
   }
 
-  public async getPagedAssociations(
+  public async getPagedSocialNetworks(
     page: number,
     pageSize: number,
-  ): Promise<PagedResults<Association>> {
-    const results = await this._associationRepository.getPagedAssociations(
+  ): Promise<PagedResults<SocialNetwork>> {
+    const results = await this._socialNetworkRepository.getPagedSocialNetworks(
       page,
       pageSize,
     );
 
     const hasNextPage = results.total > page * pageSize;
 
-    return new PagedResults(results.associations, hasNextPage, page, pageSize);
-  }
-
-  async getAssociationById(id: string): Promise<Association> {
-    return this._associationRepository.getById(id);
-  }
-
-  public async updateAssociation(
-    id: string,
-    associationDTO: AssociationDTO,
-  ): Promise<Association> {
-    const association = this._associationMapper.dtoToEntity(associationDTO);
-
-    return await this._socialNetworkRepository.updateAssociation(
-      id,
-      association,
+    return new PagedResults(
+      results.social_network,
+      hasNextPage,
+      page,
+      pageSize,
     );
   }
 
-  public async deleteAssociation(id: string): Promise<void> {
-    return await this._socialNetworkRepository.deleteAssociation(id);
+  async getSocialNetworkById(id: string): Promise<SocialNetwork> {
+    return this._socialNetworkRepository.getById(id);
+  }
+
+  public async updateSocialNetwork(
+    id: string,
+    social_DTO: SocialNetworkDTO,
+  ): Promise<SocialNetwork> {
+    const social_network = this._socialNetworkMapper.dtoToEntity(social_DTO);
+
+    return await this._socialNetworkRepository.updateSocialNetwork(
+      id,
+      social_network,
+    );
+  }
+
+  public async deleteSocialNetwork(id: string): Promise<void> {
+    return await this._socialNetworkRepository.deleteSocialNetwork(id);
   }
 }
 

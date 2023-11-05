@@ -14,9 +14,7 @@ class SocialNetowrkRepository implements ISocialNetworkRepository {
     @InjectRepository(SocialNetwork)
     private _social_networkRepository: Repository<SocialNetwork>,
   ) {}
-    deleteSocialNetwork(id: string): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
+   
 
   public async createResume(social_network: SocialNetworkDTO): Promise<SocialNetwork> {
     const createdSocialNetwork = this._social_networkRepository.create(social_network);
@@ -68,7 +66,7 @@ class SocialNetowrkRepository implements ISocialNetworkRepository {
     return this._social_networkRepository.save(existingSocialNetwork);
   }
 
-  public async deleteAssociation(id: string): Promise<void> {
+  public async deleteSocialNetwork(id: string): Promise<void> {
     const result = await this._social_networkRepository.delete(id);
 
     if (result.affected === 0) {

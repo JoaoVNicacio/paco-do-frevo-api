@@ -1,30 +1,25 @@
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
-class ContactMapper {
-  static toDTO(contact: Contact): ContactDTO {
+import IMapper from './ientity.mapper';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+class ContactMapper implements IMapper<Contact, ContactDTO> {
+  public entityToDTO(entity: Contact): ContactDTO {
     const contactDTO: ContactDTO = {
-      id: contact.id,
-      addressTo: contact.addressTo,
-      email: contact.email,
-      createdAt: contact.createdAt,
-      updatedAt: contact.updatedAt,
-      createdBy: contact.createdBy,
-      updatedBy: contact.updatedBy,
-      associationId: contact.associationId,
+      id: entity.id,
+      addressTo: entity.addressTo,
+      email: entity.email,
     };
+
     return contactDTO;
   }
 
-  static toEntity(contactDTO: ContactDTO): Contact {
+  public dtoToEntity(dto: ContactDTO): Contact {
     const contact = new Contact();
-    contact.id = contactDTO.id;
-    contact.addressTo = contactDTO.addressTo;
-    contact.email = contactDTO.email;
-    contact.createdAt = contactDTO.createdAt;
-    contact.updatedAt = contactDTO.updatedAt;
-    contact.createdBy = contactDTO.createdBy;
-    contact.updatedBy = contactDTO.updatedBy;
-    contact.associationId = contactDTO.associationId;
+    contact.id = dto.id;
+    contact.addressTo = dto.addressTo;
+    contact.email = dto.email;
 
     return contact;
   }

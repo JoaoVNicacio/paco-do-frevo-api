@@ -6,13 +6,14 @@ import {
   ManyToOne,
 } from 'typeorm';
 import Association from './association.entity';
+
 @Entity({ name: 'SocialNetworks' })
 class SocialNetwork {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
   @Column('text')
-  public ESocialNetworkType: string;
+  public socialNetworkType: string;
 
   @Column('text')
   public url: string;

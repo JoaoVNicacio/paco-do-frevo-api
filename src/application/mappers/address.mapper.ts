@@ -17,8 +17,6 @@ class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO
     dto.state = entity.state;
     dto.country = entity.country;
     dto.zipCode = entity.zipCode;
-    dto.createdBy = entity.createdBy;
-    dto.updatedBy = entity.updatedBy;
 
     return dto;
   }
@@ -34,8 +32,6 @@ class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO
     entity.state = dto.state;
     entity.country = dto.country;
     entity.zipCode = dto.zipCode;
-    entity.createdBy = dto.createdBy;
-    entity.updatedBy = dto.updatedBy;
 
     return entity;
   }
