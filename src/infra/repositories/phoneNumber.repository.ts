@@ -18,14 +18,11 @@ class PhoneNumberRepository implements IPhoneNumberRepository {
   }
 
   public async getAll(): Promise<Array<PhoneNumber>> {
-    return this._phoneNumberRepository.find();
+    return await this._phoneNumberRepository.find();
   }
 
-  //esperando confirmacao
-  //public async getPagedPhoneNumber(){}
-
   public async getById(id: string): Promise<PhoneNumber> {
-    return this._phoneNumberRepository.findOne({
+    return await this._phoneNumberRepository.findOne({
       where: { id },
       relations: ['address'],
     });
@@ -43,7 +40,7 @@ class PhoneNumberRepository implements IPhoneNumberRepository {
 
     this._phoneNumberRepository.merge(existingPhoneNumber, phoneNumber);
 
-    return this._phoneNumberRepository.save(existingPhoneNumber);
+    return await this._phoneNumberRepository.save(existingPhoneNumber);
   }
 
   public async deletePhoneNumber(id: string): Promise<void> {

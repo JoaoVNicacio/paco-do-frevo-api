@@ -38,6 +38,9 @@ class AssociationAddress implements IAddress {
   @Column('text')
   public zipCode: string;
 
+  @OneToOne(() => Association, (address) => address.address)
+  public association: Association;
+
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt: Date;
 
@@ -50,18 +53,15 @@ class AssociationAddress implements IAddress {
   @Column('uuid', { nullable: true })
   public updatedBy: string;
 
-  setCreationStamps(userId: string): void {
+  public setCreationStamps(userId: string): void {
     this.createdBy = userId;
   }
 
-  setUpdateStamps(userId: string): void {
+  public setUpdateStamps(userId: string): void {
     this.updatedBy = userId;
   }
 
-  @OneToOne(() => Association, (address) => address.address)
-  public association: Association;
-
-  isValid(): boolean {
+  public isValid(): boolean {
     throw new Error('Method not implemented.');
   }
 }

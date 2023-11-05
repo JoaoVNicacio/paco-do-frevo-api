@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import AssociationAddress from 'src/domain/entities/associationAggregate/address.entity';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import { AssociationModule } from './association.module';
+import Event from 'src/domain/entities/associationAggregate/event.entity';
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ dotenv.config();
       synchronize: true,
       logging: true,
       autoLoadEntities: true,
-      entities: [Association, AssociationAddress],
+      entities: [Association, AssociationAddress, Event],
       migrations: ['src/migration/**/*.ts'],
       subscribers: ['src/subscriber/**/*.ts'],
     }),
