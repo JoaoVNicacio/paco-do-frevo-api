@@ -3,14 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  //OneToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-//import PhoneNumber from './phone-number.entity'; // Importe a entidade PhoneNumber
-
+import PhoneNumber from './phoneNumber.entity';
 import Association from './association.entity';
 
 @Entity({ name: 'Contacts' })
@@ -24,8 +22,11 @@ class Contact {
   @Column('text')
   public email: string;
 
-  //@OneToMany(() => PhoneNumber, (phoneNumber: PhoneNumber) => phoneNumber.contact)
-  //public phoneNumbers: PhoneNumber[];
+  @OneToMany(
+    () => PhoneNumber,
+    (phoneNumber: PhoneNumber) => phoneNumber.contact,
+  )
+  public phoneNumbers: Array<PhoneNumber>;
 
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt: Date;
@@ -33,10 +34,10 @@ class Contact {
   @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public createdBy: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public updatedBy: string;
 
   @OneToOne(() => Association)
@@ -46,15 +47,15 @@ class Contact {
   @Column('uuid')
   public associationId: string;
 
-  setCreationStamps(userId: string): void {
+  public setCreationStamps(userId: string): void {
     this.createdBy = userId;
   }
 
-  setUpdateStamps(userId: string): void {
+  public setUpdateStamps(userId: string): void {
     this.updatedBy = userId;
   }
 
-  isValid(): boolean {
+  public isValid(): boolean {
     throw new Error('Method not implemented.');
   }
 }

@@ -2,35 +2,27 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
-  ManyToOne,
 } from 'typeorm';
 import Association from './association.entity';
 
-@Entity({ name: 'Members' })
-class Member {
+@Entity('Events')
+class Event {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column('text')
-  public name: string;
+  @Column({ type: 'varchar', length: 255 })
+  public eventType: string;
 
-  @Column('text')
-  public surName: string;
+  @Column({ type: 'timestamp' })
+  public dateOfAccomplishment: Date;
 
-  @Column('text')
-  public role: string;
+  @Column({ type: 'int' })
+  public participantsAmount: number;
 
-  @Column('text')
-  public actuationTimeInMonths: string;
-
-  @Column('boolean')
-  public isFrevoTheMainRevenueIncome: boolean;
-
-  @ManyToOne(() => Association, (association) => association.members)
-  @JoinColumn()
+  @ManyToOne(() => Association, (association) => association.events)
   public association: Association;
 
   @Column('uuid')
@@ -49,4 +41,4 @@ class Member {
   public updatedBy: string;
 }
 
-export default Member;
+export default Event;

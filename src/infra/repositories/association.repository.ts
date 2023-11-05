@@ -40,9 +40,9 @@ class AssociationRepository implements IAssociationRepository {
   }
 
   public async getById(id: string): Promise<Association> {
-    return this._associationRepository.findOne({
+    return await this._associationRepository.findOne({
       where: { id },
-      relations: ['address'],
+      relations: ['address', 'events', 'members', 'members.phoneNumbers'],
     });
   }
 
@@ -58,7 +58,7 @@ class AssociationRepository implements IAssociationRepository {
 
     this._associationRepository.merge(existingAssociation, association);
 
-    return this._associationRepository.save(existingAssociation);
+    return await this._associationRepository.save(existingAssociation);
   }
 
   public async deleteAssociation(id: string): Promise<void> {

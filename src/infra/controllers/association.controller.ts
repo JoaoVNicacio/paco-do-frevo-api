@@ -25,12 +25,12 @@ class AssociationController {
   ): Promise<Association> {
     try {
       // eslint-disable-next-line prettier/prettier
-      const createdAssociation = await this.associationService.createAssociation(associationDTO);
+      const createdAssociation =
+        await this.associationService.createAssociation(associationDTO);
 
       return createdAssociation;
       // eslint-disable-next-line prettier/prettier
-    } 
-    catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao criar associação',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -45,8 +45,7 @@ class AssociationController {
 
       return associations;
       // eslint-disable-next-line prettier/prettier
-    } 
-    catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao buscar associações',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -67,8 +66,7 @@ class AssociationController {
 
       return result;
       // eslint-disable-next-line prettier/prettier
-    } 
-    catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao buscar associações',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -99,14 +97,14 @@ class AssociationController {
   ): Promise<Association> {
     try {
       // eslint-disable-next-line prettier/prettier
-      const updatedAssociation = await this.associationService.updateAssociation(id, associationDTO);
+      const updatedAssociation =
+        await this.associationService.updateAssociation(id, associationDTO);
 
       return updatedAssociation;
       // eslint-disable-next-line prettier/prettier
-    } 
-    catch (error) {
+    } catch (error) {
       throw new HttpException(
-        'Erro ao atualizar associação',
+        'Erro ao atualizar associação.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -117,8 +115,7 @@ class AssociationController {
     try {
       await this.associationService.deleteAssociation(id);
       // eslint-disable-next-line prettier/prettier
-    } 
-    catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao excluir associação',
         HttpStatus.INTERNAL_SERVER_ERROR,

@@ -9,6 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import AssociationAddress from './address.entity';
+import Event from './event.entity';
 import Member from './member.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
@@ -61,10 +62,10 @@ class Association {
   @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public createdBy: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   public updatedBy: string;
 
   @OneToOne(() => AssociationAddress, (address) => address.association, {
@@ -76,8 +77,15 @@ class Association {
 
   @OneToMany(() => SocialNetwork, (social) => social.association)
   public social_network: SocialNetwork;
+
+  @OneToMany(() => Event, (event) => event.association, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  public events: Array<Event>;
+
   @OneToMany(() => Member, (member) => member.association)
-  public members: Member[];
+  public members: Array<Member>;
 
   public get getCnpj(): string {
     return this.cnpj;
@@ -86,8 +94,19 @@ class Association {
   public set setCnpj(value: string) {
     this.cnpj = value;
   }
+  public setCreationStamps(userId: string): void {
+    this.createdBy = userId;
+  }
 
-  public isValid(): ValidationResult {
+  public setUpdateStamps(userId: string): void {
+    this.updatedBy = userId;
+  }
+
+  public isValid(): boolean {
+    return this.validateCreation().error.details.length === 0;
+  }
+
+  public validateCreation(): ValidationResult {
     return new AssociationValidation().validate(this);
   }
 }
