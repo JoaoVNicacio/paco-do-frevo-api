@@ -10,6 +10,7 @@ import { PhoneNumberModule } from './phoneNumber.module';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import Member from 'src/domain/entities/associationAggregate/member.entity';
+import { ContactModule } from './contact.module';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ dotenv.config();
     EventModule,
     PhoneNumberModule,
     AssociationModule,
+    ContactModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DB_URL,

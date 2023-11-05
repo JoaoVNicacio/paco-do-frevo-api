@@ -13,11 +13,13 @@ import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import { EventModule } from './event.module';
 import { PhoneNumberModule } from './phoneNumber.module';
 import AddressMapper from 'src/application/mappers/address.mapper';
+import { ContactModule } from './contact.module';
 
 @Module({
   imports: [
     EventModule,
     PhoneNumberModule,
+    ContactModule,
     TypeOrmModule.forFeature([
       Association,
       AssociationAddress,
