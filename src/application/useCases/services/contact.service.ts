@@ -3,7 +3,7 @@ import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import ContactMapper from 'src/application/mappers/contact.mapper';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import IContactService from 'src/domain/services/icontact.service';
-import ContactRepository from 'src/domain/repositories/icontact.repository';
+import ContactRepository from 'src/infra/repositories/contact.repository';
 
 @Injectable()
 class ContactService implements IContactService {

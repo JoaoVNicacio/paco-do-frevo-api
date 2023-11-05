@@ -14,6 +14,7 @@ import Member from './member.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
 import SocialNetwork from './social_network.entity';
+import Contact from './contact.entity';
 
 @Entity({ name: 'Associations' })
 class Association {
@@ -75,8 +76,11 @@ class Association {
   @JoinColumn()
   public address: AssociationAddress;
 
-  @OneToMany(() => SocialNetwork, (social) => social.association)
-  public social_network: SocialNetwork;
+  @OneToMany(() => SocialNetwork, (social) => social.association, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  public socialNetworks: Array<SocialNetwork>;
 
   @OneToMany(() => Event, (event) => event.association, {
     cascade: true,
@@ -84,8 +88,17 @@ class Association {
   })
   public events: Array<Event>;
 
-  @OneToMany(() => Member, (member) => member.association)
+  @OneToMany(() => Member, (member) => member.association, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   public members: Array<Member>;
+
+  @OneToMany(() => Member, (member) => member.association, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  public contacts: Array<Contact>;
 
   public get getCnpj(): string {
     return this.cnpj;

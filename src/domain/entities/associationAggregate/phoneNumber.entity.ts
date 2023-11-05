@@ -37,10 +37,7 @@ class PhoneNumber {
   @Column('uuid')
   public updatedBy: string;
 
-  @ManyToOne(() => Contact, (contact) => contact.association, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => Contact, (contact) => contact.association)
   @JoinColumn()
   public contact: Contact;
 

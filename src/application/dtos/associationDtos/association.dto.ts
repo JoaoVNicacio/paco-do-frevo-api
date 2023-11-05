@@ -1,4 +1,8 @@
 import AssociationAddressDTO from './address.dto';
+import ContactDTO from './contact.dto';
+import EventDTO from './event.dto';
+import MemberDTO from './member.dto';
+import SocialNetworkDTO from './social_network.dto';
 
 class AssociationDTO {
   public name: string;
@@ -14,6 +18,10 @@ class AssociationDTO {
   public canIssueOwnReceipts: boolean;
   public associationHistoryNotes: string;
   public address: AssociationAddressDTO;
+  public socialNetworks: Array<SocialNetworkDTO>;
+  public events: Array<EventDTO>;
+  public members: Array<MemberDTO>;
+  public contacts: Array<ContactDTO>;
 }
 
 export default AssociationDTO;

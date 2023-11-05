@@ -13,7 +13,7 @@ class Event {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column('text')
   public eventType: string;
 
   @Column({ type: 'timestamp' })

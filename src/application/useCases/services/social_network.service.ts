@@ -3,7 +3,7 @@ import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_networ
 import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
-import ISocialNetworkService from 'src/domain/services/Isocial_network.service';
+import ISocialNetworkService from 'src/domain/services/isocial_network.service';
 import SocialNetworkRepository from 'src/infra/repositories/social_network.repository';
 
 @Injectable()
