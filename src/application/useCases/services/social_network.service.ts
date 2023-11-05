@@ -3,13 +3,13 @@ import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_networ
 import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
-import ISocialNetowrkService from 'src/domain/services/Isocial_network.service';
-import SocialNetowrkRepository from 'src/infra/repositories/social_network.repository';
+import ISocialNetworkService from 'src/domain/services/Isocial_network.service';
+import SocialNetworkRepository from 'src/infra/repositories/social_network.repository';
 
 @Injectable()
-class SocialNetWorkService implements ISocialNetowrkService {
+class SocialNetworkService implements ISocialNetworkService {
   constructor(
-    private readonly _socialNetworkRepository: SocialNetowrkRepository,
+    private readonly _socialNetworkRepository: SocialNetworkRepository,
     private readonly _socialNetworkMapper: SocialNetworkMapper,
   ) {}
 
@@ -66,4 +66,4 @@ class SocialNetWorkService implements ISocialNetowrkService {
   }
 }
 
-export default SocialNetWorkService;
+export default SocialNetworkService;

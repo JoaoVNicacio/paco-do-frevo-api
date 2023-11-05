@@ -11,6 +11,8 @@ import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.en
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import Member from 'src/domain/entities/associationAggregate/member.entity';
 import { ContactModule } from './contact.module';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
+import { SocialNetworkModule } from './social_network.module';
 
 dotenv.config();
 
@@ -20,6 +22,7 @@ dotenv.config();
     PhoneNumberModule,
     AssociationModule,
     ContactModule,
+    SocialNetworkModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DB_URL,
@@ -34,6 +37,7 @@ dotenv.config();
         PhoneNumber,
         Contact,
         Event,
+        SocialNetwork,
       ],
       migrations: ['src/migration/**/*.ts'],
       subscribers: ['src/subscriber/**/*.ts'],

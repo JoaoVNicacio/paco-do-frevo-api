@@ -7,17 +7,18 @@ import ISocialNetworkRepository from 'src/domain/repositories/isocial_network.re
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
 
-
 @Injectable()
-class SocialNetowrkRepository implements ISocialNetworkRepository {
+class SocialNetworkRepository implements ISocialNetworkRepository {
   constructor(
     @InjectRepository(SocialNetwork)
     private _social_networkRepository: Repository<SocialNetwork>,
   ) {}
-   
 
-  public async createResume(social_network: SocialNetworkDTO): Promise<SocialNetwork> {
-    const createdSocialNetwork = this._social_networkRepository.create(social_network);
+  public async createResume(
+    social_network: SocialNetworkDTO,
+  ): Promise<SocialNetwork> {
+    const createdSocialNetwork =
+      this._social_networkRepository.create(social_network);
 
     return await this._social_networkRepository.save(createdSocialNetwork);
   }
@@ -34,7 +35,8 @@ class SocialNetowrkRepository implements ISocialNetworkRepository {
     total: number;
   }> {
     // eslint-disable-next-line prettier/prettier
-    const queryBuilder = this._social_networkRepository.createQueryBuilder('social_network');
+    const queryBuilder =
+      this._social_networkRepository.createQueryBuilder('social_network');
 
     const [social_network, total] = await queryBuilder
       .skip((page - 1) * pageSize)
@@ -75,4 +77,4 @@ class SocialNetowrkRepository implements ISocialNetworkRepository {
   }
 }
 
-export default SocialNetowrkRepository;
+export default SocialNetworkRepository;

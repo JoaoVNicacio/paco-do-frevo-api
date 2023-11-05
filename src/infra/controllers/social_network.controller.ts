@@ -12,12 +12,12 @@ import {
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import SocialNetWorkService from 'src/application/useCases/services/social_network.service';
+import SocialNetworkService from 'src/application/useCases/services/social_network.service';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
 
 @Controller('social-networks')
 class SocialNetworkController {
-  constructor(private readonly socialNetworkService: SocialNetWorkService) {}
+  constructor(private readonly socialNetworkService: SocialNetworkService) {}
 
   @Post()
   public async createSocialNetwork(
@@ -25,12 +25,12 @@ class SocialNetworkController {
   ): Promise<SocialNetwork> {
     try {
       // eslint-disable-next-line prettier/prettier
-        const createdSocialNetwork = await this.socialNetworkService.createSocialNetwork(social_networkDTO);
+      const createdSocialNetwork =
+        await this.socialNetworkService.createSocialNetwork(social_networkDTO);
 
       return createdSocialNetwork;
       // eslint-disable-next-line prettier/prettier
-      } 
-      catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao criar uma rede social',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -46,8 +46,7 @@ class SocialNetworkController {
 
       return social_network;
       // eslint-disable-next-line prettier/prettier
-      } 
-      catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao buscar redes sociais',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -68,8 +67,7 @@ class SocialNetworkController {
 
       return result;
       // eslint-disable-next-line prettier/prettier
-      } 
-      catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao buscar redes sociais',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -98,12 +96,15 @@ class SocialNetworkController {
   ): Promise<SocialNetwork> {
     try {
       // eslint-disable-next-line prettier/prettier
-        const updatedSocialNetwork = await this.socialNetworkService.updateSocialNetwork(id, social_network_DTO);
+      const updatedSocialNetwork =
+        await this.socialNetworkService.updateSocialNetwork(
+          id,
+          social_network_DTO,
+        );
 
       return updatedSocialNetwork;
       // eslint-disable-next-line prettier/prettier
-      } 
-      catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao atualizar uma rede social.',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -116,8 +117,7 @@ class SocialNetworkController {
     try {
       await this.socialNetworkService.deleteSocialNetwork(id);
       // eslint-disable-next-line prettier/prettier
-      } 
-      catch (error) {
+    } catch (error) {
       throw new HttpException(
         'Erro ao excluir uma rede social.',
         HttpStatus.INTERNAL_SERVER_ERROR,

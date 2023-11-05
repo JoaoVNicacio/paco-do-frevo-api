@@ -1,7 +1,7 @@
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
 import SocialNetwork from '../entities/associationAggregate/social_network.entity';
 
-interface ISocialNetowrkService {
+interface ISocialNetworkService {
   createSocialNetwork(
     socialNetowrkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork>;
@@ -14,4 +14,4 @@ interface ISocialNetowrkService {
   deleteSocialNetwork(id: string): Promise<void>;
 }
 
-export default ISocialNetowrkService;
+export default ISocialNetworkService;
