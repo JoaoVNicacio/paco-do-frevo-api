@@ -14,12 +14,15 @@ import { EventModule } from './event.module';
 import { PhoneNumberModule } from './phoneNumber.module';
 import AddressMapper from 'src/application/mappers/address.mapper';
 import { ContactModule } from './contact.module';
+import { SocialNetworkModule } from './social_network.module';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
 
 @Module({
   imports: [
     EventModule,
     PhoneNumberModule,
     ContactModule,
+    SocialNetworkModule,
     TypeOrmModule.forFeature([
       Association,
       AssociationAddress,
@@ -28,6 +31,7 @@ import { ContactModule } from './contact.module';
       PhoneNumber,
       Contact,
       Event,
+      SocialNetwork,
     ]),
   ],
   controllers: [AssociationController],

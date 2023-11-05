@@ -13,8 +13,6 @@ class AssociationDTO {
   public cnpj: string | null;
   public canIssueOwnReceipts: boolean;
   public associationHistoryNotes: string;
-  public createdBy: string;
-  public updatedBy: string;
   public address: AssociationAddressDTO;
 }
 

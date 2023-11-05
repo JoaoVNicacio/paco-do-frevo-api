@@ -7,8 +7,6 @@ class AssociationAddressDTO {
   public state: string;
   public country: string;
   public zipCode: string;
-  public createdBy: string;
-  public updatedBy: string;
 }
 
 export default AssociationAddressDTO;

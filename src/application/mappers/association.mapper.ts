@@ -23,8 +23,6 @@ class AssociationMapper implements IMapper<Association, AssociationDTO> {
     dto.cnpj = entity.getCnpj;
     dto.canIssueOwnReceipts = entity.canIssueOwnReceipts;
     dto.associationHistoryNotes = entity.associationHistoryNotes;
-    dto.createdBy = entity.createdBy;
-    dto.updatedBy = entity.updatedBy;
     dto.address = this._addressMapper.entityToDTO(entity.address);
 
     return dto;
@@ -45,8 +43,6 @@ class AssociationMapper implements IMapper<Association, AssociationDTO> {
     entity.setCnpj = dto.cnpj;
     entity.canIssueOwnReceipts = dto.canIssueOwnReceipts;
     entity.associationHistoryNotes = dto.associationHistoryNotes;
-    entity.createdBy = dto.createdBy;
-    entity.updatedBy = dto.updatedBy;
     entity.address = this._addressMapper.dtoToEntity(dto.address);
 
     return entity;

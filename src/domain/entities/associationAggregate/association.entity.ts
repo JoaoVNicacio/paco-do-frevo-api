@@ -13,6 +13,7 @@ import Event from './event.entity';
 import Member from './member.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
+import SocialNetwork from './social_network.entity';
 
 @Entity({ name: 'Associations' })
 class Association {
@@ -73,6 +74,9 @@ class Association {
   })
   @JoinColumn()
   public address: AssociationAddress;
+
+  @OneToMany(() => SocialNetwork, (social) => social.association)
+  public social_network: SocialNetwork;
 
   @OneToMany(() => Event, (event) => event.association, {
     cascade: true,
