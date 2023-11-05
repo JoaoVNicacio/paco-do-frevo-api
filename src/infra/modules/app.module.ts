@@ -1,4 +1,3 @@
-import { EventModule } from './event.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
@@ -11,7 +10,6 @@ dotenv.config();
 
 @Module({
   imports: [
-    EventModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DB_URL,
