@@ -6,9 +6,14 @@ import ContactController from '../controllers/contact.controller'; // Certifique
 import ContactMapper from 'src/application/mappers/contact.mapper'; // Certifique-se de importar o mapper correto
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ContactRepository from '../repositories/contact.repository';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
+import { PhoneNumberModule } from './phoneNumber.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Contact, Association])],
+  imports: [
+    PhoneNumberModule,
+    TypeOrmModule.forFeature([Contact, Association, PhoneNumber]),
+  ],
   controllers: [ContactController],
   providers: [ContactRepository, ContactMapper, ContactService],
 })

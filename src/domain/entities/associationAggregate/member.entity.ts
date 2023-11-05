@@ -18,7 +18,7 @@ class Member {
   public name: string;
 
   @Column('text')
-  public surName: string;
+  public surname: string;
 
   @Column('text')
   public role: string;

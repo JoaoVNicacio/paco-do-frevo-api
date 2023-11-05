@@ -1,6 +1,6 @@
 class MemberDTO {
   public name: string;
-  public surName: string;
+  public surname: string;
   public role: string;
   public actuationTimeInMonths: number;
   public isFrevoTheMainRevenueIncome: boolean;
