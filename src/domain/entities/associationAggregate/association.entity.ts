@@ -9,6 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import AssociationAddress from './address.entity';
+import Member from './member.entity';
 import { ValidationResult } from 'joi';
 import AssociationValidation from './validations/association.validation';
 import SocialNetwork from './social_network.entity';
@@ -75,6 +76,8 @@ class Association {
 
   @OneToMany(() => SocialNetwork, (social) => social.association)
   public social_network: SocialNetwork;
+  @OneToMany(() => Member, (member) => member.association)
+  public members: Member[];
 
   public get getCnpj(): string {
     return this.cnpj;

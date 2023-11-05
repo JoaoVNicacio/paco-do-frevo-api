@@ -4,11 +4,11 @@ interface ISocialNetworkRepository {
   createResume(social_network: SocialNetwork): Promise<SocialNetwork>;
   getAll(): Promise<Array<SocialNetwork> | any>;
   getById(id: string): Promise<SocialNetwork | undefined>;
-  updateAssociation(
+  updateSocialNetwork(
     id: string,
     social_network: SocialNetwork,
   ): Promise<SocialNetwork | undefined>;
-  deleteAssociation(id: string): Promise<void>;
+  deleteSocialNetwork(id: string): Promise<void>;
 }
 
 export default ISocialNetworkRepository;
