@@ -1,6 +1,8 @@
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
-import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
+import ContactDTO from '../dtos/associationDtos/contact.dto';
+
 class ContactMapper {
+  dtoToEntity: any;
   static toDTO(contact: Contact): ContactDTO {
     const contactDTO: ContactDTO = {
       id: contact.id,
