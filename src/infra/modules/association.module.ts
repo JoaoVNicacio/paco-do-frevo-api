@@ -17,6 +17,10 @@ import { ContactModule } from './contact.module';
 import { SocialNetworkModule } from './social_network.module';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
 import MemberMapper from 'src/application/mappers/member.mapper';
+import PhoneNumberMapper from 'src/application/mappers/phoneNumber.mapper';
+import ContactMapper from 'src/application/mappers/contact.mapper';
+import EventMapper from 'src/application/mappers/event.mapper';
+import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
 
 @Module({
   imports: [
@@ -42,6 +46,10 @@ import MemberMapper from 'src/application/mappers/member.mapper';
     AssociationMapper,
     AddressMapper,
     MemberMapper,
+    PhoneNumberMapper,
+    ContactMapper,
+    EventMapper,
+    SocialNetworkMapper,
   ],
 })
 export class AssociationModule {}
