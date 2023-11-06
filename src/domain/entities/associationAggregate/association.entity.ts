@@ -94,7 +94,7 @@ class Association {
   })
   public members: Array<Member>;
 
-  @OneToMany(() => Member, (member) => member.association, {
+  @OneToMany(() => Contact, (contact) => contact.association, {
     cascade: true,
     onDelete: 'CASCADE',
   })

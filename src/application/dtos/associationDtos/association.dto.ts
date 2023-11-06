@@ -7,7 +7,6 @@ import SocialNetworkDTO from './social_network.dto';
 class AssociationDTO {
   public name: string;
   public foundationDate: Date;
-  public addressId: string;
   public colors: Array<string>;
   public associationType: string;
   public activeMembers: number;

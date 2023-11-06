@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
@@ -28,7 +29,7 @@ class PhoneNumber {
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt: Date;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
   @Column('uuid')

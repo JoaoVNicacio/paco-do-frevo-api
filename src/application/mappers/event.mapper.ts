@@ -20,6 +20,8 @@ class EventMapper implements IMapper<Event, EventDTO> {
     entity.eventType = dto.eventType;
     entity.dateOfAccomplishment = dto.dateOfAccomplishment;
     entity.participantsAmount = dto.participantsAmount;
+    entity.createdAt = new Date();
+    entity.updatedAt = new Date();
 
     return entity;
   }

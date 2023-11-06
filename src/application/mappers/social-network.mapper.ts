@@ -19,6 +19,8 @@ class SocialNetworkMapper implements IMapper<SocialNetwork, SocialNetworkDTO> {
 
     entity.socialNetworkType = dto.socialNetworkType;
     entity.url = dto.url;
+    entity.createdAt = new Date();
+    entity.updatedAt = new Date();
 
     return entity;
   }

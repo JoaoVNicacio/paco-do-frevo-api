@@ -25,6 +25,8 @@ class MemberMapper implements IMapper<Member, MemberDTO> {
     entity.role = dto.role;
     entity.actuationTimeInMonths = dto.actuationTimeInMonths;
     entity.isFrevoTheMainRevenueIncome = dto.isFrevoTheMainRevenueIncome;
+    entity.createdAt = new Date();
+    entity.updatedAt = new Date();
 
     return entity;
   }

@@ -10,7 +10,6 @@ class ContactMapper implements IMapper<Contact, ContactDTO> {
 
   public entityToDTO(entity: Contact): ContactDTO {
     const contactDTO: ContactDTO = {
-      id: entity.id,
       addressTo: entity.addressTo,
       email: entity.email,
       phoneNumbers: entity.phoneNumbers.map((phoneNumber) =>
@@ -24,9 +23,10 @@ class ContactMapper implements IMapper<Contact, ContactDTO> {
   public dtoToEntity(dto: ContactDTO): Contact {
     const contact = new Contact();
 
-    contact.id = dto.id;
     contact.addressTo = dto.addressTo;
     contact.email = dto.email;
+    contact.createdAt = new Date();
+    contact.updatedAt = new Date();
     contact.phoneNumbers = dto.phoneNumbers.map((phoneNumber) =>
       this._phoneNumberMapper.dtoToEntity(phoneNumber),
     );

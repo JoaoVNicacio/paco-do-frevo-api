@@ -23,7 +23,6 @@ class AssociationMapper implements IMapper<Association, AssociationDTO> {
 
     dto.name = entity.name;
     dto.foundationDate = entity.foundationDate;
-    dto.addressId = entity.addressId;
     dto.colors = entity.colors;
     dto.associationType = entity.associationType;
     dto.activeMembers = entity.activeMembers;
@@ -55,7 +54,6 @@ class AssociationMapper implements IMapper<Association, AssociationDTO> {
 
     entity.name = dto.name;
     entity.foundationDate = dto.foundationDate;
-    entity.addressId = dto.addressId;
     entity.colors = dto.colors;
     entity.associationType = dto.associationType;
     entity.activeMembers = dto.activeMembers;
@@ -66,6 +64,8 @@ class AssociationMapper implements IMapper<Association, AssociationDTO> {
     entity.canIssueOwnReceipts = dto.canIssueOwnReceipts;
     entity.associationHistoryNotes = dto.associationHistoryNotes;
     entity.address = this._addressMapper.dtoToEntity(dto.address);
+    entity.createdAt = new Date();
+    entity.updatedAt = new Date();
     entity.contacts = dto.contacts.map((contact) =>
       this._contactMapper.dtoToEntity(contact),
     );
