@@ -18,13 +18,13 @@ class Member {
   public name: string;
 
   @Column('text')
-  public surName: string;
+  public surname: string;
 
   @Column('text')
   public role: string;
 
-  @Column('text')
-  public actuationTimeInMonths: string;
+  @Column({ type: 'int' })
+  public actuationTimeInMonths: number;
 
   @Column('boolean')
   public isFrevoTheMainRevenueIncome: boolean;

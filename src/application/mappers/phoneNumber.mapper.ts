@@ -10,9 +10,6 @@ class PhoneNumberMapper implements IMapper<PhoneNumber, PhoneNumberDTO> {
     dto.countryCode = entity.countryCode;
     dto.areaCode = entity.areaCode;
     dto.number = entity.number;
-    dto.contactId = entity.contactId;
-    dto.cretedBy = entity.createdBy;
-    dto.updatedBy = entity.updatedBy;
 
     return dto;
   }
@@ -23,9 +20,8 @@ class PhoneNumberMapper implements IMapper<PhoneNumber, PhoneNumberDTO> {
     entity.countryCode = dto.countryCode;
     entity.areaCode = dto.areaCode;
     entity.number = dto.number;
-    entity.contactId = dto.contactId;
-    entity.createdBy = dto.cretedBy;
-    entity.updatedBy = dto.updatedBy;
+    entity.createdAt = new Date();
+    entity.updatedAt = new Date();
 
     return entity;
   }
