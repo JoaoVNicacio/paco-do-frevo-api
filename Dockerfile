@@ -14,4 +14,4 @@ RUN npm install
 RUN npm install -g @nestjs/cli
 
 # Define the entry point for the container
-CMD ["npm", "start : dev"]
+CMD npm start dev
