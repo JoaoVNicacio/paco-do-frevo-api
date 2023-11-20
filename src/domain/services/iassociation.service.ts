@@ -11,7 +11,7 @@ interface IAssociationService {
   updateAssociation(
     id: string,
     associationDTO: AssociationDTO,
-  ): Promise<Association>;
+  ): Promise<ValidationResponse<Association>>;
   deleteAssociation(id: string): Promise<void>;
 }
 

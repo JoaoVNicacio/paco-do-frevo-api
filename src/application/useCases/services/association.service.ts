@@ -69,10 +69,28 @@ class AssociationService implements IAssociationService {
   public async updateAssociation(
     id: string,
     associationDTO: AssociationDTO,
-  ): Promise<Association> {
+  ): Promise<ValidationResponse<Association>> {
     const association = this._associationMapper.dtoToEntity(associationDTO);
+    const isValid = await association.isValid();
 
-    return await this._associationRepository.updateAssociation(id, association);
+    if (!isValid) {
+      return new ValidationResponse(
+        association,
+        await association.validateCreation(),
+        isValid,
+      );
+    }
+
+    const updateResponse = await this._associationRepository.updateAssociation(
+      id,
+      association,
+    );
+
+    return new ValidationResponse(
+      updateResponse,
+      await association.validateCreation(),
+      isValid,
+    );
   }
 
   public async deleteAssociation(id: string): Promise<void> {

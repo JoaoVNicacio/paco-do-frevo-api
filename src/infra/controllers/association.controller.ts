@@ -98,13 +98,15 @@ class AssociationController extends ControllerBase {
   ): Promise<Association> {
     try {
       // eslint-disable-next-line prettier/prettier
-      return await this._associationService.updateAssociation(id, associationDTO);;
+      const updatedAssociation = await this._associationService.updateAssociation(id,associationDTO);
+
+      return this.sendCustomValidationResponse<Association>(updatedAssociation);
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
       this.throwInternalError(
         error,
-        'There was an error updating the association',
+        'There was an error creating the association',
       );
     }
   }
