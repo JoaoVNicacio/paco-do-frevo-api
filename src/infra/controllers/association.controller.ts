@@ -6,18 +6,19 @@ import {
   Delete,
   Param,
   Body,
-  HttpException,
-  HttpStatus,
   Query,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import AssociationService from 'src/application/useCases/services/association.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
+import ControllerBase from './controller.base';
 
 @Controller('associations')
-class AssociationController {
-  constructor(private readonly associationService: AssociationService) {}
+class AssociationController extends ControllerBase {
+  constructor(private readonly _associationService: AssociationService) {
+    super();
+  }
 
   @Post()
   public async createAssociation(
@@ -25,100 +26,99 @@ class AssociationController {
   ): Promise<Association> {
     try {
       // eslint-disable-next-line prettier/prettier
-      const createdAssociation =
-        await this.associationService.createAssociation(associationDTO);
+      const createdAssociation = await this._associationService.createAssociation(associationDTO);
 
-      return createdAssociation;
+      return this.sendCustomValidationResponse<Association>(createdAssociation);
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao criar associação',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error creating the association',
       );
     }
   }
 
   @Get()
-  public async getAllAssociations(): Promise<Association[]> {
+  public async getAllAssociations(): Promise<Array<Association>> {
     try {
-      const associations = await this.associationService.getAllAssociations();
-
-      return associations;
+      return await this._associationService.getAllAssociations();
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao buscar associações',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error retrieving the associations',
       );
     }
   }
 
-  @Get('paged')
+  @Get('/paged')
   public async getPagedAssociations(
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ): Promise<PagedResults<Association>> {
     try {
-      const result = await this.associationService.getPagedAssociations(
+      return await this._associationService.getPagedAssociations(
         page,
         pageSize,
       );
-
-      return result;
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao buscar associações',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error retrieving the associations',
       );
     }
   }
 
-  @Get(':id')
+  @Get('id/:id')
   public async getAssociationById(
     @Param('id') id: string,
   ): Promise<Association> {
-    const association = await this.associationService.getAssociationById(id);
-
-    if (!association) {
-      throw new HttpException(
-        'Associação não encontrada',
-        HttpStatus.NOT_FOUND,
+    try {
+      return this.sendCustomResponse<Association>(
+        await this._associationService.getAssociationById(id),
+      );
+      // eslint-disable-next-line prettier/prettier
+  }
+  catch(error){
+      this.throwInternalError(
+        error,
+        'There was an error retrieving the association',
       );
     }
-
-    return association;
   }
 
-  @Put(':id')
+  @Put('id/:id')
   public async updateAssociation(
     @Param('id') id: string,
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
     try {
       // eslint-disable-next-line prettier/prettier
-      const updatedAssociation =
-        await this.associationService.updateAssociation(id, associationDTO);
-
-      return updatedAssociation;
+      return await this._associationService.updateAssociation(id, associationDTO);;
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao atualizar associação.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error updating the association',
       );
     }
   }
 
-  @Delete(':id')
+  @Delete('id/:id')
   public async deleteAssociation(@Param('id') id: string): Promise<void> {
     try {
-      await this.associationService.deleteAssociation(id);
+      await this._associationService.deleteAssociation(id);
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao excluir associação',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error deleting the association',
       );
     }
   }

@@ -15,7 +15,7 @@ import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.en
 
 @Controller('phoneNumbers')
 class PhoneNumberController {
-  constructor(private readonly phoneNumberService: PhoneNumberService) {}
+  constructor(private readonly _phoneNumberService: PhoneNumberService) {}
 
   @Post()
   public async createPhoneNumber(
@@ -23,7 +23,7 @@ class PhoneNumberController {
   ): Promise<PhoneNumber> {
     try {
       const createdPhoneNumber =
-        await this.phoneNumberService.createPhoneNumber(phoneNumberDTO);
+        await this._phoneNumberService.createPhoneNumber(phoneNumberDTO);
 
       return createdPhoneNumber;
     } catch (error) {
@@ -37,7 +37,7 @@ class PhoneNumberController {
   @Get()
   public async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
     try {
-      const phoneNumbers = await this.phoneNumberService.getAllPhoneNumbers();
+      const phoneNumbers = await this._phoneNumberService.getAllPhoneNumbers();
 
       return phoneNumbers;
     } catch (error) {
@@ -52,7 +52,7 @@ class PhoneNumberController {
   public async getAssociationById(
     @Param('id') id: string,
   ): Promise<PhoneNumber> {
-    const phoneNumber = await this.phoneNumberService.getPhoneNumberById(id);
+    const phoneNumber = await this._phoneNumberService.getPhoneNumberById(id);
 
     if (!phoneNumber) {
       throw new HttpException(
@@ -70,7 +70,7 @@ class PhoneNumberController {
     @Body() phoneNumberDTO: PhoneNumberDTO,
   ): Promise<PhoneNumber> {
     try {
-      const updatePhoneNumber = await this.phoneNumberService.updatePhoneNumber(
+      const updatePhoneNumber = await this._phoneNumberService.updatePhoneNumber(
         id,
         phoneNumberDTO,
       );
@@ -87,7 +87,7 @@ class PhoneNumberController {
   @Delete(':id')
   public async deletePhoneNumber(@Param('id') id: string): Promise<void> {
     try {
-      await this.phoneNumberService.deletePhoneNumber(id);
+      await this._phoneNumberService.deletePhoneNumber(id);
     } catch (error) {
       throw new HttpException(
         'Erro ao excluir número de telefone.',

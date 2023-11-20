@@ -42,6 +42,7 @@ class SocialNetworkService implements ISocialNetworkService {
       hasNextPage,
       page,
       pageSize,
+      results.total,
     );
   }
 

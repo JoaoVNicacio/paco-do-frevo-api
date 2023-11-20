@@ -64,8 +64,6 @@ class AssociationMapper implements IMapper<Association, AssociationDTO> {
     entity.canIssueOwnReceipts = dto.canIssueOwnReceipts;
     entity.associationHistoryNotes = dto.associationHistoryNotes;
     entity.address = this._addressMapper.dtoToEntity(dto.address);
-    entity.createdAt = new Date();
-    entity.updatedAt = new Date();
     entity.contacts = dto.contacts.map((contact) =>
       this._contactMapper.dtoToEntity(contact),
     );

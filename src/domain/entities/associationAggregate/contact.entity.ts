@@ -44,9 +44,6 @@ class Contact {
   @JoinColumn()
   public association: Association;
 
-  @Column('uuid')
-  public associationId: string;
-
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;
   }

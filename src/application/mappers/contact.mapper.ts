@@ -25,8 +25,6 @@ class ContactMapper implements IMapper<Contact, ContactDTO> {
 
     contact.addressTo = dto.addressTo;
     contact.email = dto.email;
-    contact.createdAt = new Date();
-    contact.updatedAt = new Date();
     contact.phoneNumbers = dto.phoneNumbers.map((phoneNumber) =>
       this._phoneNumberMapper.dtoToEntity(phoneNumber),
     );

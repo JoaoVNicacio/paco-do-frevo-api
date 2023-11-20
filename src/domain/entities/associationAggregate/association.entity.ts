@@ -11,49 +11,72 @@ import {
 import AssociationAddress from './address.entity';
 import Event from './event.entity';
 import Member from './member.entity';
-import { ValidationResult } from 'joi';
-import AssociationValidation from './validations/association.validation';
 import SocialNetwork from './social_network.entity';
 import Contact from './contact.entity';
+import {
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidationError,
+  validate,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
+/* This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'Associations' })
 class Association {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column()
+  @IsNotEmpty()
+  @IsString()
+  @Column('text')
   public name: string;
 
+  @Type(() => Date)
   @Column('timestamp')
   public foundationDate: Date;
 
-  @Column('uuid')
-  public addressId: string;
-
+  @IsArray()
+  @IsString({ each: true })
   @Column('simple-array', { nullable: true })
   public colors: Array<string>;
 
+  @IsNotEmpty()
+  @IsString()
   @Column('text')
   public associationType: string;
 
+  @IsInt()
   @Column('int')
   public activeMembers: number;
 
+  @IsBoolean()
   @Column('boolean')
   public isSharedWithAResidence: boolean;
 
+  @IsBoolean()
   @Column('boolean')
   public hasOwnedHeadquarters: boolean;
 
+  @IsBoolean()
   @Column('boolean')
   public isLegalEntity: boolean;
 
+  @IsOptional()
+  @IsString()
   @Column({ nullable: true })
   private cnpj: string | null;
 
+  @IsBoolean()
   @Column('boolean')
   public canIssueOwnReceipts: boolean;
 
+  @IsNotEmpty()
+  @IsString()
   @Column('text')
   public associationHistoryNotes: string;
 
@@ -115,12 +138,14 @@ class Association {
     this.updatedBy = userId;
   }
 
-  public isValid(): boolean {
-    return this.validateCreation().error.details.length === 0;
+  public async isValid(): Promise<boolean> {
+    const errors = await this.validateCreation();
+
+    return errors.length === 0;
   }
 
-  public validateCreation(): ValidationResult {
-    return new AssociationValidation().validate(this);
+  public async validateCreation(): Promise<Array<ValidationError>> {
+    return await validate(this);
   }
 }
 
