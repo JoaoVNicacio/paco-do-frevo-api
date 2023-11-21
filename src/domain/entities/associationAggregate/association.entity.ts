@@ -20,6 +20,8 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
+  ValidateNested,
   ValidationError,
   validate,
 } from 'class-validator';
@@ -69,6 +71,9 @@ class Association {
   @IsOptional()
   @IsString()
   @Column({ nullable: true })
+  @Matches(/^(\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}|\d{14})$/, {
+    message: 'Invalid CNPJ format',
+  })
   private cnpj: string | null;
 
   @IsBoolean()
@@ -97,30 +102,35 @@ class Association {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
+  @ValidateNested()
   public address: AssociationAddress;
 
   @OneToMany(() => SocialNetwork, (social) => social.association, {
     cascade: true,
     onDelete: 'CASCADE',
   })
+  @ValidateNested()
   public socialNetworks: Array<SocialNetwork>;
 
   @OneToMany(() => Event, (event) => event.association, {
     cascade: true,
     onDelete: 'CASCADE',
   })
+  @ValidateNested()
   public events: Array<Event>;
 
   @OneToMany(() => Member, (member) => member.association, {
     cascade: true,
     onDelete: 'CASCADE',
   })
+  @ValidateNested()
   public members: Array<Member>;
 
   @OneToMany(() => Contact, (contact) => contact.association, {
     cascade: true,
     onDelete: 'CASCADE',
   })
+  @ValidateNested()
   public contacts: Array<Contact>;
 
   public get getCnpj(): string {

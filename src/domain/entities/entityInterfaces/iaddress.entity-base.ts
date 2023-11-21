@@ -14,7 +14,7 @@ interface IAddress {
   updatedBy: string;
   setCreationStamps(userId: string): void;
   setUpdateStamps(userId: string): void;
-  isValid(): boolean;
+  isValid(): Promise<boolean>;
 }
 
 export default IAddress;

@@ -25,7 +25,7 @@ class Contact {
   public id: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Address To is required' })
+  @IsNotEmpty({ message: 'The person to be addressed is required' })
   public addressTo: string;
 
   @Column('text')
@@ -35,6 +35,10 @@ class Contact {
   @OneToMany(
     () => PhoneNumber,
     (phoneNumber: PhoneNumber) => phoneNumber.contact,
+    {
+      cascade: true,
+      onDelete: 'CASCADE',
+    },
   )
   @ValidateNested({ each: true })
   public phoneNumbers: Array<PhoneNumber>;
@@ -55,7 +59,6 @@ class Contact {
 
   @OneToOne(() => Association)
   @JoinColumn()
-  @IsNotEmpty({ message: 'Association is required' })
   public association: Association;
 
   public setCreationStamps(userId: string): void {

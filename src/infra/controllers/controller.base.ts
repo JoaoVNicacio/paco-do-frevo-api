@@ -25,7 +25,6 @@ class ControllerBase {
       const formattedErrors = validationResponse.validationResult.map(
         (error) => ({
           property: error.property,
-          value: error.value,
           constraints: error.constraints,
           children: error.children,
           contexts: error.contexts,
