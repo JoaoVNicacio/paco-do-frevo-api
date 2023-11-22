@@ -9,6 +9,7 @@ import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.en
 import { PhoneNumberModule } from './phoneNumber.module';
 import ContactMapper from 'src/application/mappers/contact.mapper';
 import PhoneNumberMapper from 'src/application/mappers/phoneNumber.mapper';
+import AssociationRepository from '../repositories/association.repository';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import PhoneNumberMapper from 'src/application/mappers/phoneNumber.mapper';
     ContactRepository,
     ContactMapper,
     ContactService,
+    AssociationRepository,
     PhoneNumberMapper,
   ],
 })
