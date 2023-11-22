@@ -18,7 +18,7 @@ class ControllerBase {
    * `ValidationResponse<T>`. It contains information about the validation result and the output value.
    * @returns the `output` property of the `validationResponse` object.
    */
-  public sendCustomValidationResponse<T>(
+  protected sendCustomValidationResponse<T>(
     validationResponse: ValidationResponse<T>,
   ): T {
     if (!validationResponse.isValid) {
@@ -47,7 +47,7 @@ class ControllerBase {
    * object that will be sent back. It can be any type of object.
    * @returns The `sendCustomResponse` method returns the `response` parameter that is passed to it.
    */
-  public sendCustomResponse<T>(response: T): T {
+  protected sendCustomResponse<T>(response: T): T {
     if (!response) {
       throw new NotFoundException('The requested item was not found.');
     }
@@ -68,7 +68,7 @@ class ControllerBase {
    * @param {string} message - The `message` parameter is a string that represents the error message to
    * be displayed. It is used to provide additional information about the error that occurred.
    */
-  public throwInternalError(error, message: string): void {
+  protected throwInternalError(error, message: string): void {
     if (!(error instanceof HttpException)) {
       throw new InternalServerErrorException(
         `Oops, ${message.trim()}. Please contact our support`,
