@@ -13,7 +13,9 @@ import PagedResults from 'src/application/responseObjects/paged.results';
 import SocialNetworkService from 'src/application/useCases/services/social_network.service';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
 import ControllerBase from './controller.base';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('SocialNetworks')
 @Controller('social-networks')
 class SocialNetworkController extends ControllerBase {
   constructor(private readonly socialNetworkService: SocialNetworkService) {

@@ -13,7 +13,9 @@ import PagedResults from 'src/application/responseObjects/paged.results';
 import AssociationService from 'src/application/useCases/services/association.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ControllerBase from './controller.base';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Association')
 @Controller('associations')
 class AssociationController extends ControllerBase {
   constructor(private readonly _associationService: AssociationService) {

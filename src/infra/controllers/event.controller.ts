@@ -11,8 +11,10 @@ import Event from 'src/domain/entities/associationAggregate/event.entity';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
 import EventService from 'src/application/useCases/services/event.service';
 import ControllerBase from './controller.base';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller()
+@ApiTags('Events')
+@Controller('event')
 class EventController extends ControllerBase {
   constructor(private readonly _eventService: EventService) {
     super();

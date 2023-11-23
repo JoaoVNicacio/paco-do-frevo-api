@@ -11,7 +11,9 @@ import PhoneNumberDTO from 'src/application/dtos/associationDtos/phoneNumber.dto
 import PhoneNumberService from 'src/application/useCases/services/phoneNumber.service';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
 import ControllerBase from './controller.base';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
 class PhoneNumberController extends ControllerBase {
   constructor(private readonly _phoneNumberService: PhoneNumberService) {
