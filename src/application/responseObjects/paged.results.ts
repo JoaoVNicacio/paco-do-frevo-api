@@ -6,6 +6,7 @@ class PagedResults<T> {
   public pageIndex: number;
   public pageSize: number;
   public totalCount: number;
+  public totalPages: number;
 
   constructor(
     result: Array<T>,
@@ -19,6 +20,7 @@ class PagedResults<T> {
     this.pageIndex = pageIndex;
     this.pageSize = pageSize;
     this.totalCount = totalCount;
+    this.totalPages = Math.ceil(totalCount / pageSize);
   }
 }
 

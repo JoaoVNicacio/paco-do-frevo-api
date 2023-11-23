@@ -1,23 +1,56 @@
 import { Injectable } from '@nestjs/common';
+import { ValidationError } from 'class-validator';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phoneNumber.dto';
 import PhoneNumberMapper from 'src/application/mappers/phoneNumber.mapper';
+import ValidationResponse from 'src/application/responseObjects/validation.response';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
 import IPhoneNumberService from 'src/domain/services/iphoneNumber.service';
+import ContactRepository from 'src/infra/repositories/contact.repository';
 import PhoneNumberRepository from 'src/infra/repositories/phoneNumber.repository';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
   constructor(
     private readonly _phoneNumberRepository: PhoneNumberRepository,
+    private readonly _contactRepository: ContactRepository,
     private readonly _phoneNumberMapper: PhoneNumberMapper,
   ) {}
 
   public async createPhoneNumber(
     phoneNumberDTO: PhoneNumberDTO,
-  ): Promise<PhoneNumber> {
+    contactId: string,
+  ): Promise<ValidationResponse<PhoneNumber>> {
     const phoneNumber = this._phoneNumberMapper.dtoToEntity(phoneNumberDTO);
 
-    return this._phoneNumberRepository.createResume(phoneNumber);
+    const contact = await this._contactRepository.getById(contactId);
+
+    if (!contact) {
+      const error = new ValidationError();
+      error.constraints = { contactId: 'The association does not exists' };
+
+      return new ValidationResponse(phoneNumber, [error], false);
+    }
+
+    phoneNumber.contact = contact;
+
+    const isValid = await phoneNumber.isValid();
+
+    if (!isValid) {
+      return new ValidationResponse(
+        phoneNumber,
+        await phoneNumber.validateCreation(),
+        isValid,
+      );
+    }
+
+    const insertResponse =
+      await this._phoneNumberRepository.createResume(phoneNumber);
+
+    return new ValidationResponse(
+      insertResponse,
+      await phoneNumber.validateCreation(),
+      isValid,
+    );
   }
 
   public async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
@@ -31,10 +64,29 @@ class PhoneNumberService implements IPhoneNumberService {
   public async updatePhoneNumber(
     id: string,
     phoneNumberDTO: PhoneNumberDTO,
-  ): Promise<PhoneNumber> {
+  ): Promise<ValidationResponse<PhoneNumber>> {
     const phoneNumber = this._phoneNumberMapper.dtoToEntity(phoneNumberDTO);
 
-    return await this._phoneNumberRepository.updatePhoneNumber(id, phoneNumber);
+    const isValid = await phoneNumber.isValid();
+
+    if (!isValid) {
+      return new ValidationResponse(
+        phoneNumber,
+        await phoneNumber.validateCreation(),
+        isValid,
+      );
+    }
+
+    const updateResponse = await this._phoneNumberRepository.updatePhoneNumber(
+      id,
+      phoneNumber,
+    );
+
+    return new ValidationResponse(
+      updateResponse,
+      await phoneNumber.validateCreation(),
+      isValid,
+    );
   }
 
   public async deletePhoneNumber(id: string): Promise<void> {

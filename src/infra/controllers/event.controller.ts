@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
@@ -41,16 +39,13 @@ class EventController extends ControllerBase {
 
   @Get('id/:id')
   public async getAssociationById(@Param('id') id: string): Promise<Event> {
-    const phoneNumber = await this._eventService.findById(id);
-
-    if (!phoneNumber) {
-      throw new HttpException(
-        'Número de telefone não encontrado.',
-        HttpStatus.NOT_FOUND,
-      );
+    try {
+      return this.sendCustomResponse(await this._eventService.findById(id));
+      // eslint-disable-next-line prettier/prettier
     }
-
-    return phoneNumber;
+    catch (error) {
+      this.throwInternalError(error, 'There was an error retriving the event');
+    }
   }
 
   @Put('id/:id')

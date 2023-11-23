@@ -6,35 +6,40 @@ import {
   Delete,
   Param,
   Body,
-  HttpException,
-  HttpStatus,
   Query,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import SocialNetworkService from 'src/application/useCases/services/social_network.service';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
+import ControllerBase from './controller.base';
 
 @Controller('social-networks')
-class SocialNetworkController {
-  constructor(private readonly socialNetworkService: SocialNetworkService) {}
+class SocialNetworkController extends ControllerBase {
+  constructor(private readonly socialNetworkService: SocialNetworkService) {
+    super();
+  }
 
   @Post()
   public async createSocialNetwork(
-    @Body() social_networkDTO: SocialNetworkDTO,
+    @Body() socialNetworkDTO: SocialNetworkDTO,
+    @Param('associationId') associationId: string,
   ): Promise<SocialNetwork> {
     try {
       // eslint-disable-next-line prettier/prettier
       const createdSocialNetwork =
-        await this.socialNetworkService.createSocialNetwork(social_networkDTO);
+        await this.socialNetworkService.createSocialNetwork(
+          socialNetworkDTO,
+          associationId,
+        );
 
-      return createdSocialNetwork;
-      // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao criar uma rede social',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      return this.sendCustomValidationResponse<SocialNetwork>(
+        createdSocialNetwork,
       );
+      // eslint-disable-next-line prettier/prettier
+    }
+    catch (error) {
+      this.throwInternalError(error, 'There was an error creating the network');
     }
   }
 
@@ -46,10 +51,11 @@ class SocialNetworkController {
 
       return social_network;
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao buscar redes sociais',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error retriving the networks',
       );
     }
   }
@@ -67,29 +73,27 @@ class SocialNetworkController {
 
       return result;
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao buscar redes sociais',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error retrieving the networks',
       );
     }
   }
 
-  @Get(':id')
+  @Get('id/:id')
   public async getById(@Param('id') id: string): Promise<SocialNetwork> {
-    const social_network = await this.getById(id);
-
-    if (!social_network) {
-      throw new HttpException(
-        'Rede social não encontrada',
-        HttpStatus.NOT_FOUND,
-      );
+    try {
+      return this.sendCustomResponse(await this.getById(id));
+      // eslint-disable-next-line prettier/prettier
     }
-
-    return social_network;
+    catch(error){
+      this.throwInternalError(error, 'There was an error creating the contact');
+    }
   }
 
-  @Put(':id')
+  @Put('id/:id')
   public async updateSocialNetwork(
     @Param('id') id: string,
     @Body() social_network_DTO: SocialNetworkDTO,
@@ -102,26 +106,24 @@ class SocialNetworkController {
           social_network_DTO,
         );
 
-      return updatedSocialNetwork;
-      // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao atualizar uma rede social.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      return this.sendCustomValidationResponse<SocialNetwork>(
+        updatedSocialNetwork,
       );
+      // eslint-disable-next-line prettier/prettier
+    }
+    catch (error) {
+      this.throwInternalError(error, 'There was an error updating the network');
     }
   }
 
-  @Delete(':id')
+  @Delete('id/:id')
   public async deleteSocialNetwork(@Param('id') id: string): Promise<void> {
     try {
       await this.socialNetworkService.deleteSocialNetwork(id);
       // eslint-disable-next-line prettier/prettier
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao excluir uma rede social.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    }
+    catch (error) {
+      this.throwInternalError(error, 'There was an error deleting the network');
     }
   }
 }

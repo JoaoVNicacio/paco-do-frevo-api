@@ -11,43 +11,43 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social_netwo
 class SocialNetworkRepository implements ISocialNetworkRepository {
   constructor(
     @InjectRepository(SocialNetwork)
-    private _social_networkRepository: Repository<SocialNetwork>,
+    private _socialNetworkRepository: Repository<SocialNetwork>,
   ) {}
 
   public async createResume(
     social_network: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     const createdSocialNetwork =
-      this._social_networkRepository.create(social_network);
+      this._socialNetworkRepository.create(social_network);
 
-    return await this._social_networkRepository.save(createdSocialNetwork);
+    return await this._socialNetworkRepository.save(createdSocialNetwork);
   }
 
   public async getAll(): Promise<Array<SocialNetwork>> {
-    return this._social_networkRepository.find();
+    return this._socialNetworkRepository.find();
   }
 
   public async getPagedSocialNetworks(
     page: number,
     pageSize: number,
   ): Promise<{
-    social_network: Array<SocialNetwork>;
+    socialNetwork: Array<SocialNetwork>;
     total: number;
   }> {
     // eslint-disable-next-line prettier/prettier
     const queryBuilder =
-      this._social_networkRepository.createQueryBuilder('social_network');
+      this._socialNetworkRepository.createQueryBuilder('socialNetwork');
 
-    const [social_network, total] = await queryBuilder
+    const [socialNetwork, total] = await queryBuilder
       .skip((page - 1) * pageSize)
       .take(pageSize)
       .getManyAndCount();
 
-    return { social_network, total };
+    return { socialNetwork, total };
   }
 
   public async getById(id: string): Promise<SocialNetwork> {
-    return this._social_networkRepository.findOne({
+    return this._socialNetworkRepository.findOne({
       where: { id },
       relations: ['address'],
     });
@@ -63,13 +63,13 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
       throw new Error('Rede social não encontrada.');
     }
 
-    this._social_networkRepository.merge(existingSocialNetwork, social_network);
+    this._socialNetworkRepository.merge(existingSocialNetwork, social_network);
 
-    return this._social_networkRepository.save(existingSocialNetwork);
+    return this._socialNetworkRepository.save(existingSocialNetwork);
   }
 
   public async deleteSocialNetwork(id: string): Promise<void> {
-    const result = await this._social_networkRepository.delete(id);
+    const result = await this._socialNetworkRepository.delete(id);
 
     if (result.affected === 0) {
       throw new Error('Rede social não encontrada.');
