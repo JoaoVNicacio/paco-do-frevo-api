@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
@@ -12,67 +10,70 @@ import {
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
 import EventService from 'src/application/useCases/services/event.service';
+import ControllerBase from './controller.base';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller()
-class EventController {
-  constructor(private readonly _eventService: EventService) {}
+@ApiTags('Events')
+@Controller('event')
+class EventController extends ControllerBase {
+  constructor(private readonly _eventService: EventService) {
+    super();
+  }
 
   @Post()
-  public async createEvent(@Body() eventDTO: EventDTO): Promise<Event> {
+  public async createEvent(
+    @Body() eventDTO: EventDTO,
+    @Param('associationId') associationId: string,
+  ): Promise<Event> {
     try {
-      return await this._eventService.createEvent(eventDTO);
+      const event = await this._eventService.createEvent(
+        eventDTO,
+        associationId,
+      );
+
+      return this.sendCustomValidationResponse<Event>(event);
       // eslint-disable-next-line prettier/prettier
-    } 
+    }
     catch (error) {
-      throw new HttpException(
-        'Erro ao criar número de telefone',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      this.throwInternalError(error, 'There was an error creating the event');
     }
   }
 
-  @Get(':id')
+  @Get('id/:id')
   public async getAssociationById(@Param('id') id: string): Promise<Event> {
-    const phoneNumber = await this._eventService.findById(id);
-
-    if (!phoneNumber) {
-      throw new HttpException(
-        'Número de telefone não encontrado.',
-        HttpStatus.NOT_FOUND,
-      );
+    try {
+      return this.sendCustomResponse(await this._eventService.findById(id));
+      // eslint-disable-next-line prettier/prettier
     }
-
-    return phoneNumber;
+    catch (error) {
+      this.throwInternalError(error, 'There was an error retriving the event');
+    }
   }
 
-  @Put(':id')
+  @Put('id/:id')
   public async updtadeAssociation(
     @Param('id') id: string,
     @Body() eventDTO: EventDTO,
   ): Promise<Event> {
     try {
-      return await this._eventService.updateEvent(id, eventDTO);
+      const event = await this._eventService.updateEvent(id, eventDTO);
+
+      return this.sendCustomValidationResponse<Event>(event);
       // eslint-disable-next-line prettier/prettier
-    } 
+    }
     catch (error) {
-      throw new HttpException(
-        'Erro ao atualizar número de telefone.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      this.throwInternalError(error, 'There was an error updating the contact');
     }
   }
 
-  @Delete(':id')
+  @Delete('id/:id')
   public async deleteEvent(@Param('id') id: string): Promise<void> {
     try {
       await this._eventService.deleteEvent(id);
       // eslint-disable-next-line prettier/prettier
-    } 
+    }
     catch (error) {
-      throw new HttpException(
-        'Erro ao excluir evento.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      this.throwInternalError(error, 'There was an error deleting the event');
     }
   }
 }

@@ -8,6 +8,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import Association from './association.entity';
+import {
+  IsNotEmpty,
+  Matches,
+  ValidationError,
+  validate,
+} from 'class-validator';
 
 @Entity({ name: 'SocialNetworks' })
 class SocialNetwork {
@@ -15,9 +21,14 @@ class SocialNetwork {
   public id: string;
 
   @Column('text')
+  @IsNotEmpty({ message: 'Social network type is required' })
   public socialNetworkType: string;
 
   @Column('text')
+  @IsNotEmpty({ message: 'URL is required' })
+  @Matches(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, {
+    message: 'Invalid URL format',
+  })
   public url: string;
 
   @Column('uuid', { nullable: true })
@@ -42,6 +53,16 @@ class SocialNetwork {
 
   setUpdateStamps(userId: string): void {
     this.updatedBy = userId;
+  }
+
+  public async isValid(): Promise<boolean> {
+    const errors = await this.validateCreation();
+
+    return errors.length === 0;
+  }
+
+  public async validateCreation(): Promise<Array<ValidationError>> {
+    return await validate(this);
   }
 }
 

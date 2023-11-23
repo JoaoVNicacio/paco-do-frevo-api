@@ -6,6 +6,7 @@ import SocialNetworkController from '../controllers/social_network.controller';
 import SocialNetworkRepository from '../repositories/social_network.repository';
 import SocialNetworkService from 'src/application/useCases/services/social_network.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
+import AssociationRepository from '../repositories/association.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SocialNetwork, Association])],
@@ -13,6 +14,7 @@ import Association from 'src/domain/entities/associationAggregate/association.en
   providers: [
     SocialNetworkService,
     SocialNetworkRepository,
+    AssociationRepository,
     SocialNetworkMapper,
   ],
 })

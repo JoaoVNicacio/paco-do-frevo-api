@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
@@ -12,24 +10,35 @@ import {
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phoneNumber.dto';
 import PhoneNumberService from 'src/application/useCases/services/phoneNumber.service';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
+import ControllerBase from './controller.base';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
-class PhoneNumberController {
-  constructor(private readonly phoneNumberService: PhoneNumberService) {}
+class PhoneNumberController extends ControllerBase {
+  constructor(private readonly _phoneNumberService: PhoneNumberService) {
+    super();
+  }
 
   @Post()
   public async createPhoneNumber(
     @Body() phoneNumberDTO: PhoneNumberDTO,
+    @Param('contactId') contactId: string,
   ): Promise<PhoneNumber> {
     try {
       const createdPhoneNumber =
-        await this.phoneNumberService.createPhoneNumber(phoneNumberDTO);
+        await this._phoneNumberService.createPhoneNumber(
+          phoneNumberDTO,
+          contactId,
+        );
 
-      return createdPhoneNumber;
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao criar número de telefone',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      return this.sendCustomValidationResponse<PhoneNumber>(createdPhoneNumber);
+      // eslint-disable-next-line prettier/prettier
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error creating the phone number',
       );
     }
   }
@@ -37,61 +46,65 @@ class PhoneNumberController {
   @Get()
   public async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
     try {
-      const phoneNumbers = await this.phoneNumberService.getAllPhoneNumbers();
+      const phoneNumbers = await this._phoneNumberService.getAllPhoneNumbers();
 
       return phoneNumbers;
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao buscar números de telefone',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      // eslint-disable-next-line prettier/prettier
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error getting the phone numbers',
       );
     }
   }
 
-  @Get(':id')
+  @Get('id/:id')
   public async getAssociationById(
     @Param('id') id: string,
   ): Promise<PhoneNumber> {
-    const phoneNumber = await this.phoneNumberService.getPhoneNumberById(id);
-
-    if (!phoneNumber) {
-      throw new HttpException(
-        'Número de telefone não encontrado.',
-        HttpStatus.NOT_FOUND,
+    try {
+      return await this._phoneNumberService.getPhoneNumberById(id);
+      // eslint-disable-next-line prettier/prettier
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error retriving the phone number',
       );
     }
-
-    return phoneNumber;
   }
 
-  @Put(':id')
+  @Put('id/:id')
   public async updtadeAssociation(
     @Param('id') id: string,
     @Body() phoneNumberDTO: PhoneNumberDTO,
   ): Promise<PhoneNumber> {
     try {
-      const updatePhoneNumber = await this.phoneNumberService.updatePhoneNumber(
-        id,
-        phoneNumberDTO,
-      );
+      const updatePhoneNumber =
+        await this._phoneNumberService.updatePhoneNumber(id, phoneNumberDTO);
 
-      return updatePhoneNumber;
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao atualizar número de telefone.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      return this.sendCustomValidationResponse<PhoneNumber>(updatePhoneNumber);
+      // eslint-disable-next-line prettier/prettier
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error updating the phone number',
       );
     }
   }
 
-  @Delete(':id')
+  @Delete('id/:id')
   public async deletePhoneNumber(@Param('id') id: string): Promise<void> {
     try {
-      await this.phoneNumberService.deletePhoneNumber(id);
-    } catch (error) {
-      throw new HttpException(
-        'Erro ao excluir número de telefone.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      await this._phoneNumberService.deletePhoneNumber(id);
+      // eslint-disable-next-line prettier/prettier
+    }
+    catch (error) {
+      this.throwInternalError(
+        error,
+        'There was an error deleting the phone number',
       );
     }
   }

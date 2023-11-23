@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import AssociationMapper from 'src/application/mappers/association.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
+import ValidationResponse from 'src/application/responseObjects/validation.response';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import IAssociationService from 'src/domain/services/iassociation.service';
 import AssociationRepository from 'src/infra/repositories/association.repository';
@@ -15,10 +16,26 @@ class AssociationService implements IAssociationService {
 
   public async createAssociation(
     associationDTO: AssociationDTO,
-  ): Promise<Association> {
+  ): Promise<ValidationResponse<Association>> {
     const association = this._associationMapper.dtoToEntity(associationDTO);
+    const isValid = await association.isValid();
 
-    return this._associationRepository.createResume(association);
+    if (!isValid) {
+      return new ValidationResponse(
+        association,
+        await association.validateCreation(),
+        isValid,
+      );
+    }
+
+    const insertResponse =
+      await this._associationRepository.createResume(association);
+
+    return new ValidationResponse(
+      insertResponse,
+      await association.validateCreation(),
+      isValid,
+    );
   }
 
   public async getAllAssociations(): Promise<Array<Association>> {
@@ -36,20 +53,44 @@ class AssociationService implements IAssociationService {
 
     const hasNextPage = results.total > page * pageSize;
 
-    return new PagedResults(results.associations, hasNextPage, page, pageSize);
+    return new PagedResults(
+      results.associations,
+      hasNextPage,
+      page,
+      pageSize,
+      results.total,
+    );
   }
 
   public async getAssociationById(id: string): Promise<Association> {
-    return this._associationRepository.getById(id);
+    return await this._associationRepository.getById(id);
   }
 
   public async updateAssociation(
     id: string,
     associationDTO: AssociationDTO,
-  ): Promise<Association> {
+  ): Promise<ValidationResponse<Association>> {
     const association = this._associationMapper.dtoToEntity(associationDTO);
+    const isValid = await association.isValid();
 
-    return await this._associationRepository.updateAssociation(id, association);
+    if (!isValid) {
+      return new ValidationResponse(
+        association,
+        await association.validateCreation(),
+        isValid,
+      );
+    }
+
+    const updateResponse = await this._associationRepository.updateAssociation(
+      id,
+      association,
+    );
+
+    return new ValidationResponse(
+      updateResponse,
+      await association.validateCreation(),
+      isValid,
+    );
   }
 
   public async deleteAssociation(id: string): Promise<void> {

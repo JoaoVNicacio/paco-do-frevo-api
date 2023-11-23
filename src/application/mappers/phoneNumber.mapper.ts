@@ -20,8 +20,6 @@ class PhoneNumberMapper implements IMapper<PhoneNumber, PhoneNumberDTO> {
     entity.countryCode = dto.countryCode;
     entity.areaCode = dto.areaCode;
     entity.number = dto.number;
-    entity.createdAt = new Date();
-    entity.updatedAt = new Date();
 
     return entity;
   }
