@@ -8,10 +8,10 @@ import {
   Body,
   Query,
 } from '@nestjs/common';
-import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
+import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import SocialNetworkService from 'src/application/useCases/services/social_network.service';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
+import SocialNetworkService from 'src/application/useCases/services/social-network.service';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import ControllerBase from './controller.base';
 import { ApiTags } from '@nestjs/swagger';
 

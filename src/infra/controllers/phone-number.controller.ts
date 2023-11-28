@@ -7,9 +7,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import PhoneNumberDTO from 'src/application/dtos/associationDtos/phoneNumber.dto';
-import PhoneNumberService from 'src/application/useCases/services/phoneNumber.service';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
+import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
+import PhoneNumberService from 'src/application/useCases/services/phone-number.service';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import ControllerBase from './controller.base';
 import { ApiTags } from '@nestjs/swagger';
 

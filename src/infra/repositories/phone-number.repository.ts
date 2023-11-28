@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
-import IPhoneNumberRepository from 'src/domain/repositories/iphoneNumber.repository';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import { Repository } from 'typeorm';
 
 @Injectable()

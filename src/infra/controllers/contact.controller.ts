@@ -12,6 +12,7 @@ import ContactService from 'src/application/useCases/services/contact.service';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import ControllerBase from './controller.base';
 import { ApiTags } from '@nestjs/swagger';
+import UUIDParam from './requestObjects/uuid.param';
 
 @ApiTags('Contacts')
 @Controller('contacts')
@@ -40,10 +41,10 @@ class ContactController extends ControllerBase {
   }
 
   @Get('id/:id')
-  public async getContactById(@Param('id') id: string): Promise<Contact> {
+  public async getContactById(@Param() idParam: UUIDParam): Promise<Contact> {
     try {
       return this.sendCustomResponse(
-        await this.contactService.getContactById(id),
+        await this.contactService.getContactById(idParam.id),
       );
       // eslint-disable-next-line prettier/prettier
     }
@@ -54,12 +55,12 @@ class ContactController extends ControllerBase {
 
   @Put('id/:id')
   public async updateContact(
-    @Param('id') id: string,
+    @Param() idParam: UUIDParam,
     @Body() contactDTO: ContactDTO,
   ): Promise<Contact> {
     try {
       const updatedContact = await this.contactService.updateContact(
-        id,
+        idParam.id,
         contactDTO,
       );
 

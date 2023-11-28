@@ -14,6 +14,8 @@ import AssociationService from 'src/application/useCases/services/association.se
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ControllerBase from './controller.base';
 import { ApiTags } from '@nestjs/swagger';
+import PagingParams from './requestObjects/paging.params';
+import UUIDParam from './requestObjects/uuid.param';
 
 @ApiTags('Association')
 @Controller('associations')
@@ -57,13 +59,12 @@ class AssociationController extends ControllerBase {
 
   @Get('/paged')
   public async getPagedAssociations(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
+    @Query() pagingParams: PagingParams,
   ): Promise<PagedResults<Association>> {
     try {
       return await this._associationService.getPagedAssociations(
-        page,
-        pageSize,
+        Number(pagingParams.page),
+        Number(pagingParams.pageSize),
       );
       // eslint-disable-next-line prettier/prettier
     }
@@ -77,15 +78,15 @@ class AssociationController extends ControllerBase {
 
   @Get('id/:id')
   public async getAssociationById(
-    @Param('id') id: string,
+    @Param() idParam: UUIDParam,
   ): Promise<Association> {
     try {
       return this.sendCustomResponse<Association>(
-        await this._associationService.getAssociationById(id),
+        await this._associationService.getAssociationById(idParam.id),
       );
       // eslint-disable-next-line prettier/prettier
-  }
-  catch(error){
+    }
+    catch (error) {
       this.throwInternalError(
         error,
         'There was an error retrieving the association',
@@ -95,12 +96,12 @@ class AssociationController extends ControllerBase {
 
   @Put('id/:id')
   public async updateAssociation(
-    @Param('id') id: string,
+    @Param() idParam: UUIDParam,
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
     try {
       // eslint-disable-next-line prettier/prettier
-      const updatedAssociation = await this._associationService.updateAssociation(id,associationDTO);
+      const updatedAssociation = await this._associationService.updateAssociation(idParam.id, associationDTO);
 
       return this.sendCustomValidationResponse<Association>(updatedAssociation);
       // eslint-disable-next-line prettier/prettier
@@ -114,9 +115,9 @@ class AssociationController extends ControllerBase {
   }
 
   @Delete('id/:id')
-  public async deleteAssociation(@Param('id') id: string): Promise<void> {
+  public async deleteAssociation(@Param() idParam: UUIDParam): Promise<void> {
     try {
-      await this._associationService.deleteAssociation(id);
+      await this._associationService.deleteAssociation(idParam.id);
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {

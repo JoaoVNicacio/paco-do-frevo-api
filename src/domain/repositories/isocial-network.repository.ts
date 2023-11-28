@@ -1,4 +1,4 @@
-import SocialNetwork from '../entities/associationAggregate/social_network.entity';
+import SocialNetwork from '../entities/associationAggregate/social-network.entity';
 
 interface ISocialNetworkRepository {
   createResume(social_network: SocialNetwork): Promise<SocialNetwork>;

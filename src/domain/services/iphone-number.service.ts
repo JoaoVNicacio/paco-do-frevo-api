@@ -1,5 +1,5 @@
-import PhoneNumberDTO from 'src/application/dtos/associationDtos/phoneNumber.dto';
-import PhoneNumber from '../entities/associationAggregate/phoneNumber.entity';
+import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
+import PhoneNumber from '../entities/associationAggregate/phone-number.entity';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 
 interface IPhoneNumberService {

@@ -11,7 +11,7 @@ import {
 import AssociationAddress from './address.entity';
 import Event from './event.entity';
 import Member from './member.entity';
-import SocialNetwork from './social_network.entity';
+import SocialNetwork from './social-network.entity';
 import Contact from './contact.entity';
 import {
   IsArray,

@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import PhoneNumber from './phoneNumber.entity';
+import PhoneNumber from './phone-number.entity';
 import Association from './association.entity';
 import {
   IsEmail,

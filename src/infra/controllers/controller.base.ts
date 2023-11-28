@@ -53,7 +53,7 @@ class ControllerBase {
     }
 
     if (response instanceof Array && response.length === 0) {
-      throw new HttpException('', HttpStatus.NO_CONTENT);
+      throw new HttpException(null, HttpStatus.NO_CONTENT);
     }
 
     return response;

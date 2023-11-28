@@ -1,4 +1,4 @@
-import PhoneNumber from '../entities/associationAggregate/phoneNumber.entity';
+import PhoneNumber from '../entities/associationAggregate/phone-number.entity';
 
 interface IPhoneNumberRepository {
   createResume(phoneNumber: PhoneNumber): Promise<PhoneNumber>;

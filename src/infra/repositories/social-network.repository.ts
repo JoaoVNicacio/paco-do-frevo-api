@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
-import ISocialNetworkRepository from 'src/domain/repositories/isocial_network.repository';
-import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
+import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
+import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 
 @Injectable()
 class SocialNetworkRepository implements ISocialNetworkRepository {

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
-import PhoneNumberDTO from 'src/application/dtos/associationDtos/phoneNumber.dto';
-import PhoneNumberMapper from 'src/application/mappers/phoneNumber.mapper';
+import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
+import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
-import IPhoneNumberService from 'src/domain/services/iphoneNumber.service';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import IPhoneNumberService from 'src/domain/services/iphone-number.service';
 import ContactRepository from 'src/infra/repositories/contact.repository';
-import PhoneNumberRepository from 'src/infra/repositories/phoneNumber.repository';
+import PhoneNumberRepository from 'src/infra/repositories/phone-number.repository';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
