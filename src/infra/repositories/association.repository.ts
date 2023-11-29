@@ -11,7 +11,7 @@ class AssociationRepository implements IAssociationRepository {
     private _associationRepository: Repository<Association>,
   ) {}
 
-  public async createResume(association: Association): Promise<Association> {
+  public async createAssociation(association: Association): Promise<Association> {
     const createdAssociation = this._associationRepository.create(association);
 
     return await this._associationRepository.save(createdAssociation);

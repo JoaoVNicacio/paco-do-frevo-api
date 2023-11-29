@@ -14,7 +14,7 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
     private _socialNetworkRepository: Repository<SocialNetwork>,
   ) {}
 
-  public async createResume(
+  public async createSocialNetwork(
     social_network: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     const createdSocialNetwork =

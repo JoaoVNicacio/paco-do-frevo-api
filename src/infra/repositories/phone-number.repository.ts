@@ -11,7 +11,9 @@ class PhoneNumberRepository implements IPhoneNumberRepository {
     private _phoneNumberRepository: Repository<PhoneNumber>,
   ) {}
 
-  public async createResume(phoneNumber: PhoneNumber): Promise<PhoneNumber> {
+  public async createPhoneNumber(
+    phoneNumber: PhoneNumber,
+  ): Promise<PhoneNumber> {
     const createdPhoneNumber = this._phoneNumberRepository.create(phoneNumber);
 
     return await this._phoneNumberRepository.save(createdPhoneNumber);

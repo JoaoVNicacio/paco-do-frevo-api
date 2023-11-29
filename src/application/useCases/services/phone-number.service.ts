@@ -44,7 +44,7 @@ class PhoneNumberService implements IPhoneNumberService {
     }
 
     const insertResponse =
-      await this._phoneNumberRepository.createResume(phoneNumber);
+      await this._phoneNumberRepository.createPhoneNumber(phoneNumber);
 
     return new ValidationResponse(
       insertResponse,

@@ -1,7 +1,7 @@
 import PhoneNumber from '../entities/associationAggregate/phone-number.entity';
 
 interface IPhoneNumberRepository {
-  createResume(phoneNumber: PhoneNumber): Promise<PhoneNumber>;
+  createPhoneNumber(phoneNumber: PhoneNumber): Promise<PhoneNumber>;
   getAll(): Promise<Array<PhoneNumber> | any>;
   getById(id: string): Promise<PhoneNumber | undefined>;
   updatePhoneNumber(

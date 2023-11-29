@@ -47,7 +47,7 @@ class SocialNetworkService implements ISocialNetworkService {
     }
 
     const insertResponse =
-      await this._socialNetworkRepository.createResume(socialNetwork);
+      await this._socialNetworkRepository.createSocialNetwork(socialNetwork);
 
     return new ValidationResponse(
       insertResponse,

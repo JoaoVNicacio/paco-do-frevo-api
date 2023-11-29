@@ -10,7 +10,7 @@ import {
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import ContactService from 'src/application/useCases/services/contact.service';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
-import ControllerBase from './controller.base';
+import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
 import UUIDParam from './requestObjects/uuid.param';
 

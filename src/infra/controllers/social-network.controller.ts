@@ -12,7 +12,7 @@ import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-networ
 import PagedResults from 'src/application/responseObjects/paged.results';
 import SocialNetworkService from 'src/application/useCases/services/social-network.service';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
-import ControllerBase from './controller.base';
+import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('SocialNetworks')

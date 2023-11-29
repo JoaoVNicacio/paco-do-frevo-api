@@ -12,7 +12,7 @@ import AssociationDTO from 'src/application/dtos/associationDtos/association.dto
 import PagedResults from 'src/application/responseObjects/paged.results';
 import AssociationService from 'src/application/useCases/services/association.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
-import ControllerBase from './controller.base';
+import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
 import PagingParams from './requestObjects/paging.params';
 import UUIDParam from './requestObjects/uuid.param';

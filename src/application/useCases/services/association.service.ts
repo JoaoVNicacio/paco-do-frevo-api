@@ -29,7 +29,7 @@ class AssociationService implements IAssociationService {
     }
 
     const insertResponse =
-      await this._associationRepository.createResume(association);
+      await this._associationRepository.createAssociation(association);
 
     return new ValidationResponse(
       insertResponse,

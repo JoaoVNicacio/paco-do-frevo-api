@@ -10,7 +10,7 @@ import {
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
 import EventService from 'src/application/useCases/services/event.service';
-import ControllerBase from './controller.base';
+import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Events')
