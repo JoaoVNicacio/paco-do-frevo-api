@@ -48,10 +48,10 @@ class SocialNetworkController extends ControllerBase {
   @Get()
   public async getAllSocialNetworks(): Promise<SocialNetwork[]> {
     try {
-      const social_network =
+      const socialNetwork =
         await this.socialNetworkService.getAllSocialNetwork();
 
-      return social_network;
+      return socialNetwork;
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
@@ -98,14 +98,14 @@ class SocialNetworkController extends ControllerBase {
   @Put('id/:id')
   public async updateSocialNetwork(
     @Param('id') id: string,
-    @Body() social_network_DTO: SocialNetworkDTO,
+    @Body() socialNetwork_DTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     try {
       // eslint-disable-next-line prettier/prettier
       const updatedSocialNetwork =
         await this.socialNetworkService.updateSocialNetwork(
           id,
-          social_network_DTO,
+          socialNetwork_DTO,
         );
 
       return this.sendCustomValidationResponse<SocialNetwork>(

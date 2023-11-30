@@ -8,10 +8,12 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
 class AssociationRepository implements IAssociationRepository {
   constructor(
     @InjectRepository(Association)
-    private _associationRepository: Repository<Association>,
+    private readonly _associationRepository: Repository<Association>,
   ) {}
 
-  public async createAssociation(association: Association): Promise<Association> {
+  public async createAssociation(
+    association: Association,
+  ): Promise<Association> {
     const createdAssociation = this._associationRepository.create(association);
 
     return await this._associationRepository.save(createdAssociation);

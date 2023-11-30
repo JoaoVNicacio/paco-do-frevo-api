@@ -51,7 +51,7 @@ class CnpjNumberValidator extends DocumentNumberValidatorTemplate {
     return true;
   }
 
-  /* The `ValidateCNPJChecksum` method is a private helper method used in the `CnpjNumberValidator` class
+  /** `ValidateCNPJChecksum` method is a private helper method used in the `CnpjNumberValidator` class
 to validate the checksum of a CNPJ number. */
   private ValidateCNPJChecksum(
     digits: number[],

@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 class PhoneNumberRepository implements IPhoneNumberRepository {
   constructor(
     @InjectRepository(PhoneNumber)
-    private _phoneNumberRepository: Repository<PhoneNumber>,
+    private readonly _phoneNumberRepository: Repository<PhoneNumber>,
   ) {}
 
   public async createPhoneNumber(

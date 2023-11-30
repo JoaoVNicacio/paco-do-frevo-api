@@ -11,14 +11,14 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social-netwo
 class SocialNetworkRepository implements ISocialNetworkRepository {
   constructor(
     @InjectRepository(SocialNetwork)
-    private _socialNetworkRepository: Repository<SocialNetwork>,
+    private readonly _socialNetworkRepository: Repository<SocialNetwork>,
   ) {}
 
   public async createSocialNetwork(
-    social_network: SocialNetworkDTO,
+    socialNetwork: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     const createdSocialNetwork =
-      this._socialNetworkRepository.create(social_network);
+      this._socialNetworkRepository.create(socialNetwork);
 
     return await this._socialNetworkRepository.save(createdSocialNetwork);
   }
@@ -55,7 +55,7 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
 
   public async updateSocialNetwork(
     id: string,
-    social_network: SocialNetwork,
+    socialNetwork: SocialNetwork,
   ): Promise<SocialNetwork> {
     const existingSocialNetwork = await this.getById(id);
 
@@ -63,7 +63,7 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
       throw new Error('Rede social não encontrada.');
     }
 
-    this._socialNetworkRepository.merge(existingSocialNetwork, social_network);
+    this._socialNetworkRepository.merge(existingSocialNetwork, socialNetwork);
 
     return this._socialNetworkRepository.save(existingSocialNetwork);
   }

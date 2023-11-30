@@ -11,6 +11,8 @@ abstract class DocumentNumberValidatorTemplate {
    * value.
    */
   public validate(number: string): boolean {
+    number = number.replace('.', '').replace('-', '').replace('/', '');
+
     if (this.hasAllSameDigits(number)) {
       return false;
     }
