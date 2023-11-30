@@ -60,7 +60,7 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Get('id/:id')
-  public async getAssociationById(
+  public async getPhoneNumberById(
     @Param('id') id: string,
   ): Promise<PhoneNumber> {
     try {
@@ -76,7 +76,7 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Put('id/:id')
-  public async updtadeAssociation(
+  public async updtadePhoneNumber(
     @Param('id') id: string,
     @Body() phoneNumberDTO: PhoneNumberDTO,
   ): Promise<PhoneNumber> {
