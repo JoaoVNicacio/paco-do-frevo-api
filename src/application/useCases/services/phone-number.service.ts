@@ -26,7 +26,7 @@ class PhoneNumberService implements IPhoneNumberService {
 
     if (!contact) {
       const error = new ValidationError();
-      error.constraints = { contactId: 'The association does not exists' };
+      error.constraints = { contactId: 'The contact does not exists' };
 
       return new ValidationResponse(phoneNumber, [error], false);
     }

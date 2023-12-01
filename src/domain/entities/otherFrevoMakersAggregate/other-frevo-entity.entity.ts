@@ -17,7 +17,7 @@ import {
 } from 'class-validator';
 import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
 
-/* This class represents an Carnival Association with its various properties, relationships and behaviour. */
+
 @Entity({ name: 'OtherFrevoEntities' })
 class OtherFrevoEntity {
   @PrimaryGeneratedColumn('uuid')
