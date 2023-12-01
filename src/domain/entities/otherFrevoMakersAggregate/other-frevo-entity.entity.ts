@@ -17,7 +17,6 @@ import {
 } from 'class-validator';
 import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
 
-
 @Entity({ name: 'OtherFrevoEntities' })
 class OtherFrevoEntity {
   @PrimaryGeneratedColumn('uuid')
