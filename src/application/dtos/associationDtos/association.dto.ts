@@ -2,7 +2,7 @@ import AssociationAddressDTO from './address.dto';
 import ContactDTO from './contact.dto';
 import EventDTO from './event.dto';
 import MemberDTO from './member.dto';
-import SocialNetworkDTO from './social_network.dto';
+import SocialNetworkDTO from './social-network.dto';
 
 class AssociationDTO {
   public name: string;

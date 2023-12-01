@@ -5,10 +5,10 @@ import ContactService from 'src/application/useCases/services/contact.service'; 
 import ContactController from '../controllers/contact.controller'; // Certifique-se de importar o controlador correto
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ContactRepository from '../repositories/contact.repository';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
-import { PhoneNumberModule } from './phoneNumber.module';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import { PhoneNumberModule } from './phone-number.module';
 import ContactMapper from 'src/application/mappers/contact.mapper';
-import PhoneNumberMapper from 'src/application/mappers/phoneNumber.mapper';
+import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import AssociationRepository from '../repositories/association.repository';
 
 @Module({
