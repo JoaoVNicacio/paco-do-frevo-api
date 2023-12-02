@@ -13,6 +13,8 @@ import Member from 'src/domain/entities/associationAggregate/member.entity';
 import { ContactModule } from './contact.module';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import { SocialNetworkModule } from './social-network.module';
+import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 
 dotenv.config();
 
@@ -38,6 +40,8 @@ dotenv.config();
         Contact,
         Event,
         SocialNetwork,
+        OtherFrevoEntity,
+        OtherFrevoEntityAddress,
       ],
       migrations: ['src/migration/**/*.ts'],
       subscribers: ['src/subscriber/**/*.ts'],
