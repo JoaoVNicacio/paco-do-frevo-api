@@ -104,6 +104,8 @@ export function ValidCnpjNumber(validationOptions?: ValidationOptions) {
             if (!value || typeof value !== 'string') {
               return false;
             }
+
+            return new CnpjNumberValidator().validate(entity.getCnpj);
           }
 
           return true;
