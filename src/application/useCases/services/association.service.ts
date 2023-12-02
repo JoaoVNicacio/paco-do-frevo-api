@@ -3,6 +3,7 @@ import AssociationDTO from 'src/application/dtos/associationDtos/association.dto
 import AssociationMapper from 'src/application/mappers/association.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
+import CleanStringBuilder from 'src/application/utils/clean-string.builder';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import IAssociationService from 'src/domain/services/iassociation.service';
 import AssociationRepository from 'src/infra/repositories/association.repository';
@@ -28,8 +29,14 @@ class AssociationService implements IAssociationService {
       );
     }
 
+    association.setCnpj = CleanStringBuilder.fromString(association.getCnpj)
+      .withoutDashes()
+      .withoutDots()
+      .withoutSlashes()
+      .build();
+
     const insertResponse =
-      await this._associationRepository.createResume(association);
+      await this._associationRepository.createAssociation(association);
 
     return new ValidationResponse(
       insertResponse,
@@ -80,6 +87,12 @@ class AssociationService implements IAssociationService {
         isValid,
       );
     }
+
+    association.setCnpj = CleanStringBuilder.fromString(association.getCnpj)
+      .withoutDashes()
+      .withoutDots()
+      .withoutSlashes()
+      .build();
 
     const updateResponse = await this._associationRepository.updateAssociation(
       id,

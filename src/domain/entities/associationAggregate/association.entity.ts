@@ -11,7 +11,7 @@ import {
 import AssociationAddress from './address.entity';
 import Event from './event.entity';
 import Member from './member.entity';
-import SocialNetwork from './social_network.entity';
+import SocialNetwork from './social-network.entity';
 import Contact from './contact.entity';
 import {
   IsArray,
@@ -26,8 +26,9 @@ import {
   validate,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ValidCnpjNumber } from 'src/domain/validators/cnpj-number.validator';
 
-/* This class represents an Carnival Association with its various properties, relationships and behaviour. */
+/** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'Associations' })
 class Association {
   @PrimaryGeneratedColumn('uuid')
@@ -74,6 +75,7 @@ class Association {
   @Matches(/^(\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}|\d{14})$/, {
     message: 'Invalid CNPJ format',
   })
+  @ValidCnpjNumber({ message: 'The given CNPJ is invalid' })
   private cnpj: string | null;
 
   @IsBoolean()

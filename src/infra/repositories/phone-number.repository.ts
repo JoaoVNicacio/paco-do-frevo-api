@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
-import IPhoneNumberRepository from 'src/domain/repositories/iphoneNumber.repository';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import { Repository } from 'typeorm';
 
 @Injectable()
 class PhoneNumberRepository implements IPhoneNumberRepository {
   constructor(
     @InjectRepository(PhoneNumber)
-    private _phoneNumberRepository: Repository<PhoneNumber>,
+    private readonly _phoneNumberRepository: Repository<PhoneNumber>,
   ) {}
 
-  public async createResume(phoneNumber: PhoneNumber): Promise<PhoneNumber> {
+  public async createPhoneNumber(
+    phoneNumber: PhoneNumber,
+  ): Promise<PhoneNumber> {
     const createdPhoneNumber = this._phoneNumberRepository.create(phoneNumber);
 
     return await this._phoneNumberRepository.save(createdPhoneNumber);

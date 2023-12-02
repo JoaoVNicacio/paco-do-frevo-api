@@ -8,11 +8,11 @@ import {
   Body,
   Query,
 } from '@nestjs/common';
-import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
+import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import SocialNetworkService from 'src/application/useCases/services/social_network.service';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
-import ControllerBase from './controller.base';
+import SocialNetworkService from 'src/application/useCases/services/social-network.service';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('SocialNetworks')
@@ -48,10 +48,10 @@ class SocialNetworkController extends ControllerBase {
   @Get()
   public async getAllSocialNetworks(): Promise<SocialNetwork[]> {
     try {
-      const social_network =
+      const socialNetwork =
         await this.socialNetworkService.getAllSocialNetwork();
 
-      return social_network;
+      return socialNetwork;
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
@@ -98,14 +98,14 @@ class SocialNetworkController extends ControllerBase {
   @Put('id/:id')
   public async updateSocialNetwork(
     @Param('id') id: string,
-    @Body() social_network_DTO: SocialNetworkDTO,
+    @Body() socialNetwork_DTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     try {
       // eslint-disable-next-line prettier/prettier
       const updatedSocialNetwork =
         await this.socialNetworkService.updateSocialNetwork(
           id,
-          social_network_DTO,
+          socialNetwork_DTO,
         );
 
       return this.sendCustomValidationResponse<SocialNetwork>(

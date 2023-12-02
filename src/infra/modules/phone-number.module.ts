@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
-import PhoneNumberController from '../controllers/phoneNumber.controller';
-import PhoneNumberService from 'src/application/useCases/services/phoneNumber.service';
-import PhoneNumberMapper from 'src/application/mappers/phoneNumber.mapper';
-import PhoneNumberRepository from '../repositories/phoneNumber.repository';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import PhoneNumberController from '../controllers/phone-number.controller';
+import PhoneNumberService from 'src/application/useCases/services/phone-number.service';
+import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
+import PhoneNumberRepository from '../repositories/phone-number.repository';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import ContactRepository from '../repositories/contact.repository';
 

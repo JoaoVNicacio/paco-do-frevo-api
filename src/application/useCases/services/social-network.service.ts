@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
-import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
+import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
-import ISocialNetworkService from 'src/domain/services/isocial_network.service';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import ISocialNetworkService from 'src/domain/services/isocial-network.service';
 import AssociationRepository from 'src/infra/repositories/association.repository';
-import SocialNetworkRepository from 'src/infra/repositories/social_network.repository';
+import SocialNetworkRepository from 'src/infra/repositories/social-network.repository';
 
 @Injectable()
 class SocialNetworkService implements ISocialNetworkService {
@@ -47,7 +47,7 @@ class SocialNetworkService implements ISocialNetworkService {
     }
 
     const insertResponse =
-      await this._socialNetworkRepository.createResume(socialNetwork);
+      await this._socialNetworkRepository.createSocialNetwork(socialNetwork);
 
     return new ValidationResponse(
       insertResponse,

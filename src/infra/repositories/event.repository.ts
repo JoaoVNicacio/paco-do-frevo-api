@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 class EventRepository implements IEventRepository {
   constructor(
     @InjectRepository(Event)
-    private _eventRepository: Repository<Event>,
+    private readonly _eventRepository: Repository<Event>,
   ) {}
 
   public async createEvent(event: Event): Promise<Event> {

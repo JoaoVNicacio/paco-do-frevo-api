@@ -3,22 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
-import ISocialNetworkRepository from 'src/domain/repositories/isocial_network.repository';
-import SocialNetworkDTO from 'src/application/dtos/associationDtos/social_network.dto';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
+import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
+import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 
 @Injectable()
 class SocialNetworkRepository implements ISocialNetworkRepository {
   constructor(
     @InjectRepository(SocialNetwork)
-    private _socialNetworkRepository: Repository<SocialNetwork>,
+    private readonly _socialNetworkRepository: Repository<SocialNetwork>,
   ) {}
 
-  public async createResume(
-    social_network: SocialNetworkDTO,
+  public async createSocialNetwork(
+    socialNetwork: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     const createdSocialNetwork =
-      this._socialNetworkRepository.create(social_network);
+      this._socialNetworkRepository.create(socialNetwork);
 
     return await this._socialNetworkRepository.save(createdSocialNetwork);
   }
@@ -55,7 +55,7 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
 
   public async updateSocialNetwork(
     id: string,
-    social_network: SocialNetwork,
+    socialNetwork: SocialNetwork,
   ): Promise<SocialNetwork> {
     const existingSocialNetwork = await this.getById(id);
 
@@ -63,7 +63,7 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
       throw new Error('Rede social não encontrada.');
     }
 
-    this._socialNetworkRepository.merge(existingSocialNetwork, social_network);
+    this._socialNetworkRepository.merge(existingSocialNetwork, socialNetwork);
 
     return this._socialNetworkRepository.save(existingSocialNetwork);
   }

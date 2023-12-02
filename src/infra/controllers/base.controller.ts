@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 
-/* The `ControllerBase` is a base class for the project's NestJS controllers.
+/** The `ControllerBase` is a base class for the project's NestJS controllers.
 it provides methods for sending custom validation and response messages, as
 well as handling errors. */
 class ControllerBase {
@@ -53,11 +53,10 @@ class ControllerBase {
     }
 
     if (response instanceof Array && response.length === 0) {
-      throw new HttpException('', HttpStatus.NO_CONTENT);
+      throw new HttpException(null, HttpStatus.NO_CONTENT);
     }
 
     return response;
-    // eslint-disable-next-line prettier/prettier
   }
 
   /**

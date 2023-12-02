@@ -1,7 +1,7 @@
 import Association from '../entities/associationAggregate/association.entity';
 
 interface IAssociationRepository {
-  createResume(association: Association): Promise<Association>;
+  createAssociation(association: Association): Promise<Association>;
   getAll(): Promise<Array<Association> | any>;
   getById(id: string): Promise<Association | undefined>;
   updateAssociation(
