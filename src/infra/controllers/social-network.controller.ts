@@ -22,7 +22,7 @@ class SocialNetworkController extends ControllerBase {
     super();
   }
 
-  @Post()
+  @Post('association/:associationId')
   public async createSocialNetwork(
     @Body() socialNetworkDTO: SocialNetworkDTO,
     @Param('associationId') associationId: string,

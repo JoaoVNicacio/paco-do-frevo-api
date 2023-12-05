@@ -20,7 +20,7 @@ class PhoneNumberController extends ControllerBase {
     super();
   }
 
-  @Post()
+  @Post('contact/:contactId')
   public async createPhoneNumber(
     @Body() phoneNumberDTO: PhoneNumberDTO,
     @Param('contactId') contactId: string,

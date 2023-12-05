@@ -21,7 +21,7 @@ class ContactController extends ControllerBase {
     super();
   }
 
-  @Post()
+  @Post('association/:associationId')
   public async createContact(
     @Body() contactDTO: ContactDTO,
     @Param('associationId') associationId: string,
