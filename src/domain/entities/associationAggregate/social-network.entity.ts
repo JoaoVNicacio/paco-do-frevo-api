@@ -9,11 +9,13 @@ import {
 } from 'typeorm';
 import Association from './association.entity';
 import {
+  IsIn,
   IsNotEmpty,
   Matches,
   ValidationError,
   validate,
 } from 'class-validator';
+import SocialNetworkConstants from './constants/social-network.constants';
 
 @Entity({ name: 'SocialNetworks' })
 class SocialNetwork {
@@ -22,6 +24,7 @@ class SocialNetwork {
 
   @Column('text')
   @IsNotEmpty({ message: 'Social network type is required' })
+  @IsIn(SocialNetworkConstants.socialNetworkTypes)
   public socialNetworkType: string;
 
   @Column('text')
@@ -47,11 +50,11 @@ class SocialNetwork {
   @JoinColumn()
   public association: Association;
 
-  setCreationStamps(userId: string): void {
+  public set setCreationStamps(userId: string) {
     this.createdBy = userId;
   }
 
-  setUpdateStamps(userId: string): void {
+  public set setUpdateStamps(userId: string) {
     this.updatedBy = userId;
   }
 

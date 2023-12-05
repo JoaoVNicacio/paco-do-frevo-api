@@ -1,5 +1,5 @@
 class AddressConstants {
-  public static readonly brazilianstates: Array<string> = [
+  public static readonly brazilianStates: Array<string> = [
     'AC',
     'AL',
     'AP',

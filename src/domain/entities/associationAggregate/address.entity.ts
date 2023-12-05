@@ -57,7 +57,7 @@ class AssociationAddress implements IAddress {
   @Column('text')
   @IsNotEmpty({ message: 'State is required' })
   @Length(2)
-  @IsIn(AddressConstants.brazilianstates)
+  @IsIn(AddressConstants.brazilianStates)
   public state: string;
 
   @Column('text')
