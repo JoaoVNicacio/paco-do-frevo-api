@@ -46,7 +46,9 @@ class SocialNetwork {
   @UpdateDateColumn({ type: 'timestamp' })
   public updatedAt: Date;
 
-  @ManyToOne(() => Association, (association) => association.socialNetworks)
+  @ManyToOne(() => Association, (association) => association.socialNetworks, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
   @JoinColumn()
   public association: Association;
 

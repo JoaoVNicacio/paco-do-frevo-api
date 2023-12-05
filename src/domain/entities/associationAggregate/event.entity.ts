@@ -34,7 +34,9 @@ class Event {
   @Min(0)
   public participantsAmount: number;
 
-  @ManyToOne(() => Association, (association) => association.events)
+  @ManyToOne(() => Association, (association) => association.events, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
   public association: Association;
 
   @Column('uuid')

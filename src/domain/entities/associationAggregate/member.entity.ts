@@ -44,7 +44,9 @@ class Member {
   @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
   public isFrevoTheMainRevenueIncome: boolean;
 
-  @ManyToOne(() => Association, (association) => association.members)
+  @ManyToOne(() => Association, (association) => association.members, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
   @JoinColumn()
   public association: Association;
 
