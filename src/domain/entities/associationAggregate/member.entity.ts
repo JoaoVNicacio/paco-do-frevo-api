@@ -7,7 +7,16 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
+import {
+  IsNotEmpty,
+  IsInt,
+  IsBoolean,
+  validate,
+  ValidationError,
+  IsIn,
+} from 'class-validator';
 import Association from './association.entity';
+import MemberConstants from './constants/member.constants';
 
 @Entity({ name: 'Members' })
 class Member {
@@ -15,21 +24,29 @@ class Member {
   public id: string;
 
   @Column('text')
+  @IsNotEmpty({ message: 'Name is required' })
   public name: string;
 
   @Column('text')
+  @IsNotEmpty({ message: 'Surname is required' })
   public surname: string;
 
   @Column('text')
+  @IsNotEmpty({ message: 'Role is required' })
+  @IsIn(MemberConstants.memberTypes)
   public role: string;
 
   @Column({ type: 'int' })
+  @IsInt({ message: 'Actuation time must be an integer' })
   public actuationTimeInMonths: number;
 
   @Column('boolean')
+  @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
   public isFrevoTheMainRevenueIncome: boolean;
 
-  @ManyToOne(() => Association, (association) => association.members)
+  @ManyToOne(() => Association, (association) => association.members, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
   @JoinColumn()
   public association: Association;
 
@@ -47,6 +64,16 @@ class Member {
 
   @Column('uuid', { nullable: true })
   public updatedBy: string;
+
+  public async isValid(): Promise<boolean> {
+    const errors = await this.validateCreation();
+
+    return errors.length === 0;
+  }
+
+  public async validateCreation(): Promise<Array<ValidationError>> {
+    return await validate(this);
+  }
 }
 
 export default Member;

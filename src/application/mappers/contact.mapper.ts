@@ -2,7 +2,7 @@ import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import IMapper from './ientity.mapper';
 import { Injectable } from '@nestjs/common';
-import PhoneNumberMapper from './phoneNumber.mapper';
+import PhoneNumberMapper from './phone-number.mapper';
 
 @Injectable()
 class ContactMapper implements IMapper<Contact, ContactDTO> {
@@ -25,8 +25,6 @@ class ContactMapper implements IMapper<Contact, ContactDTO> {
 
     contact.addressTo = dto.addressTo;
     contact.email = dto.email;
-    contact.createdAt = new Date();
-    contact.updatedAt = new Date();
     contact.phoneNumbers = dto.phoneNumbers.map((phoneNumber) =>
       this._phoneNumberMapper.dtoToEntity(phoneNumber),
     );

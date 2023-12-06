@@ -8,7 +8,7 @@ import IContactRepository from 'src/domain/repositories/icontact.repository';
 class ContactRepository implements IContactRepository {
   constructor(
     @InjectRepository(Contact)
-    private _contactRepository: Repository<Contact>,
+    private readonly _contactRepository: Repository<Contact>,
   ) {}
 
   public async createContact(contact: Contact): Promise<Contact> {

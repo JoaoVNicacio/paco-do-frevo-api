@@ -1,6 +1,6 @@
-import SocialNetwork from 'src/domain/entities/associationAggregate/social_network.entity';
+import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import IMapper from './ientity.mapper';
-import SocialNetworkDTO from '../dtos/associationDtos/social_network.dto';
+import SocialNetworkDTO from '../dtos/associationDtos/social-network.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -19,8 +19,6 @@ class SocialNetworkMapper implements IMapper<SocialNetwork, SocialNetworkDTO> {
 
     entity.socialNetworkType = dto.socialNetworkType;
     entity.url = dto.url;
-    entity.createdAt = new Date();
-    entity.updatedAt = new Date();
 
     return entity;
   }

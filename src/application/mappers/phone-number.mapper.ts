@@ -1,5 +1,5 @@
-import PhoneNumber from 'src/domain/entities/associationAggregate/phoneNumber.entity';
-import PhoneNumberDTO from '../dtos/associationDtos/phoneNumber.dto';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import PhoneNumberDTO from '../dtos/associationDtos/phone-number.dto';
 import IMapper from './ientity.mapper';
 import { Injectable } from '@nestjs/common';
 
@@ -20,8 +20,6 @@ class PhoneNumberMapper implements IMapper<PhoneNumber, PhoneNumberDTO> {
     entity.countryCode = dto.countryCode;
     entity.areaCode = dto.areaCode;
     entity.number = dto.number;
-    entity.createdAt = new Date();
-    entity.updatedAt = new Date();
 
     return entity;
   }

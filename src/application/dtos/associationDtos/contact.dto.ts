@@ -1,4 +1,4 @@
-import PhoneNumberDTO from './phoneNumber.dto';
+import PhoneNumberDTO from './phone-number.dto';
 
 class ContactDTO {
   public addressTo: string;
