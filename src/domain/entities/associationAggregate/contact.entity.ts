@@ -57,7 +57,9 @@ class Contact {
   @IsOptional()
   public updatedBy: string;
 
-  @OneToOne(() => Association)
+  @OneToOne(() => Association, (association) => association.address, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
   @JoinColumn()
   public association: Association;
 

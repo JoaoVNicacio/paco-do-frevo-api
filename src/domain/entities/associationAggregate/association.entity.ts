@@ -16,6 +16,7 @@ import Contact from './contact.entity';
 import {
   IsArray,
   IsBoolean,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -27,6 +28,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ValidCnpjNumber } from 'src/domain/validators/cnpj-number.validator';
+import AssociationConstants from './constants/association.constants';
 
 /** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'Associations' })
@@ -50,6 +52,7 @@ class Association {
 
   @IsNotEmpty()
   @IsString()
+  @IsIn(AssociationConstants.associationTypes)
   @Column('text')
   public associationType: string;
 

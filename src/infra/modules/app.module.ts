@@ -15,6 +15,7 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social-netwo
 import { SocialNetworkModule } from './social-network.module';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
+import { OtherFrevoEntityModule } from './other-frevo-entity.module';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ dotenv.config();
     AssociationModule,
     ContactModule,
     SocialNetworkModule,
+    OtherFrevoEntityModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DB_URL,

@@ -20,7 +20,7 @@ class EventController extends ControllerBase {
     super();
   }
 
-  @Post()
+  @Post('association/:associationId')
   public async createEvent(
     @Body() eventDTO: EventDTO,
     @Param('associationId') associationId: string,

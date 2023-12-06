@@ -13,8 +13,10 @@ import {
   IsBoolean,
   validate,
   ValidationError,
+  IsIn,
 } from 'class-validator';
 import Association from './association.entity';
+import MemberConstants from './constants/member.constants';
 
 @Entity({ name: 'Members' })
 class Member {
@@ -31,6 +33,7 @@ class Member {
 
   @Column('text')
   @IsNotEmpty({ message: 'Role is required' })
+  @IsIn(MemberConstants.memberTypes)
   public role: string;
 
   @Column({ type: 'int' })
@@ -41,7 +44,9 @@ class Member {
   @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
   public isFrevoTheMainRevenueIncome: boolean;
 
-  @ManyToOne(() => Association, (association) => association.members)
+  @ManyToOne(() => Association, (association) => association.members, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
   @JoinColumn()
   public association: Association;
 

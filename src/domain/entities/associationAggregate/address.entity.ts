@@ -57,7 +57,7 @@ class AssociationAddress implements IAddress {
   @Column('text')
   @IsNotEmpty({ message: 'State is required' })
   @Length(2)
-  @IsIn(AddressConstants.brazilianstates)
+  @IsIn(AddressConstants.brazilianStates)
   public state: string;
 
   @Column('text')
@@ -70,7 +70,9 @@ class AssociationAddress implements IAddress {
   @IsPostalCode('BR', { message: 'Invalid ZIP code format' })
   public zipCode: string;
 
-  @OneToOne(() => Association, (address) => address.address)
+  @OneToOne(() => Association, (address) => address.address, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
   public association: Association;
 
   @CreateDateColumn({ type: 'timestamp' })
