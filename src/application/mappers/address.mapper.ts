@@ -7,6 +7,9 @@ import { Injectable } from '@nestjs/common';
 // eslint-disable-next-line prettier/prettier
 class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO> {
   public entityToDTO(entity: AssociationAddress): AssociationAddressDTO {
+    if (!entity) {
+      return null;
+    }
     const dto = new AssociationAddressDTO();
 
     dto.addressSite = entity.addressSite;
@@ -22,6 +25,10 @@ class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO
   }
 
   public dtoToEntity(dto: AssociationAddressDTO): AssociationAddress {
+    if (!dto) {
+      return null;
+    }
+
     const entity = new AssociationAddress();
 
     entity.addressSite = dto.addressSite;
@@ -32,8 +39,6 @@ class AddressMapper implements IMapper<AssociationAddress, AssociationAddressDTO
     entity.state = dto.state;
     entity.country = dto.country;
     entity.zipCode = dto.zipCode;
-    entity.createdAt = new Date();
-    entity.updatedAt = new Date();
 
     return entity;
   }

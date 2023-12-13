@@ -6,7 +6,12 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 class PhoneNumberMapper implements IMapper<PhoneNumber, PhoneNumberDTO> {
   public entityToDTO(entity: PhoneNumber): PhoneNumberDTO {
+    if (!entity) {
+      return null;
+    }
+
     const dto = new PhoneNumberDTO();
+
     dto.countryCode = entity.countryCode;
     dto.areaCode = entity.areaCode;
     dto.number = entity.number;
@@ -15,6 +20,10 @@ class PhoneNumberMapper implements IMapper<PhoneNumber, PhoneNumberDTO> {
   }
 
   public dtoToEntity(dto: PhoneNumberDTO): PhoneNumber {
+    if (!dto) {
+      return null;
+    }
+
     const entity = new PhoneNumber();
 
     entity.countryCode = dto.countryCode;

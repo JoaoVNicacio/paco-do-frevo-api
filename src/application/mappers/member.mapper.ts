@@ -6,6 +6,10 @@ import IMapper from './ientity.mapper';
 @Injectable()
 class MemberMapper implements IMapper<Member, MemberDTO> {
   public entityToDTO(entity: Member): MemberDTO {
+    if (!entity) {
+      return null;
+    }
+
     const dto = new MemberDTO();
 
     dto.name = entity.name;
@@ -18,6 +22,10 @@ class MemberMapper implements IMapper<Member, MemberDTO> {
   }
 
   public dtoToEntity(dto: MemberDTO): Member {
+    if (!dto) {
+      return null;
+    }
+
     const entity = new Member();
 
     entity.name = dto.name;

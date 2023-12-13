@@ -1,4 +1,4 @@
-/* The `PagedResults` class represents a paginated result set with information about the current page,
+/** The `PagedResults` class represents a paginated result set with information about the current page,
 total count, and whether there is a next page. */
 class PagedResults<T> {
   public result: Array<T>;
