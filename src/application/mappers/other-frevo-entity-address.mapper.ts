@@ -9,6 +9,10 @@ class OtherFrevoEntityAddressMapper implements IMapper<OtherFrevoEntityAddress, 
   public entityToDTO(
     entity: OtherFrevoEntityAddress,
   ): OtherFrevoEntityAddressDTO {
+    if (!entity) {
+      return null;
+    }
+
     const dto = new OtherFrevoEntityAddressDTO();
 
     dto.addressSite = entity.addressSite;
@@ -24,6 +28,10 @@ class OtherFrevoEntityAddressMapper implements IMapper<OtherFrevoEntityAddress, 
   }
 
   public dtoToEntity(dto: OtherFrevoEntityAddressDTO): OtherFrevoEntityAddress {
+    if (!dto) {
+      return null;
+    }
+
     const entity = new OtherFrevoEntityAddress();
 
     entity.addressSite = dto.addressSite;

@@ -6,6 +6,10 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 class SocialNetworkMapper implements IMapper<SocialNetwork, SocialNetworkDTO> {
   public entityToDTO(entity: SocialNetwork): SocialNetworkDTO {
+    if (!entity) {
+      return null;
+    }
+
     const dto = new SocialNetworkDTO();
 
     dto.socialNetworkType = entity.socialNetworkType;
@@ -15,6 +19,10 @@ class SocialNetworkMapper implements IMapper<SocialNetwork, SocialNetworkDTO> {
   }
 
   public dtoToEntity(dto: SocialNetworkDTO): SocialNetwork {
+    if (!dto) {
+      return null;
+    }
+
     const entity = new SocialNetwork();
 
     entity.socialNetworkType = dto.socialNetworkType;

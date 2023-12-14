@@ -13,6 +13,10 @@ class OtherFrevoEntityMapper
   ) {}
 
   public entityToDTO(entity: OtherFrevoEntity): OtherFrevoEntityDTO {
+    if (!entity) {
+      return null;
+    }
+
     const dto = new OtherFrevoEntityDTO();
 
     dto.name = entity.name;
@@ -27,6 +31,10 @@ class OtherFrevoEntityMapper
   }
 
   public dtoToEntity(dto: OtherFrevoEntityDTO): OtherFrevoEntity {
+    if (!dto) {
+      return null;
+    }
+
     const entity = new OtherFrevoEntity();
 
     entity.name = dto.name;
