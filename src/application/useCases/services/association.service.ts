@@ -29,11 +29,13 @@ class AssociationService implements IAssociationService {
       );
     }
 
-    association.setCnpj = CleanStringBuilder.fromString(association.getCnpj)
-      .withoutDashes()
-      .withoutDots()
-      .withoutSlashes()
-      .build();
+    if (association.getCnpj) {
+      association.setCnpj = CleanStringBuilder.fromString(association.getCnpj)
+        .withoutDashes()
+        .withoutDots()
+        .withoutSlashes()
+        .build();
+    }
 
     const insertResponse =
       await this._associationRepository.createAssociation(association);

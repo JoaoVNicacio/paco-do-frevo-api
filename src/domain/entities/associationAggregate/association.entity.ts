@@ -75,7 +75,7 @@ class Association {
   @IsOptional()
   @IsString()
   @Column({ nullable: true })
-  @Matches(/^(\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}|\d{14})$/, {
+  @Matches(/^(\d{14})$/, {
     message: 'Invalid CNPJ format',
   })
   @ValidCnpjNumber({ message: 'The given CNPJ is invalid' })

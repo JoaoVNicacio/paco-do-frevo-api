@@ -1,6 +1,6 @@
 import { ValidationError } from 'class-validator';
 
-/* The ValidationResponse class represents the result of a validation process, including the output,
+/** The ValidationResponse class represents the result of a validation process, including the output,
 validation result, and whether it is valid or not. */
 class ValidationResponse<TEntity> {
   public output: TEntity;
