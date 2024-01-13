@@ -1,3 +1,4 @@
+import { UserModule } from './user.module';
 import { EventModule } from './event.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,11 +17,13 @@ import { SocialNetworkModule } from './social-network.module';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 import { OtherFrevoEntityModule } from './other-frevo-entity.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 dotenv.config();
 
 @Module({
   imports: [
+    UserModule,
     EventModule,
     PhoneNumberModule,
     AssociationModule,
@@ -48,6 +51,7 @@ dotenv.config();
       migrations: ['src/migration/**/*.ts'],
       subscribers: ['src/subscriber/**/*.ts'],
     }),
+    MongooseModule.forRoot(process.env.MONGO_DB_URL),
   ],
   controllers: [],
   providers: [],

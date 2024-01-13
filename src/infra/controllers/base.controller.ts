@@ -70,6 +70,7 @@ class ControllerBase {
   protected throwInternalError(error, message: string): void {
     if (!(error instanceof HttpException)) {
       throw new InternalServerErrorException(
+        error.message,
         `Oops, ${message.trim()}. Please contact our support`,
       );
     }
