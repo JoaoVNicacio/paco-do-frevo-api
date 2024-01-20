@@ -1,13 +1,16 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import ControllerBase from './base.controller';
-import UserService from 'src/application/useCases/services/user.service';
 import { ApiTags } from '@nestjs/swagger';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
+import IUserService from 'src/domain/services/iuser.service';
 
-@ApiTags('SocialNetworks')
+@ApiTags('Users')
 @Controller('users')
 class UserController extends ControllerBase {
-  constructor(private readonly _userService: UserService) {
+  constructor(
+    @Inject(IUserService)
+    private readonly _userService: IUserService,
+  ) {
     super();
   }
 

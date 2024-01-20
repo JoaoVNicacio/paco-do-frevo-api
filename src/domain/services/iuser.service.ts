@@ -5,4 +5,6 @@ interface IUserService {
   createUser(user: UserDTO): Promise<User>;
 }
 
+const IUserService = Symbol('IUserService');
+
 export default IUserService;

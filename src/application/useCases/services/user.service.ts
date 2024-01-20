@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
 import UserMapper from 'src/application/mappers/user.mapper';
 import User from 'src/domain/entities/userAggregate/user.entity';
+import IUserRepository from 'src/domain/repositories/iuser.repository';
 import IUserService from 'src/domain/services/iuser.service';
-import UserRepository from 'src/infra/repositories/user.repository';
 
 @Injectable()
 class UserService implements IUserService {
   constructor(
-    private readonly _userRepository: UserRepository,
+    @Inject(IUserRepository)
+    private readonly _userRepository: IUserRepository,
     private readonly _userMapper: UserMapper,
   ) {}
 

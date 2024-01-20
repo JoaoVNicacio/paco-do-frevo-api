@@ -5,6 +5,8 @@ import UserRepository from '../repositories/user.repository';
 import UserService from 'src/application/useCases/services/user.service';
 import UserController from '../controllers/user.controller';
 import UserMapper from 'src/application/mappers/user.mapper';
+import IUserRepository from 'src/domain/repositories/iuser.repository';
+import IUserService from 'src/domain/services/iuser.service';
 
 @Module({
   imports: [
@@ -15,7 +17,17 @@ import UserMapper from 'src/application/mappers/user.mapper';
       },
     ]),
   ],
-  providers: [UserRepository, UserService, UserMapper],
+  providers: [
+    {
+      provide: IUserRepository,
+      useClass: UserRepository,
+    },
+    {
+      provide: IUserService,
+      useClass: UserService,
+    },
+    UserMapper,
+  ],
   controllers: [UserController],
 })
 export class UserModule {}

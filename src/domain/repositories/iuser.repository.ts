@@ -7,4 +7,6 @@ interface IUserRepository {
   deleteUser(id: string): Promise<void>;
 }
 
+const IUserRepository = Symbol('IUserRepository');
+
 export default IUserRepository;
