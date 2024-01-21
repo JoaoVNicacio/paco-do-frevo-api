@@ -3,46 +3,55 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
-import EventService from 'src/application/useCases/services/event.service';
 import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
+import IEventService from 'src/domain/services/ievent.service';
+import UUIDParam from 'src/application/requestObjects/uuid.param';
 
 @ApiTags('Events')
 @Controller('event')
 class EventController extends ControllerBase {
-  constructor(private readonly _eventService: EventService) {
+  constructor(
+    @Inject(IEventService)
+    private readonly _eventService: IEventService,
+  ) {
     super();
   }
 
-  @Post('association/:associationId')
+  @Post('association/:id')
   public async createEvent(
     @Body() eventDTO: EventDTO,
-    @Param('associationId') associationId: string,
+    @Param('id') associationId: UUIDParam,
   ): Promise<Event> {
     try {
       const event = await this._eventService.createEvent(
         eventDTO,
-        associationId,
+        associationId.id,
       );
 
       return this.sendCustomValidationResponse<Event>(event);
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error creating the event');
+      this.throwInternalError(error, 'houve um erro ao criar event');
     }
   }
 
   @Get('id/:id')
-  public async getAssociationById(@Param('id') id: string): Promise<Event> {
+  public async getAssociationById(
+    @Param('id') idParam: UUIDParam,
+  ): Promise<Event> {
     try {
-      return this.sendCustomResponse(await this._eventService.findById(id));
+      return this.sendCustomResponse(
+        await this._eventService.findById(idParam.id),
+      );
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
@@ -52,17 +61,17 @@ class EventController extends ControllerBase {
 
   @Put('id/:id')
   public async updtadeAssociation(
-    @Param('id') id: string,
+    @Param('id') idParam: UUIDParam,
     @Body() eventDTO: EventDTO,
   ): Promise<Event> {
     try {
-      const event = await this._eventService.updateEvent(id, eventDTO);
+      const event = await this._eventService.updateEvent(idParam.id, eventDTO);
 
       return this.sendCustomValidationResponse<Event>(event);
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error updating the contact');
+      this.throwInternalError(error, 'houve um erro ao atualizar contact');
     }
   }
 
@@ -73,7 +82,7 @@ class EventController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error deleting the event');
+      this.throwInternalError(error, 'houve um erro ao remover event');
     }
   }
 }

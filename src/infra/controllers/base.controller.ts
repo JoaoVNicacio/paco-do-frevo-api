@@ -32,7 +32,7 @@ class ControllerBase {
       );
 
       throw new BadRequestException({
-        message: `The given ${typeof validationResponse.output} is invalid.`,
+        message: `A requisição com ${typeof validationResponse.output} é inválida.`,
         errors: formattedErrors,
       });
     }
@@ -49,7 +49,7 @@ class ControllerBase {
    */
   protected sendCustomResponse<T>(response: T): T {
     if (!response) {
-      throw new NotFoundException('The requested item was not found.');
+      throw new NotFoundException('O item requisitado não foi encontrado.');
     }
 
     if (response instanceof Array && response.length === 0) {
@@ -70,8 +70,7 @@ class ControllerBase {
   protected throwInternalError(error, message: string): void {
     if (!(error instanceof HttpException)) {
       throw new InternalServerErrorException(
-        error.message,
-        `Oops, ${message.trim()}. Please contact our support`,
+        `Oops, ${message.trim()}. Por favor, relate ao suporte.`,
       );
     }
 

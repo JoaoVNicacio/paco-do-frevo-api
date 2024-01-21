@@ -21,6 +21,8 @@ import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import ContactMapper from 'src/application/mappers/contact.mapper';
 import EventMapper from 'src/application/mappers/event.mapper';
 import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
+import IAssociationService from 'src/domain/services/iassociation.service';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 
 @Module({
   imports: [
@@ -41,8 +43,19 @@ import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
   ],
   controllers: [AssociationController],
   providers: [
-    AssociationService,
-    AssociationRepository,
+    // Services:
+    {
+      provide: IAssociationService,
+      useClass: AssociationService,
+    },
+
+    // Repositories:
+    {
+      provide: IAssociationRepository,
+      useClass: AssociationRepository,
+    },
+
+    // Mappers:
     AssociationMapper,
     AddressMapper,
     MemberMapper,
