@@ -1,18 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
 import EventMapper from 'src/application/mappers/event.mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
+import IEventRepository from 'src/domain/repositories/ievent.repository';
 import IEventService from 'src/domain/services/ievent.service';
-import AssociationRepository from 'src/infra/repositories/association.repository';
-import EventRepository from 'src/infra/repositories/event.repository';
 
 @Injectable()
 class EventService implements IEventService {
   constructor(
-    private readonly _eventRepository: EventRepository,
-    private readonly _associationRepository: AssociationRepository,
+    @Inject(IEventRepository)
+    private readonly _eventRepository: IEventRepository,
+
+    @Inject(IAssociationRepository)
+    private readonly _associationRepository: IAssociationRepository,
+
     private readonly _eventMapper: EventMapper,
   ) {}
 

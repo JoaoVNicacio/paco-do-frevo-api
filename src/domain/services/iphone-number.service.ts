@@ -16,4 +16,6 @@ interface IPhoneNumberService {
   deletePhoneNumber(id: string): Promise<void>;
 }
 
+const IPhoneNumberService = Symbol('IPhoneNumberService');
+
 export default IPhoneNumberService;

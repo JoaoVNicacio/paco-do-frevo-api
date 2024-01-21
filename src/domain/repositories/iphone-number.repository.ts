@@ -11,4 +11,6 @@ interface IPhoneNumberRepository {
   deletePhoneNumber(id: string): Promise<void>;
 }
 
+const IPhoneNumberRepository = Symbol('IPhoneNumberRepository');
+
 export default IPhoneNumberRepository;

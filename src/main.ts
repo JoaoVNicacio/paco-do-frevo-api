@@ -11,7 +11,9 @@ dotenv.config();
 async function bootstrap() {
   const server = express();
 
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server), {
+    logger: console,
+  });
 
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());

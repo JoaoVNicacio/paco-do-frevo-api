@@ -1,17 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import AssociationMapper from 'src/application/mappers/association.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import CleanStringBuilder from 'src/application/utils/clean-string.builder';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IAssociationService from 'src/domain/services/iassociation.service';
-import AssociationRepository from 'src/infra/repositories/association.repository';
 
 @Injectable()
 class AssociationService implements IAssociationService {
   constructor(
-    private readonly _associationRepository: AssociationRepository,
+    @Inject(IAssociationRepository)
+    private readonly _associationRepository: IAssociationRepository,
     private readonly _associationMapper: AssociationMapper,
   ) {}
 

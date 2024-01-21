@@ -24,7 +24,7 @@ class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
     return this._otherFrevoEntityRepository.find();
   }
 
-  public async getPagedOtherFrevoEntitys(
+  public async getPagedOtherFrevoEntities(
     page: number,
     pageSize: number,
   ): Promise<{

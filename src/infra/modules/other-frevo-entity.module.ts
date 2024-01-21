@@ -8,6 +8,8 @@ import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/othe
 import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 import { Module } from '@nestjs/common';
 import OtherFrevoEntityAddressMapper from 'src/application/mappers/other-frevo-entity-address.mapper';
+import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
+import IOtherFrevoEntityService from 'src/domain/services/iother-frevo-entity.service';
 
 @Module({
   imports: [
@@ -15,8 +17,19 @@ import OtherFrevoEntityAddressMapper from 'src/application/mappers/other-frevo-e
   ],
   controllers: [OtherFrevoEntityController],
   providers: [
-    OtherFrevoEntityService,
-    OtherFrevoEntityRepository,
+    // Services:
+    {
+      provide: IOtherFrevoEntityService,
+      useClass: OtherFrevoEntityService,
+    },
+
+    // Repositories:
+    {
+      provide: IOtherFrevoEntityRepository,
+      useClass: OtherFrevoEntityRepository,
+    },
+
+    // Mappers:
     OtherFrevoEntityMapper,
     OtherFrevoEntityAddressMapper,
     MemberMapper,

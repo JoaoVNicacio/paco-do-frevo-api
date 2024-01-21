@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
 import OtherFrevoEntityMapper from 'src/application/mappers/other-frevo-entity.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import IOtherFrevoEntityService from 'src/domain/services/iother-frevo-entity.service';
-import OtherFrevoEntityRepository from 'src/infra/repositories/other-frevo-entity.repository';
 
 @Injectable()
 class OtherFrevoEntityService implements IOtherFrevoEntityService {
   constructor(
-    private readonly _otherFrevoEntityRepository: OtherFrevoEntityRepository,
+    @Inject(IOtherFrevoEntityRepository)
+    private readonly _otherFrevoEntityRepository: IOtherFrevoEntityRepository,
     private readonly _otherFrevoEntityMapper: OtherFrevoEntityMapper,
   ) {}
 
@@ -48,7 +49,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     pageSize: number,
   ): Promise<PagedResults<OtherFrevoEntity>> {
     const results =
-      await this._otherFrevoEntityRepository.getPagedOtherFrevoEntitys(
+      await this._otherFrevoEntityRepository.getPagedOtherFrevoEntities(
         page,
         pageSize,
       );

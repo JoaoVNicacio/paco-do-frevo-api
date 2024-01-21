@@ -10,6 +10,9 @@ import { PhoneNumberModule } from './phone-number.module';
 import ContactMapper from 'src/application/mappers/contact.mapper';
 import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import AssociationRepository from '../repositories/association.repository';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
+import IContactRepository from 'src/domain/repositories/icontact.repository';
+import IContactService from 'src/domain/services/icontact.service';
 
 @Module({
   imports: [
@@ -18,10 +21,24 @@ import AssociationRepository from '../repositories/association.repository';
   ],
   controllers: [ContactController],
   providers: [
-    ContactRepository,
+    // Services:
+    {
+      provide: IContactService,
+      useClass: ContactService,
+    },
+
+    // Repositories:
+    {
+      provide: IContactRepository,
+      useClass: ContactRepository,
+    },
+    {
+      provide: IAssociationRepository,
+      useClass: AssociationRepository,
+    },
+
+    // Mappers:
     ContactMapper,
-    ContactService,
-    AssociationRepository,
     PhoneNumberMapper,
   ],
 })

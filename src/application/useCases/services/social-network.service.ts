@@ -1,19 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
-import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
+import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import ISocialNetworkService from 'src/domain/services/isocial-network.service';
-import AssociationRepository from 'src/infra/repositories/association.repository';
-import SocialNetworkRepository from 'src/infra/repositories/social-network.repository';
 
 @Injectable()
 class SocialNetworkService implements ISocialNetworkService {
   constructor(
-    private readonly _socialNetworkRepository: SocialNetworkRepository,
-    private readonly _associationRepository: AssociationRepository,
+    @Inject(ISocialNetworkRepository)
+    private readonly _socialNetworkRepository: ISocialNetworkRepository,
+
+    @Inject(IAssociationRepository)
+    private readonly _associationRepository: IAssociationRepository,
+
     private readonly _socialNetworkMapper: SocialNetworkMapper,
   ) {}
 
@@ -56,28 +59,8 @@ class SocialNetworkService implements ISocialNetworkService {
     );
   }
 
-  public async getAllSocialNetwork(): Promise<Array<SocialNetwork>> {
+  public async getAllSocialNetworks(): Promise<Array<SocialNetwork>> {
     return await this._socialNetworkRepository.getAll();
-  }
-
-  public async getPagedSocialNetworks(
-    page: number,
-    pageSize: number,
-  ): Promise<PagedResults<SocialNetwork>> {
-    const results = await this._socialNetworkRepository.getPagedSocialNetworks(
-      page,
-      pageSize,
-    );
-
-    const hasNextPage = results.total > page * pageSize;
-
-    return new PagedResults(
-      results.socialNetwork,
-      hasNextPage,
-      page,
-      pageSize,
-      results.total,
-    );
   }
 
   public async getSocialNetworkById(id: string): Promise<SocialNetwork> {

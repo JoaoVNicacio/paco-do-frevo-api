@@ -7,20 +7,24 @@ import {
   Param,
   Body,
   Query,
+  Inject,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import AssociationService from 'src/application/useCases/services/association.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
-import PagingParams from './requestObjects/paging.params';
-import UUIDParam from './requestObjects/uuid.param';
+import PagingParams from '../../application/requestObjects/paging.params';
+import UUIDParam from '../../application/requestObjects/uuid.param';
+import IAssociationService from 'src/domain/services/iassociation.service';
 
 @ApiTags('Association')
 @Controller('associations')
 class AssociationController extends ControllerBase {
-  constructor(private readonly _associationService: AssociationService) {
+  constructor(
+    @Inject(IAssociationService)
+    private readonly _associationService: IAssociationService,
+  ) {
     super();
   }
 
@@ -36,10 +40,7 @@ class AssociationController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error creating the association',
-      );
+      this.throwInternalError(error, 'houve um erro ao criar association');
     }
   }
 
@@ -50,10 +51,7 @@ class AssociationController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error retrieving the associations',
-      );
+      this.throwInternalError(error, 'houve um erro ao obter associations');
     }
   }
 
@@ -69,10 +67,7 @@ class AssociationController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error retrieving the associations',
-      );
+      this.throwInternalError(error, 'houve um erro ao obter associations');
     }
   }
 
@@ -87,10 +82,7 @@ class AssociationController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error retrieving the association',
-      );
+      this.throwInternalError(error, 'houve um erro ao obter association');
     }
   }
 
@@ -107,10 +99,7 @@ class AssociationController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error creating the association',
-      );
+      this.throwInternalError(error, 'houve um erro ao editar association');
     }
   }
 
@@ -121,10 +110,7 @@ class AssociationController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error deleting the association',
-      );
+      this.throwInternalError(error, 'houve um erro ao remover association');
     }
   }
 }

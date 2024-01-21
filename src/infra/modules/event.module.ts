@@ -7,15 +7,32 @@ import EventService from 'src/application/useCases/services/event.service';
 import EventRepository from '../repositories/event.repository';
 import EventMapper from 'src/application/mappers/event.mapper';
 import AssociationRepository from '../repositories/association.repository';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
+import IEventService from 'src/domain/services/ievent.service';
+import IEventRepository from 'src/domain/repositories/ievent.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Event, Association])],
   controllers: [EventController],
   providers: [
-    EventService,
-    EventRepository,
+    // Services:
+    {
+      provide: IEventService,
+      useClass: EventService,
+    },
+
+    // Repositories:
+    {
+      provide: IEventRepository,
+      useClass: EventRepository,
+    },
+    {
+      provide: IAssociationRepository,
+      useClass: AssociationRepository,
+    },
+
+    // Mappers:
     EventMapper,
-    AssociationRepository,
   ],
 })
 export class EventModule {}

@@ -16,4 +16,6 @@ interface IContactService {
   deleteContact(id: string): Promise<void>;
 }
 
+const IContactService = Symbol('IContactService');
+
 export default IContactService;
