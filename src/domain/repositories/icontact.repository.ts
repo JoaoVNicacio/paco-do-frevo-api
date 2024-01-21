@@ -9,4 +9,6 @@ interface IContactRepository {
   deleteContact(id: string): Promise<void>;
 }
 
+const IContactRepository = Symbol('IContactRepository');
+
 export default IContactRepository;

@@ -34,7 +34,6 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
     socialNetwork: Array<SocialNetwork>;
     total: number;
   }> {
-    // eslint-disable-next-line prettier/prettier
     const queryBuilder =
       this._socialNetworkRepository.createQueryBuilder('socialNetwork');
 

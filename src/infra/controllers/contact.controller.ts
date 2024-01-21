@@ -6,37 +6,41 @@ import {
   Delete,
   Param,
   Body,
+  Inject,
 } from '@nestjs/common';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
-import ContactService from 'src/application/useCases/services/contact.service';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
-import UUIDParam from './requestObjects/uuid.param';
+import UUIDParam from '../../application/requestObjects/uuid.param';
+import IContactService from 'src/domain/services/icontact.service';
 
 @ApiTags('Contacts')
 @Controller('contacts')
 class ContactController extends ControllerBase {
-  constructor(private readonly contactService: ContactService) {
+  constructor(
+    @Inject(IContactService)
+    private readonly contactService: IContactService,
+  ) {
     super();
   }
 
-  @Post('association/:associationId')
+  @Post('association/:id')
   public async createContact(
     @Body() contactDTO: ContactDTO,
-    @Param('associationId') associationId: string,
+    @Param('id') idParam: UUIDParam,
   ): Promise<Contact> {
     try {
       const createdContact = await this.contactService.createContact(
         contactDTO,
-        associationId,
+        idParam.id,
       );
 
       return this.sendCustomValidationResponse<Contact>(createdContact);
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error creating the contact');
+      this.throwInternalError(error, 'houve um erro ao criar contact');
     }
   }
 
@@ -49,7 +53,7 @@ class ContactController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error creating the contact');
+      this.throwInternalError(error, 'houve um erro ao criar contact');
     }
   }
 
@@ -68,7 +72,7 @@ class ContactController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error updating the contact');
+      this.throwInternalError(error, 'houve um erro ao atualizar contact');
     }
   }
 
@@ -79,7 +83,7 @@ class ContactController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error deleting the contact');
+      this.throwInternalError(error, 'houve um erro ao remover contact');
     }
   }
 }

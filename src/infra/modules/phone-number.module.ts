@@ -7,14 +7,31 @@ import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import PhoneNumberRepository from '../repositories/phone-number.repository';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import ContactRepository from '../repositories/contact.repository';
+import IContactRepository from 'src/domain/repositories/icontact.repository';
+import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
+import IPhoneNumberService from 'src/domain/services/iphone-number.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhoneNumber, Contact])],
   controllers: [PhoneNumberController],
   providers: [
-    PhoneNumberService,
-    PhoneNumberRepository,
-    ContactRepository,
+    // Services:
+    {
+      provide: IPhoneNumberService,
+      useClass: PhoneNumberService,
+    },
+
+    // Repositories:
+    {
+      provide: IPhoneNumberRepository,
+      useClass: PhoneNumberRepository,
+    },
+    {
+      provide: IContactRepository,
+      useClass: ContactRepository,
+    },
+
+    // Mappers:
     PhoneNumberMapper,
   ],
 })

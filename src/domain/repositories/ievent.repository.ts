@@ -7,4 +7,6 @@ interface IEventRepository {
   deleteEvent(id: string): Promise<void>;
 }
 
+const IEventRepository = Symbol('IEventRepository');
+
 export default IEventRepository;

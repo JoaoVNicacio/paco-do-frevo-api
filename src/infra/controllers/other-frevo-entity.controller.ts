@@ -7,19 +7,23 @@ import {
   Param,
   Body,
   Query,
+  Inject,
 } from '@nestjs/common';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
-import OtherFrevoEntityService from 'src/application/useCases/services/other-frevo-entity.service';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import IOtherFrevoEntityService from 'src/domain/services/iother-frevo-entity.service';
+import UUIDParam from 'src/application/requestObjects/uuid.param';
+import PagingParams from 'src/application/requestObjects/paging.params';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
 class OtherFrevoEntityController extends ControllerBase {
   constructor(
-    private readonly _otherFrevoEntityService: OtherFrevoEntityService,
+    @Inject(IOtherFrevoEntityService)
+    private readonly _otherFrevoEntityService: IOtherFrevoEntityService,
   ) {
     super();
   }
@@ -38,10 +42,7 @@ class OtherFrevoEntityController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error creating the otherFrevoEntity',
-      );
+      this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
     }
   }
 
@@ -54,57 +55,53 @@ class OtherFrevoEntityController extends ControllerBase {
     catch (error) {
       this.throwInternalError(
         error,
-        'There was an error retrieving the otherFrevoEntities',
+        'houve um erro ao obter otherFrevoEntities',
       );
     }
   }
 
   @Get('/paged')
   public async getPagedOtherFrevoEntities(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
+    @Query() pagingParams: PagingParams,
   ): Promise<PagedResults<OtherFrevoEntity>> {
     try {
       return await this._otherFrevoEntityService.getPagedOtherFrevoEntities(
-        page,
-        pageSize,
+        pagingParams.page,
+        pagingParams.pageSize,
       );
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
       this.throwInternalError(
         error,
-        'There was an error retrieving the otherFrevoEntities',
+        'houve um erro ao obter otherFrevoEntities',
       );
     }
   }
 
   @Get('id/:id')
   public async getOtherFrevoEntityById(
-    @Param('id') id: string,
+    @Param('id') idParam: UUIDParam,
   ): Promise<OtherFrevoEntity> {
     try {
       return this.sendCustomResponse<OtherFrevoEntity>(
-        await this._otherFrevoEntityService.getOtherFrevoEntityById(id),
+        await this._otherFrevoEntityService.getOtherFrevoEntityById(idParam.id),
       );
       // eslint-disable-next-line prettier/prettier
   }
   catch(error){
-      this.throwInternalError(
-        error,
-        'There was an error retrieving the otherFrevoEntity',
-      );
+      this.throwInternalError(error, 'houve um erro ao obter otherFrevoEntity');
     }
   }
 
   @Put('id/:id')
   public async updateOtherFrevoEntity(
-    @Param('id') id: string,
+    @Param('id') idParam: UUIDParam,
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
     try {
       // eslint-disable-next-line prettier/prettier
-      const updatedOtherFrevoEntity = await this._otherFrevoEntityService.updateOtherFrevoEntity(id,otherFrevoEntityDTO);
+      const updatedOtherFrevoEntity = await this._otherFrevoEntityService.updateOtherFrevoEntity(idParam.id ,otherFrevoEntityDTO);
 
       return this.sendCustomValidationResponse<OtherFrevoEntity>(
         updatedOtherFrevoEntity,
@@ -112,23 +109,22 @@ class OtherFrevoEntityController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error creating the otherFrevoEntity',
-      );
+      this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
     }
   }
 
   @Delete('id/:id')
-  public async deleteOtherFrevoEntity(@Param('id') id: string): Promise<void> {
+  public async deleteOtherFrevoEntity(
+    @Param('id') idParam: UUIDParam,
+  ): Promise<void> {
     try {
-      await this._otherFrevoEntityService.deleteOtherFrevoEntity(id);
+      await this._otherFrevoEntityService.deleteOtherFrevoEntity(idParam.id);
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
       this.throwInternalError(
         error,
-        'There was an error deleting the otherFrevoEntity',
+        'houve um erro ao remover otherFrevoEntity',
       );
     }
   }

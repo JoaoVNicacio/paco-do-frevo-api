@@ -7,7 +7,7 @@ interface ISocialNetworkService {
     socialNetowrkDTO: SocialNetworkDTO,
     associationId: string,
   ): Promise<ValidationResponse<SocialNetwork>>;
-  getAllSocialNetwork(): Promise<Array<SocialNetwork>>;
+  getAllSocialNetworks(): Promise<Array<SocialNetwork>>;
   getSocialNetworkById(id: string): Promise<SocialNetwork>;
   updateSocialNetwork(
     id: string,
@@ -15,5 +15,7 @@ interface ISocialNetworkService {
   ): Promise<ValidationResponse<SocialNetwork>>;
   deleteSocialNetwork(id: string): Promise<void>;
 }
+
+const ISocialNetworkService = Symbol('ISocialNetworkService');
 
 export default ISocialNetworkService;

@@ -1,18 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
 import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import IContactRepository from 'src/domain/repositories/icontact.repository';
+import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
-import ContactRepository from 'src/infra/repositories/contact.repository';
-import PhoneNumberRepository from 'src/infra/repositories/phone-number.repository';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
   constructor(
-    private readonly _phoneNumberRepository: PhoneNumberRepository,
-    private readonly _contactRepository: ContactRepository,
+    @Inject(IPhoneNumberRepository)
+    private readonly _phoneNumberRepository: IPhoneNumberRepository,
+
+    @Inject(IContactRepository)
+    private readonly _contactRepository: IContactRepository,
+
     private readonly _phoneNumberMapper: PhoneNumberMapper,
   ) {}
 

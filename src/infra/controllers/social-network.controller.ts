@@ -6,33 +6,36 @@ import {
   Delete,
   Param,
   Body,
-  Query,
+  Inject,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
-import SocialNetworkService from 'src/application/useCases/services/social-network.service';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
+import ISocialNetworkService from 'src/domain/services/isocial-network.service';
+import UUIDParam from 'src/application/requestObjects/uuid.param';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')
 class SocialNetworkController extends ControllerBase {
-  constructor(private readonly socialNetworkService: SocialNetworkService) {
+  constructor(
+    @Inject(ISocialNetworkService)
+    private readonly _socialNetworkService: ISocialNetworkService,
+  ) {
     super();
   }
 
-  @Post('association/:associationId')
+  @Post('association/:id')
   public async createSocialNetwork(
     @Body() socialNetworkDTO: SocialNetworkDTO,
-    @Param('associationId') associationId: string,
+    @Param('id') idParam: UUIDParam,
   ): Promise<SocialNetwork> {
     try {
       // eslint-disable-next-line prettier/prettier
       const createdSocialNetwork =
-        await this.socialNetworkService.createSocialNetwork(
+        await this._socialNetworkService.createSocialNetwork(
           socialNetworkDTO,
-          associationId,
+          idParam.id,
         );
 
       return this.sendCustomValidationResponse<SocialNetwork>(
@@ -41,15 +44,15 @@ class SocialNetworkController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error creating the network');
+      this.throwInternalError(error, 'houve um erro ao criar network');
     }
   }
 
   @Get()
-  public async getAllSocialNetworks(): Promise<SocialNetwork[]> {
+  public async getAllSocialNetworks(): Promise<Array<SocialNetwork>> {
     try {
       const socialNetwork =
-        await this.socialNetworkService.getAllSocialNetwork();
+        await this._socialNetworkService.getAllSocialNetworks();
 
       return socialNetwork;
       // eslint-disable-next-line prettier/prettier
@@ -62,49 +65,31 @@ class SocialNetworkController extends ControllerBase {
     }
   }
 
-  @Get('paged')
-  public async getPagedSocialNetworks(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-  ): Promise<PagedResults<SocialNetwork>> {
-    try {
-      const result = await this.socialNetworkService.getPagedSocialNetworks(
-        page,
-        pageSize,
-      );
-
-      return result;
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error retrieving the networks',
-      );
-    }
-  }
-
   @Get('id/:id')
-  public async getById(@Param('id') id: string): Promise<SocialNetwork> {
+  public async getById(
+    @Param('id') idParam: UUIDParam,
+  ): Promise<SocialNetwork> {
     try {
-      return this.sendCustomResponse(await this.getById(id));
+      return this.sendCustomResponse(
+        await this._socialNetworkService.getSocialNetworkById(idParam.id),
+      );
       // eslint-disable-next-line prettier/prettier
     }
     catch(error){
-      this.throwInternalError(error, 'There was an error creating the contact');
+      this.throwInternalError(error, 'houve um erro ao criar contact');
     }
   }
 
   @Put('id/:id')
   public async updateSocialNetwork(
-    @Param('id') id: string,
+    @Param('id') idParam: UUIDParam,
     @Body() socialNetwork_DTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     try {
       // eslint-disable-next-line prettier/prettier
       const updatedSocialNetwork =
-        await this.socialNetworkService.updateSocialNetwork(
-          id,
+        await this._socialNetworkService.updateSocialNetwork(
+          idParam.id,
           socialNetwork_DTO,
         );
 
@@ -114,18 +99,20 @@ class SocialNetworkController extends ControllerBase {
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error updating the network');
+      this.throwInternalError(error, 'houve um erro ao atualizar network');
     }
   }
 
   @Delete('id/:id')
-  public async deleteSocialNetwork(@Param('id') id: string): Promise<void> {
+  public async deleteSocialNetwork(
+    @Param('id') idParam: UUIDParam,
+  ): Promise<void> {
     try {
-      await this.socialNetworkService.deleteSocialNetwork(id);
+      await this._socialNetworkService.deleteSocialNetwork(idParam.id);
       // eslint-disable-next-line prettier/prettier
     }
     catch (error) {
-      this.throwInternalError(error, 'There was an error deleting the network');
+      this.throwInternalError(error, 'houve um erro ao remover network');
     }
   }
 }

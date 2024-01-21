@@ -15,4 +15,6 @@ interface IEventService {
   deleteEvent(id: string): Promise<void>;
 }
 
+const IEventService = Symbol('IEventService');
+
 export default IEventService;
