@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import SocialNetworkController from '../controllers/social-network.controller';
 import SocialNetworkRepository from '../repositories/social-network.repository';
@@ -30,9 +29,6 @@ import ISocialNetworkService from 'src/domain/services/isocial-network.service';
       provide: IAssociationRepository,
       useClass: AssociationRepository,
     },
-
-    // Mappers:
-    SocialNetworkMapper,
   ],
 })
 export class SocialNetworkModule {}

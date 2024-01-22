@@ -16,6 +16,7 @@ import {
   validate,
 } from 'class-validator';
 import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
+import { AutoMap } from '@automapper/classes';
 
 /* This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'OtherFrevoEntities' })
@@ -26,20 +27,24 @@ class OtherFrevoEntity {
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
   public name: string;
 
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
   public type: string;
 
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
   public entityHistoryNotes: string;
 
   @IsInt()
   @Column('int')
+  @AutoMap()
   public actuationTimeInMonths: number;
 
   @CreateDateColumn({ type: 'timestamp' })
@@ -61,6 +66,7 @@ class OtherFrevoEntity {
   )
   @JoinColumn()
   @ValidateNested()
+  @AutoMap()
   public address: OtherFrevoEntityAddress;
 
   public setCreationStamps(userId: string): void {

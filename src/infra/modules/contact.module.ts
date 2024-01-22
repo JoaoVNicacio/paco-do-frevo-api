@@ -7,8 +7,6 @@ import Association from 'src/domain/entities/associationAggregate/association.en
 import ContactRepository from '../repositories/contact.repository';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import { PhoneNumberModule } from './phone-number.module';
-import ContactMapper from 'src/application/mappers/contact.mapper';
-import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import AssociationRepository from '../repositories/association.repository';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
@@ -36,10 +34,6 @@ import IContactService from 'src/domain/services/icontact.service';
       provide: IAssociationRepository,
       useClass: AssociationRepository,
     },
-
-    // Mappers:
-    ContactMapper,
-    PhoneNumberMapper,
   ],
 })
 export class ContactModule {}

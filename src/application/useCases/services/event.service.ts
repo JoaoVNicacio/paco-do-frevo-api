@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
-import EventMapper from 'src/application/mappers/event.mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import IEventService from 'src/domain/services/ievent.service';
+import mapper from 'src/application/mappers/mapper';
 
 @Injectable()
 class EventService implements IEventService {
@@ -16,15 +16,13 @@ class EventService implements IEventService {
 
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
-
-    private readonly _eventMapper: EventMapper,
   ) {}
 
   public async createEvent(
     eventDto: EventDTO,
     associationId: string,
   ): Promise<ValidationResponse<Event>> {
-    const event = this._eventMapper.dtoToEntity(eventDto);
+    const event = mapper.map(eventDto, EventDTO, Event);
 
     const association =
       await this._associationRepository.getById(associationId);
@@ -65,7 +63,7 @@ class EventService implements IEventService {
     id: string,
     eventDto: EventDTO,
   ): Promise<ValidationResponse<Event>> {
-    const event = this._eventMapper.dtoToEntity(eventDto);
+    const event = mapper.map(eventDto, EventDTO, Event);
 
     const isValid = await event.isValid();
 

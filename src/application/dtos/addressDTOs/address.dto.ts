@@ -1,12 +1,12 @@
 import { AutoMap } from '@automapper/classes';
 
-class OtherFrevoEntityAddressDTO {
+class AddressDTO {
   @AutoMap()
   public addressSite: string;
   @AutoMap()
   public number: string;
   @AutoMap()
-  public complement: string;
+  public complement: string | null;
   @AutoMap()
   public district: string;
   @AutoMap()
@@ -19,4 +19,4 @@ class OtherFrevoEntityAddressDTO {
   public zipCode: string;
 }
 
-export default OtherFrevoEntityAddressDTO;
+export default AddressDTO;

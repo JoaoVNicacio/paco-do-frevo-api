@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
-import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
+import mapper from 'src/application/mappers/mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
@@ -16,15 +16,13 @@ class PhoneNumberService implements IPhoneNumberService {
 
     @Inject(IContactRepository)
     private readonly _contactRepository: IContactRepository,
-
-    private readonly _phoneNumberMapper: PhoneNumberMapper,
   ) {}
 
   public async createPhoneNumber(
     phoneNumberDTO: PhoneNumberDTO,
     contactId: string,
   ): Promise<ValidationResponse<PhoneNumber>> {
-    const phoneNumber = this._phoneNumberMapper.dtoToEntity(phoneNumberDTO);
+    const phoneNumber = mapper.map(phoneNumberDTO, PhoneNumberDTO, PhoneNumber);
 
     const contact = await this._contactRepository.getById(contactId);
 
@@ -69,7 +67,7 @@ class PhoneNumberService implements IPhoneNumberService {
     id: string,
     phoneNumberDTO: PhoneNumberDTO,
   ): Promise<ValidationResponse<PhoneNumber>> {
-    const phoneNumber = this._phoneNumberMapper.dtoToEntity(phoneNumberDTO);
+    const phoneNumber = mapper.map(phoneNumberDTO, PhoneNumberDTO, PhoneNumber);
 
     const isValid = await phoneNumber.isValid();
 
