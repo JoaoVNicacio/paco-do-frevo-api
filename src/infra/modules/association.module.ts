@@ -16,6 +16,7 @@ import { SocialNetworkModule } from './social-network.module';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import IAssociationService from 'src/domain/services/iassociation.service';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
+import mapper from 'src/application/mappers/mapper';
 
 @Module({
   imports: [
@@ -46,6 +47,12 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
     {
       provide: IAssociationRepository,
       useClass: AssociationRepository,
+    },
+
+    // Mappers:
+    {
+      provide: 'IMapper',
+      useValue: mapper,
     },
   ],
 })

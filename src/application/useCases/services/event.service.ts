@@ -6,7 +6,7 @@ import Event from 'src/domain/entities/associationAggregate/event.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import IEventService from 'src/domain/services/ievent.service';
-import mapper from 'src/application/mappers/mapper';
+import { Mapper as IMapper } from '@automapper/core';
 
 @Injectable()
 class EventService implements IEventService {
@@ -16,13 +16,16 @@ class EventService implements IEventService {
 
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
+
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
   ) {}
 
   public async createEvent(
     eventDto: EventDTO,
     associationId: string,
   ): Promise<ValidationResponse<Event>> {
-    const event = mapper.map(eventDto, EventDTO, Event);
+    const event = this._mapper.map(eventDto, EventDTO, Event);
 
     const association =
       await this._associationRepository.getById(associationId);
@@ -63,7 +66,7 @@ class EventService implements IEventService {
     id: string,
     eventDto: EventDTO,
   ): Promise<ValidationResponse<Event>> {
-    const event = mapper.map(eventDto, EventDTO, Event);
+    const event = this._mapper.map(eventDto, EventDTO, Event);
 
     const isValid = await event.isValid();
 

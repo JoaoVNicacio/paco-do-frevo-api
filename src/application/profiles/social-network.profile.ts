@@ -5,7 +5,7 @@ import SocialNetworkDTO from '../dtos/associationDtos/social-network.dto';
 /**
  * The function `generateSocialNetworkProfile` creates mappings between `SocialNetwork`
  * and it's feature classes using the `mapper` object.
- * @param {Mapper} mapper - The `mapper` parameter is an instance of the mapping Mapper from AutoMapper
+ * @param {Mapper} mapper - The `mapper` parameter is an instance of the interface `Mapper` from AutoMapper
  */
 function generateSocialNetworkProfile(mapper: Mapper) {
   createMap(mapper, SocialNetwork, SocialNetworkDTO);

@@ -1,6 +1,6 @@
+import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
-import mapper from 'src/application/mappers/mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
@@ -12,12 +12,15 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
   constructor(
     @Inject(IOtherFrevoEntityRepository)
     private readonly _otherFrevoEntityRepository: IOtherFrevoEntityRepository,
+
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
   ) {}
 
   public async createOtherFrevoEntity(
     otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<ValidationResponse<OtherFrevoEntity>> {
-    const otherFrevoEntity = mapper.map(
+    const otherFrevoEntity = this._mapper.map(
       otherFrevoEntityDTO,
       OtherFrevoEntityDTO,
       OtherFrevoEntity,
@@ -76,7 +79,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     id: string,
     otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<ValidationResponse<OtherFrevoEntity>> {
-    const otherFrevoEntity = mapper.map(
+    const otherFrevoEntity = this._mapper.map(
       otherFrevoEntityDTO,
       OtherFrevoEntityDTO,
       OtherFrevoEntity,

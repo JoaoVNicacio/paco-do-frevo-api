@@ -2,7 +2,7 @@ import { classes } from '@automapper/classes';
 import { createMapper } from '@automapper/core';
 
 /**
- * The constant `mapper`is an instance of the `Mapper` from `AutoMapper`.
+ * The constant `mapper`is an instance of the `Mapper` interface from `AutoMapper`.
  * This object serves the purpose of automapping objects mapped on the profiles it is called;
  */
 const mapper = createMapper({

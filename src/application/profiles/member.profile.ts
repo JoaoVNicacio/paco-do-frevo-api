@@ -5,7 +5,7 @@ import MemberDTO from '../dtos/associationDtos/member.dto';
 /**
  * The function `generateMemberProfile` creates mappings between `Member`
  * and it's feature classes using the `mapper` object.
- * @param {Mapper} mapper - The `mapper` parameter is an instance of the mapping Mapper from AutoMapper
+ * @param {Mapper} mapper - The `mapper` parameter is an instance of the interface `Mapper` from AutoMapper
  */
 function generateMemberProfile(mapper: Mapper) {
   createMap(mapper, Member, MemberDTO);

@@ -9,6 +9,7 @@ import ContactRepository from '../repositories/contact.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
+import mapper from 'src/application/mappers/mapper';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhoneNumber, Contact])],
@@ -28,6 +29,12 @@ import IPhoneNumberService from 'src/domain/services/iphone-number.service';
     {
       provide: IContactRepository,
       useClass: ContactRepository,
+    },
+
+    // Mappers:
+    {
+      provide: 'IMapper',
+      useValue: mapper,
     },
   ],
 })

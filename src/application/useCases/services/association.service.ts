@@ -1,6 +1,6 @@
+import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import mapper from 'src/application/mappers/mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import CleanStringBuilder from 'src/application/utils/clean-string.builder';
@@ -13,12 +13,19 @@ class AssociationService implements IAssociationService {
   constructor(
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
+
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
   ) {}
 
   public async createAssociation(
     associationDTO: AssociationDTO,
   ): Promise<ValidationResponse<Association>> {
-    const association = mapper.map(associationDTO, AssociationDTO, Association);
+    const association = this._mapper.map(
+      associationDTO,
+      AssociationDTO,
+      Association,
+    );
 
     const isValid = await association.isValid();
 
@@ -80,7 +87,11 @@ class AssociationService implements IAssociationService {
     id: string,
     associationDTO: AssociationDTO,
   ): Promise<ValidationResponse<Association>> {
-    const association = mapper.map(associationDTO, AssociationDTO, Association);
+    const association = this._mapper.map(
+      associationDTO,
+      AssociationDTO,
+      Association,
+    );
     const isValid = await association.isValid();
 
     if (!isValid) {

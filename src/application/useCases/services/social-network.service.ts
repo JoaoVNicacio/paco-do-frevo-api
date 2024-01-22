@@ -1,7 +1,7 @@
+import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import mapper from 'src/application/mappers/mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
@@ -16,13 +16,16 @@ class SocialNetworkService implements ISocialNetworkService {
 
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
+
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
   ) {}
 
   public async createSocialNetwork(
     socialNetworkDTO: SocialNetworkDTO,
     associationId: string,
   ): Promise<ValidationResponse<SocialNetwork>> {
-    const socialNetwork = mapper.map(
+    const socialNetwork = this._mapper.map(
       socialNetworkDTO,
       SocialNetworkDTO,
       SocialNetwork,
@@ -72,7 +75,7 @@ class SocialNetworkService implements ISocialNetworkService {
     id: string,
     socialNetworkDTO: SocialNetworkDTO,
   ): Promise<ValidationResponse<SocialNetwork>> {
-    const socialNetwork = mapper.map(
+    const socialNetwork = this._mapper.map(
       socialNetworkDTO,
       SocialNetworkDTO,
       SocialNetwork,

@@ -11,6 +11,7 @@ import AssociationRepository from '../repositories/association.repository';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IContactService from 'src/domain/services/icontact.service';
+import mapper from 'src/application/mappers/mapper';
 
 @Module({
   imports: [
@@ -33,6 +34,12 @@ import IContactService from 'src/domain/services/icontact.service';
     {
       provide: IAssociationRepository,
       useClass: AssociationRepository,
+    },
+
+    // Mappers:
+    {
+      provide: 'IMapper',
+      useValue: mapper,
     },
   ],
 })

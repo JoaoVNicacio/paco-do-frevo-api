@@ -14,7 +14,6 @@ import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
 import IEventService from 'src/domain/services/ievent.service';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
-import mapper from 'src/application/mappers/mapper';
 
 @ApiTags('Events')
 @Controller('event')
@@ -52,22 +51,6 @@ class EventController extends ControllerBase {
     try {
       return this.sendCustomResponse(
         await this._eventService.findById(idParam.id),
-      );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(error, 'There was an error retriving the event');
-    }
-  }
-
-  @Get('mapped/id/:id')
-  public async getMappedEventById(
-    @Param('id') idParam: string,
-  ): Promise<EventDTO> {
-    try {
-      const response = await this._eventService.findById(idParam);
-      return this.sendCustomResponse<EventDTO>(
-        mapper.map(response, Event, EventDTO),
       );
       // eslint-disable-next-line prettier/prettier
     }
