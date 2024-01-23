@@ -15,6 +15,7 @@ import {
 } from 'class-validator';
 import Association from './association.entity';
 import { Type } from 'class-transformer';
+import { AutoMap } from '@automapper/classes';
 
 @Entity('Events')
 class Event {
@@ -23,15 +24,18 @@ class Event {
 
   @Column('text')
   @IsNotEmpty({ message: 'Event type is required' })
+  @AutoMap()
   public eventType: string;
 
   @Column({ type: 'timestamp' })
   @Type(() => Date)
+  @AutoMap()
   public dateOfAccomplishment: Date;
 
   @Column({ type: 'int' })
   @IsInt({ message: 'Participants amount must be an integer' })
   @Min(0)
+  @AutoMap()
   public participantsAmount: number;
 
   @ManyToOne(() => Association, (association) => association.events, {

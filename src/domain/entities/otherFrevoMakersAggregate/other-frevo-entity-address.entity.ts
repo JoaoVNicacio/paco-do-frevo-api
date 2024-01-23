@@ -21,14 +21,17 @@ import {
 import IAddress from '../entityInterfaces/iaddress.entity-base';
 import AddressConstants from '../associationAggregate/constants/address.constants';
 import OtherFrevoEntity from './other-frevo-entity.entity';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'OtherFrevoEntityAddresses' })
 class OtherFrevoEntityAddress implements IAddress {
   @PrimaryGeneratedColumn('uuid')
+  @AutoMap()
   public id: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Address site is required' })
+  @AutoMap()
   public addressSite: string;
 
   @Column({ type: 'text' })
@@ -40,34 +43,41 @@ class OtherFrevoEntityAddress implements IAddress {
     },
     { message: 'Number must be equal to SN or contain at least one number' },
   )
+  @AutoMap()
   public number: string;
 
   @Column('text', { nullable: true })
   @IsOptional()
-  public complement: string;
+  @AutoMap()
+  public complement: string | null;
 
   @Column('text')
   @IsNotEmpty({ message: 'District is required' })
+  @AutoMap()
   public district: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'City is required' })
+  @AutoMap()
   public city: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'State is required' })
   @Length(2)
   @IsIn(AddressConstants.brazilianStates)
+  @AutoMap()
   public state: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Country is required' })
   @Length(2)
   @Equals('BR')
+  @AutoMap()
   public country: string;
 
   @Column('text')
   @IsPostalCode('BR', { message: 'Invalid ZIP code format' })
+  @AutoMap()
   public zipCode: string;
 
   @OneToOne(() => OtherFrevoEntity, (address) => address.address)

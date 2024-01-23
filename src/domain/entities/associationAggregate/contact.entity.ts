@@ -18,6 +18,7 @@ import {
   ValidationError,
   validate,
 } from 'class-validator';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'Contacts' })
 class Contact {
@@ -26,10 +27,12 @@ class Contact {
 
   @Column('text')
   @IsNotEmpty({ message: 'The person to be addressed is required' })
+  @AutoMap()
   public addressTo: string;
 
   @Column('text')
   @IsEmail({}, { message: 'Invalid email format' })
+  @AutoMap()
   public email: string;
 
   @OneToMany(
@@ -41,6 +44,7 @@ class Contact {
     },
   )
   @ValidateNested({ each: true })
+  @AutoMap()
   public phoneNumbers: Array<PhoneNumber>;
 
   @CreateDateColumn({ type: 'timestamp' })
