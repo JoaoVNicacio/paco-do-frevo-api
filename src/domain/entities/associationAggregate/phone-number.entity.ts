@@ -16,6 +16,7 @@ import {
   ValidationError,
   validate,
 } from 'class-validator';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'PhoneNumbers' })
 class PhoneNumber {
@@ -26,17 +27,20 @@ class PhoneNumber {
   @IsNotEmpty({ message: 'Country code is required' })
   @Length(2, 2, { message: 'Country code must contain exactly 2 numbers' })
   @IsNumberString()
+  @AutoMap()
   public countryCode: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Area code is required' })
   @Length(2, 2, { message: 'Area code must contain exactly 2 numbers' })
   @IsNumberString()
+  @AutoMap()
   public areaCode: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Phone number is required' })
   @Matches(/^[2-5]\d{7}$|^[7-9]\d{8}$/)
+  @AutoMap()
   public number: string;
 
   @CreateDateColumn({ type: 'timestamp' })

@@ -16,6 +16,7 @@ import {
   validate,
 } from 'class-validator';
 import SocialNetworkConstants from './constants/social-network.constants';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'SocialNetworks' })
 class SocialNetwork {
@@ -25,6 +26,7 @@ class SocialNetwork {
   @Column('text')
   @IsNotEmpty({ message: 'Social network type is required' })
   @IsIn(SocialNetworkConstants.socialNetworkTypes)
+  @AutoMap()
   public socialNetworkType: string;
 
   @Column('text')
@@ -32,6 +34,7 @@ class SocialNetwork {
   @Matches(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, {
     message: 'Invalid URL format',
   })
+  @AutoMap()
   public url: string;
 
   @Column('uuid', { nullable: true })

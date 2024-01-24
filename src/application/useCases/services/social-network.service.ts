@@ -1,7 +1,7 @@
+import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import SocialNetworkMapper from 'src/application/mappers/social-network.mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
@@ -17,15 +17,19 @@ class SocialNetworkService implements ISocialNetworkService {
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
 
-    private readonly _socialNetworkMapper: SocialNetworkMapper,
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
   ) {}
 
   public async createSocialNetwork(
     socialNetworkDTO: SocialNetworkDTO,
     associationId: string,
   ): Promise<ValidationResponse<SocialNetwork>> {
-    const socialNetwork =
-      this._socialNetworkMapper.dtoToEntity(socialNetworkDTO);
+    const socialNetwork = this._mapper.map(
+      socialNetworkDTO,
+      SocialNetworkDTO,
+      SocialNetwork,
+    );
 
     const association =
       await this._associationRepository.getById(associationId);
@@ -69,9 +73,13 @@ class SocialNetworkService implements ISocialNetworkService {
 
   public async updateSocialNetwork(
     id: string,
-    social_DTO: SocialNetworkDTO,
+    socialNetworkDTO: SocialNetworkDTO,
   ): Promise<ValidationResponse<SocialNetwork>> {
-    const socialNetwork = this._socialNetworkMapper.dtoToEntity(social_DTO);
+    const socialNetwork = this._mapper.map(
+      socialNetworkDTO,
+      SocialNetworkDTO,
+      SocialNetwork,
+    );
 
     const isValid = await socialNetwork.isValid();
 

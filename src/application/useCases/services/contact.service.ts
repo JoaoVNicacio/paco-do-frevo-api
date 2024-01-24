@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
-import ContactMapper from 'src/application/mappers/contact.mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IContactService from 'src/domain/services/icontact.service';
+import { Mapper as IMapper } from '@automapper/core';
 
 @Injectable()
 class ContactService implements IContactService {
@@ -17,14 +17,16 @@ class ContactService implements IContactService {
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
 
-    private readonly _contactMapper: ContactMapper,
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
   ) {}
 
   public async createContact(
     contactDTO: ContactDTO,
     associationId: string,
   ): Promise<ValidationResponse<Contact>> {
-    const contact = this._contactMapper.dtoToEntity(contactDTO);
+    const contact = this._mapper.map(contactDTO, ContactDTO, Contact);
+
     const association =
       await this._associationRepository.getById(associationId);
 
@@ -68,7 +70,8 @@ class ContactService implements IContactService {
     id: string,
     contactDTO: ContactDTO,
   ): Promise<ValidationResponse<Contact>> {
-    const contact = this._contactMapper.dtoToEntity(contactDTO);
+    const contact = this._mapper.map(contactDTO, ContactDTO, Contact);
+
     const isValid = await contact.isValid();
 
     if (!isValid) {

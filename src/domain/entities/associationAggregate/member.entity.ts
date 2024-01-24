@@ -17,6 +17,7 @@ import {
 } from 'class-validator';
 import Association from './association.entity';
 import MemberConstants from './constants/member.constants';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'Members' })
 class Member {
@@ -25,23 +26,28 @@ class Member {
 
   @Column('text')
   @IsNotEmpty({ message: 'Name is required' })
+  @AutoMap()
   public name: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Surname is required' })
+  @AutoMap()
   public surname: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Role is required' })
   @IsIn(MemberConstants.memberTypes)
+  @AutoMap()
   public role: string;
 
   @Column({ type: 'int' })
   @IsInt({ message: 'Actuation time must be an integer' })
+  @AutoMap()
   public actuationTimeInMonths: number;
 
   @Column('boolean')
   @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
+  @AutoMap()
   public isFrevoTheMainRevenueIncome: boolean;
 
   @ManyToOne(() => Association, (association) => association.members, {

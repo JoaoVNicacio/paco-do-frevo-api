@@ -1,10 +1,16 @@
-import OtherFrevoEntityAddressDTO from './other-frevo-entity-address.dto';
+import { AutoMap } from '@automapper/classes';
+import AddressDTO from '../addressDTOs/address.dto';
 
 class OtherFrevoEntityDTO {
+  @AutoMap()
   public name: string;
-  public address: OtherFrevoEntityAddressDTO;
+  @AutoMap()
+  public address: AddressDTO;
+  @AutoMap()
   public type: string;
+  @AutoMap()
   public entityHistoryNotes: string;
+  @AutoMap()
   public actuationTimeInMonths: number;
 }
 

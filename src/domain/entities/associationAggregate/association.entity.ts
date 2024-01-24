@@ -29,6 +29,7 @@ import {
 import { Type } from 'class-transformer';
 import { ValidCnpjNumber } from 'src/domain/validators/cnpj-number.validator';
 import AssociationConstants from './constants/association.constants';
+import { AutoMap } from '@automapper/classes';
 
 /** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'Associations' })
@@ -39,37 +40,45 @@ class Association {
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
   public name: string;
 
   @Type(() => Date)
   @Column('timestamp')
+  @AutoMap()
   public foundationDate: Date;
 
   @IsArray()
   @IsString({ each: true })
   @Column('simple-array', { nullable: true })
+  @AutoMap()
   public colors: Array<string>;
 
   @IsNotEmpty()
   @IsString()
   @IsIn(AssociationConstants.associationTypes)
   @Column('text')
+  @AutoMap()
   public associationType: string;
 
   @IsInt()
   @Column('int')
+  @AutoMap()
   public activeMembers: number;
 
   @IsBoolean()
   @Column('boolean')
+  @AutoMap()
   public isSharedWithAResidence: boolean;
 
   @IsBoolean()
   @Column('boolean')
+  @AutoMap()
   public hasOwnedHeadquarters: boolean;
 
   @IsBoolean()
   @Column('boolean')
+  @AutoMap()
   public isLegalEntity: boolean;
 
   @IsOptional()
@@ -79,15 +88,18 @@ class Association {
     message: 'Invalid CNPJ format',
   })
   @ValidCnpjNumber({ message: 'The given CNPJ is invalid' })
+  @AutoMap()
   private cnpj: string | null;
 
   @IsBoolean()
   @Column('boolean')
+  @AutoMap()
   public canIssueOwnReceipts: boolean;
 
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
   public associationHistoryNotes: string;
 
   @CreateDateColumn({ type: 'timestamp' })
@@ -108,6 +120,7 @@ class Association {
   })
   @JoinColumn()
   @ValidateNested()
+  @AutoMap()
   public address: AssociationAddress;
 
   @OneToMany(() => SocialNetwork, (social) => social.association, {
@@ -115,6 +128,7 @@ class Association {
     onDelete: 'CASCADE',
   })
   @ValidateNested()
+  @AutoMap()
   public socialNetworks: Array<SocialNetwork>;
 
   @OneToMany(() => Event, (event) => event.association, {
@@ -122,6 +136,7 @@ class Association {
     onDelete: 'CASCADE',
   })
   @ValidateNested()
+  @AutoMap()
   public events: Array<Event>;
 
   @OneToMany(() => Member, (member) => member.association, {
@@ -129,6 +144,7 @@ class Association {
     onDelete: 'CASCADE',
   })
   @ValidateNested()
+  @AutoMap()
   public members: Array<Member>;
 
   @OneToMany(() => Contact, (contact) => contact.association, {
@@ -136,6 +152,7 @@ class Association {
     onDelete: 'CASCADE',
   })
   @ValidateNested()
+  @AutoMap()
   public contacts: Array<Contact>;
 
   public get getCnpj(): string {
