@@ -1,6 +1,6 @@
 import EUserRoles from 'src/domain/entities/userAggregate/enums/euser-roles';
 
-class UserDTO {
+class UserForCreationDTO {
   public firstName: string;
   public lastName: string;
   public role: EUserRoles;
@@ -8,4 +8,4 @@ class UserDTO {
   public password: string;
 }
 
-export default UserDTO;
+export default UserForCreationDTO;

@@ -4,9 +4,9 @@ import { UserSchema } from 'src/domain/entities/userAggregate/user.entity';
 import UserRepository from '../repositories/user.repository';
 import UserService from 'src/application/useCases/services/user.service';
 import UserController from '../controllers/user.controller';
-import UserMapper from 'src/application/mappers/user.mapper';
 import IUserRepository from 'src/domain/repositories/iuser.repository';
 import IUserService from 'src/domain/services/iuser.service';
+import mapper from 'src/application/mappers/mapper';
 
 @Module({
   imports: [
@@ -17,17 +17,25 @@ import IUserService from 'src/domain/services/iuser.service';
       },
     ]),
   ],
+  controllers: [UserController],
   providers: [
+    // Repositories:
     {
       provide: IUserRepository,
       useClass: UserRepository,
     },
+
+    // Services:
     {
       provide: IUserService,
       useClass: UserService,
     },
-    UserMapper,
+
+    // Mappers:
+    {
+      provide: 'IMapper',
+      useValue: mapper,
+    },
   ],
-  controllers: [UserController],
 })
 export class UserModule {}

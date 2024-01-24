@@ -32,7 +32,14 @@ class User {
   public email: string;
 
   @Prop({ required: true })
-  public password: string;
+  private passwordHash: string;
+
+  public get getPasswordHash(): string {
+    return this.passwordHash;
+  }
+  public set setPassword(value: string) {
+    this.passwordHash = value;
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

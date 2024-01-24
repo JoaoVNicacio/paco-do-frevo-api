@@ -1,8 +1,8 @@
-import UserDTO from 'src/application/dtos/userDtos/user.dto';
 import User from '../entities/userAggregate/user.entity';
+import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
 
 interface IUserService {
-  createUser(user: UserDTO): Promise<User>;
+  createUser(user: UserForCreationDTO): Promise<User>;
 }
 
 const IUserService = Symbol('IUserService');
