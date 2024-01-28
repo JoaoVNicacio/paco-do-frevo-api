@@ -1,4 +1,3 @@
-/* eslint-disable */
 enum ESocialNetworkType {
   facebook = 'Facebook',
   instagram = 'Instagram',
