@@ -28,7 +28,7 @@ class PhoneNumberController extends ControllerBase {
   @Post('contact/:id')
   public async createPhoneNumber(
     @Body() phoneNumberDTO: PhoneNumberDTO,
-    @Param('id') idParm: UUIDParam,
+    @Param() idParm: UUIDParam,
   ): Promise<PhoneNumber> {
     try {
       const createdPhoneNumber =
@@ -38,13 +38,8 @@ class PhoneNumberController extends ControllerBase {
         );
 
       return this.sendCustomValidationResponse<PhoneNumber>(createdPhoneNumber);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(
-        error,
-        'houve um erro ao criar phone number',
-      );
+    } catch (error) {
+      this.throwInternalError(error, 'houve um erro ao criar phone number');
     }
   }
 
@@ -54,9 +49,7 @@ class PhoneNumberController extends ControllerBase {
       const phoneNumbers = await this._phoneNumberService.getAllPhoneNumbers();
 
       return phoneNumbers;
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(
         error,
         'There was an error getting the phone numbers',
@@ -66,13 +59,11 @@ class PhoneNumberController extends ControllerBase {
 
   @Get('id/:id')
   public async getAssociationById(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
   ): Promise<PhoneNumber> {
     try {
       return await this._phoneNumberService.getPhoneNumberById(idParam.id);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(
         error,
         'There was an error retriving the phone number',
@@ -82,7 +73,7 @@ class PhoneNumberController extends ControllerBase {
 
   @Put('id/:id')
   public async updtadeAssociation(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
     @Body() phoneNumberDTO: PhoneNumberDTO,
   ): Promise<PhoneNumber> {
     try {
@@ -93,29 +84,19 @@ class PhoneNumberController extends ControllerBase {
         );
 
       return this.sendCustomValidationResponse<PhoneNumber>(updatePhoneNumber);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(
-        error,
-        'houve um erro ao atualizar phone number',
-      );
+    } catch (error) {
+      this.throwInternalError(error, 'houve um erro ao atualizar phone number');
     }
   }
 
   @Delete('id/:id')
   public async deletePhoneNumber(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
   ): Promise<void> {
     try {
       await this._phoneNumberService.deletePhoneNumber(idParam.id);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(
-        error,
-        'houve um erro ao remover phone number',
-      );
+    } catch (error) {
+      this.throwInternalError(error, 'houve um erro ao remover phone number');
     }
   }
 }

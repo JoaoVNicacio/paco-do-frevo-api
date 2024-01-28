@@ -33,13 +33,11 @@ class AssociationController extends ControllerBase {
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
     try {
-      // eslint-disable-next-line prettier/prettier
-      const createdAssociation = await this._associationService.createAssociation(associationDTO);
+      const createdAssociation =
+        await this._associationService.createAssociation(associationDTO);
 
       return this.sendCustomValidationResponse<Association>(createdAssociation);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar association');
     }
   }
@@ -48,9 +46,7 @@ class AssociationController extends ControllerBase {
   public async getAllAssociations(): Promise<Array<Association>> {
     try {
       return await this._associationService.getAllAssociations();
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao obter associations');
     }
   }
@@ -64,9 +60,7 @@ class AssociationController extends ControllerBase {
         Number(pagingParams.page),
         Number(pagingParams.pageSize),
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao obter associations');
     }
   }
@@ -79,9 +73,7 @@ class AssociationController extends ControllerBase {
       return this.sendCustomResponse<Association>(
         await this._associationService.getAssociationById(idParam.id),
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao obter association');
     }
   }
@@ -92,13 +84,14 @@ class AssociationController extends ControllerBase {
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
     try {
-      // eslint-disable-next-line prettier/prettier
-      const updatedAssociation = await this._associationService.updateAssociation(idParam.id, associationDTO);
+      const updatedAssociation =
+        await this._associationService.updateAssociation(
+          idParam.id,
+          associationDTO,
+        );
 
       return this.sendCustomValidationResponse<Association>(updatedAssociation);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao editar association');
     }
   }
@@ -107,9 +100,7 @@ class AssociationController extends ControllerBase {
   public async deleteAssociation(@Param() idParam: UUIDParam): Promise<void> {
     try {
       await this._associationService.deleteAssociation(idParam.id);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao remover association');
     }
   }

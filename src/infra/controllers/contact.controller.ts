@@ -28,7 +28,7 @@ class ContactController extends ControllerBase {
   @Post('association/:id')
   public async createContact(
     @Body() contactDTO: ContactDTO,
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
   ): Promise<Contact> {
     try {
       const createdContact = await this.contactService.createContact(
@@ -37,9 +37,7 @@ class ContactController extends ControllerBase {
       );
 
       return this.sendCustomValidationResponse<Contact>(createdContact);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar contact');
     }
   }
@@ -50,9 +48,7 @@ class ContactController extends ControllerBase {
       return this.sendCustomResponse(
         await this.contactService.getContactById(idParam.id),
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar contact');
     }
   }
@@ -69,20 +65,16 @@ class ContactController extends ControllerBase {
       );
 
       return this.sendCustomValidationResponse<Contact>(updatedContact);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao atualizar contact');
     }
   }
 
   @Delete('id/:id')
-  public async deleteContact(@Param('id') id: string): Promise<void> {
+  public async deleteContact(@Param() id: string): Promise<void> {
     try {
       await this.contactService.deleteContact(id);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao remover contact');
     }
   }

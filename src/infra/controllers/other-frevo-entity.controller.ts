@@ -33,15 +33,15 @@ class OtherFrevoEntityController extends ControllerBase {
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
     try {
-      // eslint-disable-next-line prettier/prettier
-      const createdOtherFrevoEntity = await this._otherFrevoEntityService.createOtherFrevoEntity(otherFrevoEntityDTO);
+      const createdOtherFrevoEntity =
+        await this._otherFrevoEntityService.createOtherFrevoEntity(
+          otherFrevoEntityDTO,
+        );
 
       return this.sendCustomValidationResponse<OtherFrevoEntity>(
         createdOtherFrevoEntity,
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
     }
   }
@@ -50,9 +50,7 @@ class OtherFrevoEntityController extends ControllerBase {
   public async getAllOtherFrevoEntities(): Promise<Array<OtherFrevoEntity>> {
     try {
       return await this._otherFrevoEntityService.getAllOtherFrevoEntities();
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(
         error,
         'houve um erro ao obter otherFrevoEntities',
@@ -69,9 +67,7 @@ class OtherFrevoEntityController extends ControllerBase {
         pagingParams.page,
         pagingParams.pageSize,
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(
         error,
         'houve um erro ao obter otherFrevoEntities',
@@ -81,47 +77,44 @@ class OtherFrevoEntityController extends ControllerBase {
 
   @Get('id/:id')
   public async getOtherFrevoEntityById(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
   ): Promise<OtherFrevoEntity> {
     try {
       return this.sendCustomResponse<OtherFrevoEntity>(
         await this._otherFrevoEntityService.getOtherFrevoEntityById(idParam.id),
       );
-      // eslint-disable-next-line prettier/prettier
-  }
-  catch(error){
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao obter otherFrevoEntity');
     }
   }
 
   @Put('id/:id')
   public async updateOtherFrevoEntity(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
     try {
-      // eslint-disable-next-line prettier/prettier
-      const updatedOtherFrevoEntity = await this._otherFrevoEntityService.updateOtherFrevoEntity(idParam.id ,otherFrevoEntityDTO);
+      const updatedOtherFrevoEntity =
+        await this._otherFrevoEntityService.updateOtherFrevoEntity(
+          idParam.id,
+          otherFrevoEntityDTO,
+        );
 
       return this.sendCustomValidationResponse<OtherFrevoEntity>(
         updatedOtherFrevoEntity,
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
     }
   }
 
   @Delete('id/:id')
   public async deleteOtherFrevoEntity(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
   ): Promise<void> {
     try {
       await this._otherFrevoEntityService.deleteOtherFrevoEntity(idParam.id);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(
         error,
         'houve um erro ao remover otherFrevoEntity',

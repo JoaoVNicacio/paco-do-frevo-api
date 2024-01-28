@@ -28,7 +28,7 @@ class EventController extends ControllerBase {
   @Post('association/:id')
   public async createEvent(
     @Body() eventDTO: EventDTO,
-    @Param('id') associationId: UUIDParam,
+    @Param() associationId: UUIDParam,
   ): Promise<Event> {
     try {
       const event = await this._eventService.createEvent(
@@ -37,51 +37,43 @@ class EventController extends ControllerBase {
       );
 
       return this.sendCustomValidationResponse<Event>(event);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar event');
     }
   }
 
   @Get('id/:id')
   public async getAssociationById(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
   ): Promise<Event> {
     try {
       return this.sendCustomResponse(
         await this._eventService.findById(idParam.id),
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'There was an error retriving the event');
     }
   }
 
   @Put('id/:id')
   public async updtadeAssociation(
-    @Param('id') idParam: UUIDParam,
+    @Param() idParam: UUIDParam,
     @Body() eventDTO: EventDTO,
   ): Promise<Event> {
     try {
       const event = await this._eventService.updateEvent(idParam.id, eventDTO);
 
       return this.sendCustomValidationResponse<Event>(event);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao atualizar contact');
     }
   }
 
   @Delete('id/:id')
-  public async deleteEvent(@Param('id') id: string): Promise<void> {
+  public async deleteEvent(@Param() id: string): Promise<void> {
     try {
       await this._eventService.deleteEvent(id);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
+    } catch (error) {
       this.throwInternalError(error, 'houve um erro ao remover event');
     }
   }
