@@ -11,9 +11,18 @@ import {
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import ControllerBase from './base.controller';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
+import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 
 @ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
@@ -26,6 +35,19 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Post('contact/:id')
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+    type: PhoneNumber,
+  })
+  @ApiBadRequestResponse({
+    description: 'The record has an error on the sent object.',
+    type: ValidationErrorDTO,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
+  @ApiBody({
+    description: 'The record data.',
+    type: PhoneNumberDTO,
+  })
   public async createPhoneNumber(
     @Body() phoneNumberDTO: PhoneNumberDTO,
     @Param() idParm: UUIDParam,
@@ -43,21 +65,16 @@ class PhoneNumberController extends ControllerBase {
     }
   }
 
-  @Get()
-  public async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
-    try {
-      const phoneNumbers = await this._phoneNumberService.getAllPhoneNumbers();
-
-      return phoneNumbers;
-    } catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error getting the phone numbers',
-      );
-    }
-  }
-
   @Get('id/:id')
+  @ApiOkResponse({
+    description: 'The record has been successfully fetched.',
+    type: PhoneNumber,
+  })
+  @ApiNotFoundResponse({
+    description: 'The record was not found.',
+    type: String,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
   public async getAssociationById(
     @Param() idParam: UUIDParam,
   ): Promise<PhoneNumber> {
@@ -72,6 +89,19 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @ApiOkResponse({
+    description: 'The record has been successfully updated.',
+    type: PhoneNumber,
+  })
+  @ApiBadRequestResponse({
+    description: 'The record has an error on the sent object.',
+    type: ValidationErrorDTO,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
+  @ApiBody({
+    description: 'The record data.',
+    type: PhoneNumberDTO,
+  })
   public async updtadeAssociation(
     @Param() idParam: UUIDParam,
     @Body() phoneNumberDTO: PhoneNumberDTO,
@@ -90,9 +120,11 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Delete('id/:id')
-  public async deletePhoneNumber(
-    @Param() idParam: UUIDParam,
-  ): Promise<void> {
+  @ApiOkResponse({
+    description: 'The record has been successfully deleted.',
+    type: Object,
+  })
+  public async deletePhoneNumber(@Param() idParam: UUIDParam): Promise<void> {
     try {
       await this._phoneNumberService.deletePhoneNumber(idParam.id);
     } catch (error) {

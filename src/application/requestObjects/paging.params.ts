@@ -6,13 +6,13 @@ class PagingParams {
   @Min(1)
   @IsNotEmpty()
   @Type(() => Number)
-  public page: number;
+  public page: number = 1;
 
   @IsInt()
   @Min(1)
   @IsNotEmpty()
   @Type(() => Number)
-  public pageSize: number;
+  public pageSize: number = 10;
 }
 
 export default PagingParams;

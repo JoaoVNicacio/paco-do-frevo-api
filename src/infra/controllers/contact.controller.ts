@@ -11,9 +11,18 @@ import {
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
 import ControllerBase from './base.controller';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import UUIDParam from '../../application/requestObjects/uuid.param';
 import IContactService from 'src/domain/services/icontact.service';
+import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 
 @ApiTags('Contacts')
 @Controller('contacts')
@@ -26,6 +35,19 @@ class ContactController extends ControllerBase {
   }
 
   @Post('association/:id')
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+    type: Contact,
+  })
+  @ApiBadRequestResponse({
+    description: 'The record has an error on the sent object.',
+    type: ValidationErrorDTO,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
+  @ApiBody({
+    description: 'The record data.',
+    type: ContactDTO,
+  })
   public async createContact(
     @Body() contactDTO: ContactDTO,
     @Param() idParam: UUIDParam,
@@ -43,6 +65,15 @@ class ContactController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @ApiOkResponse({
+    description: 'The record has been successfully fetched.',
+    type: Contact,
+  })
+  @ApiNotFoundResponse({
+    description: 'The record was not found.',
+    type: String,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
   public async getContactById(@Param() idParam: UUIDParam): Promise<Contact> {
     try {
       return this.sendCustomResponse(
@@ -54,6 +85,19 @@ class ContactController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @ApiOkResponse({
+    description: 'The record has been successfully updated.',
+    type: Contact,
+  })
+  @ApiBadRequestResponse({
+    description: 'The record has an error on the sent object.',
+    type: ValidationErrorDTO,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
+  @ApiBody({
+    description: 'The record data.',
+    type: ContactDTO,
+  })
   public async updateContact(
     @Param() idParam: UUIDParam,
     @Body() contactDTO: ContactDTO,
@@ -71,6 +115,10 @@ class ContactController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @ApiOkResponse({
+    description: 'The record has been successfully deleted.',
+    type: Object,
+  })
   public async deleteContact(@Param() id: string): Promise<void> {
     try {
       await this.contactService.deleteContact(id);

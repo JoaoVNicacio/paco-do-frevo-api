@@ -17,10 +17,12 @@ import {
   validate,
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'PhoneNumbers' })
 class PhoneNumber {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   public id: string;
 
   @Column('text')
@@ -28,6 +30,7 @@ class PhoneNumber {
   @Length(2, 2, { message: 'Country code must contain exactly 2 numbers' })
   @IsNumberString()
   @AutoMap()
+  @ApiProperty()
   public countryCode: string;
 
   @Column('text')
@@ -35,24 +38,30 @@ class PhoneNumber {
   @Length(2, 2, { message: 'Area code must contain exactly 2 numbers' })
   @IsNumberString()
   @AutoMap()
+  @ApiProperty()
   public areaCode: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Phone number is required' })
   @Matches(/^[2-5]\d{7}$|^[7-9]\d{8}$/)
   @AutoMap()
+  @ApiProperty()
   public number: string;
 
   @CreateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public updatedAt: Date;
 
   @Column('uuid', { nullable: true })
+  @ApiProperty()
   public createdBy: string;
 
   @Column('uuid', { nullable: true })
+  @ApiProperty()
   public updatedBy: string;
 
   @ManyToOne(() => Contact, (contact) => contact.phoneNumbers, {
