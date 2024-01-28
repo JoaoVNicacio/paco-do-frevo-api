@@ -19,20 +19,24 @@ import {
   validate,
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'Contacts' })
 class Contact {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   public id: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'The person to be addressed is required' })
   @AutoMap()
+  @ApiProperty()
   public addressTo: string;
 
   @Column('text')
   @IsEmail({}, { message: 'Invalid email format' })
   @AutoMap()
+  @ApiProperty()
   public email: string;
 
   @OneToMany(
@@ -45,24 +49,29 @@ class Contact {
   )
   @ValidateNested({ each: true })
   @AutoMap()
+  @ApiProperty({ type: [PhoneNumber] })
   public phoneNumbers: Array<PhoneNumber>;
 
   @CreateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public updatedAt: Date;
 
   @Column('uuid', { nullable: true })
   @IsOptional()
+  @ApiProperty()
   public createdBy: string;
 
   @Column('uuid', { nullable: true })
   @IsOptional()
+  @ApiProperty()
   public updatedBy: string;
 
   @OneToOne(() => Association, (association) => association.address, {
-    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   public association: Association;

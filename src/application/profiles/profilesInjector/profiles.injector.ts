@@ -8,6 +8,7 @@ import generateOtherFrevoEntityProfile from '../other-frevo-entity.profile';
 import generatePhoneNumberProfile from '../phone-number.profile';
 import generateSocialNetworkProfile from '../social-network.profile';
 import generateUserProfile from '../user.profile';
+import generateValidationResponseProfile from '../validation-response.profile';
 
 /**
  * The function `injectProfiles` imports and calls functions to generate profiles,
@@ -23,6 +24,7 @@ function injectProfiles() {
   generateAssociationProfile(mapper);
   generateOtherFrevoEntityProfile(mapper);
   generateUserProfile(mapper);
+  generateValidationResponseProfile(mapper);
 }
 
 export default injectProfiles;

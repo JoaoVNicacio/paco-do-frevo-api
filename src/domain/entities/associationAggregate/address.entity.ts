@@ -22,15 +22,18 @@ import {
 import IAddress from '../entityInterfaces/iaddress.entity-base';
 import AddressConstants from './constants/address.constants';
 import { AutoMap } from '@automapper/classes';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'AssociationAddresses' })
 class AssociationAddress implements IAddress {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   public id: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Address site is required' })
   @AutoMap()
+  @ApiProperty()
   public addressSite: string;
 
   @Column({ type: 'text' })
@@ -43,21 +46,25 @@ class AssociationAddress implements IAddress {
     { message: 'Number must be equal to SN or contain at least one number' },
   )
   @AutoMap()
+  @ApiProperty()
   public number: string;
 
   @Column('text', { nullable: true })
   @IsOptional()
   @AutoMap()
+  @ApiProperty()
   public complement: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'District is required' })
   @AutoMap()
+  @ApiProperty()
   public district: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'City is required' })
   @AutoMap()
+  @ApiProperty()
   public city: string;
 
   @Column('text')
@@ -65,6 +72,7 @@ class AssociationAddress implements IAddress {
   @Length(2)
   @IsIn(AddressConstants.brazilianStates)
   @AutoMap()
+  @ApiProperty()
   public state: string;
 
   @Column('text')
@@ -72,11 +80,13 @@ class AssociationAddress implements IAddress {
   @Length(2)
   @Equals('BR')
   @AutoMap()
+  @ApiProperty()
   public country: string;
 
   @Column('text')
   @IsPostalCode('BR', { message: 'Invalid ZIP code format' })
   @AutoMap()
+  @ApiProperty()
   public zipCode: string;
 
   @OneToOne(() => Association, (address) => address.address, {
@@ -85,20 +95,24 @@ class AssociationAddress implements IAddress {
   public association: Association;
 
   @CreateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   @AutoMap()
+  @ApiProperty()
   public updatedAt: Date;
 
   @Column('uuid', { nullable: true })
   @IsUUID()
   @IsOptional()
+  @ApiProperty()
   public createdBy: string;
 
   @Column('uuid', { nullable: true })
   @IsUUID()
   @IsOptional()
+  @ApiProperty()
   public updatedBy: string;
 
   public setCreationStamps(userId: string): void {

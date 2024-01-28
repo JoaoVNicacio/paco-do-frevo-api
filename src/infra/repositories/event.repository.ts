@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository as InjectContext } from '@nestjs/typeorm';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
-import { Repository } from 'typeorm';
+import { Repository as DBContext } from 'typeorm';
 
 @Injectable()
 class EventRepository implements IEventRepository {
   constructor(
-    @InjectRepository(Event)
-    private readonly _eventRepository: Repository<Event>,
+    @InjectContext(Event)
+    private readonly _eventContext: DBContext<Event>,
   ) {}
 
   public async createEvent(event: Event): Promise<Event> {
-    const createdEvent = this._eventRepository.create(event);
+    const createdEvent = this._eventContext.create(event);
 
-    return await this._eventRepository.save(createdEvent);
+    return await this._eventContext.save(createdEvent);
   }
 
   public async findById(id: string): Promise<Event> {
-    return await this._eventRepository.findOne({
+    return await this._eventContext.findOne({
       where: { id },
     });
   }
@@ -30,13 +30,13 @@ class EventRepository implements IEventRepository {
       throw new Error('Número de telefone não encontrado.');
     }
 
-    this._eventRepository.merge(existingEvent, event);
+    this._eventContext.merge(existingEvent, event);
 
-    return await this._eventRepository.save(existingEvent);
+    return await this._eventContext.save(existingEvent);
   }
 
   public async deleteEvent(id: string): Promise<void> {
-    const result = await this._eventRepository.delete(id);
+    const result = await this._eventContext.delete(id);
 
     if (result.affected === 0) {
       throw new Error('Número de telefone não encontrado.');

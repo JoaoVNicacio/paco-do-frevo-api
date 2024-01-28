@@ -3,7 +3,7 @@ enum ESocialNetworkType {
   instagram = 'Instagram',
   twitter = 'Twitter',
   tiktok = 'TikTok',
-  linkedin = 'LinkedIn',
+  linkedin = 'Linkedin',
 }
 
 export default ESocialNetworkType;

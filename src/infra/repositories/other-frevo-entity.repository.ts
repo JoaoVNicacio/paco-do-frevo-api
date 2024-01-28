@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository as InjectContext } from '@nestjs/typeorm';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
-import { Repository } from 'typeorm';
+import { Repository as DBContext } from 'typeorm';
 
 @Injectable()
 class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
   constructor(
-    @InjectRepository(OtherFrevoEntity)
-    private _otherFrevoEntityRepository: Repository<OtherFrevoEntity>,
+    @InjectContext(OtherFrevoEntity)
+    private _otherFrevoEntityContext: DBContext<OtherFrevoEntity>,
   ) {}
 
   public async createResume(
     otherFrevoEntity: OtherFrevoEntity,
   ): Promise<OtherFrevoEntity> {
     const createdOtherFrevoEntity =
-      this._otherFrevoEntityRepository.create(otherFrevoEntity);
+      this._otherFrevoEntityContext.create(otherFrevoEntity);
 
-    return await this._otherFrevoEntityRepository.save(createdOtherFrevoEntity);
+    return await this._otherFrevoEntityContext.save(createdOtherFrevoEntity);
   }
 
   public async getAll(): Promise<Array<OtherFrevoEntity>> {
-    return this._otherFrevoEntityRepository.find();
+    return this._otherFrevoEntityContext.find();
   }
 
   public async getPagedOtherFrevoEntities(
@@ -31,8 +31,8 @@ class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
     otherFrevoEntitys: Array<OtherFrevoEntity>;
     total: number;
   }> {
-    // eslint-disable-next-line prettier/prettier
-    const queryBuilder = this._otherFrevoEntityRepository.createQueryBuilder('otherFrevoEntity');
+    const queryBuilder =
+      this._otherFrevoEntityContext.createQueryBuilder('otherFrevoEntity');
 
     const [otherFrevoEntitys, total] = await queryBuilder
       .skip((page - 1) * pageSize)
@@ -43,7 +43,7 @@ class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
   }
 
   public async getById(id: string): Promise<OtherFrevoEntity> {
-    return await this._otherFrevoEntityRepository.findOne({
+    return await this._otherFrevoEntityContext.findOne({
       where: { id },
       relations: ['address'],
     });
@@ -59,18 +59,16 @@ class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
       throw new Error('Entidade do frevo não encontrada.');
     }
 
-    this._otherFrevoEntityRepository.merge(
+    this._otherFrevoEntityContext.merge(
       existingOtherFrevoEntity,
       otherFrevoEntity,
     );
 
-    return await this._otherFrevoEntityRepository.save(
-      existingOtherFrevoEntity,
-    );
+    return await this._otherFrevoEntityContext.save(existingOtherFrevoEntity);
   }
 
   public async deleteOtherFrevoEntity(id: string): Promise<void> {
-    const result = await this._otherFrevoEntityRepository.delete(id);
+    const result = await this._otherFrevoEntityContext.delete(id);
 
     if (result.affected === 0) {
       throw new Error('Entidade do frevo não encontrada.');

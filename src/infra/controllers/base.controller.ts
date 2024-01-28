@@ -5,11 +5,20 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/validation-error-signature.dto';
+import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import mapper from 'src/application/mappers/mapper';
+import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 
 /** The `ControllerBase` is a base class for the project's NestJS controllers.
 it provides methods for sending custom validation and response messages, as
 well as handling errors. */
+@ApiInternalServerErrorResponse({
+  description: 'There was a internal server error on the operation',
+  type: Object,
+})
 class ControllerBase {
   /**
    * The function sends a custom validation response and throws a BadRequestException if the validation
@@ -22,13 +31,10 @@ class ControllerBase {
     validationResponse: ValidationResponse<T>,
   ): T {
     if (!validationResponse.isValid) {
-      const formattedErrors = validationResponse.validationResult.map(
-        (error) => ({
-          property: error.property,
-          constraints: error.constraints,
-          children: error.children,
-          contexts: error.contexts,
-        }),
+      const formattedErrors = mapper.mapArray(
+        validationResponse.validationResult as Array<ValidationErrorCopy>,
+        ValidationErrorCopy,
+        ValidationErrorDTO,
       );
 
       throw new BadRequestException({
@@ -38,7 +44,6 @@ class ControllerBase {
     }
 
     return validationResponse.output;
-    // eslint-disable-next-line prettier/prettier
   }
 
   /**
@@ -52,7 +57,10 @@ class ControllerBase {
       throw new NotFoundException('O item requisitado não foi encontrado.');
     }
 
-    if (response instanceof Array && response.length === 0) {
+    if (
+      (response instanceof Array && response.length === 0) ||
+      (response instanceof PagedResults && response.result.length === 0)
+    ) {
       throw new HttpException(null, HttpStatus.NO_CONTENT);
     }
 
