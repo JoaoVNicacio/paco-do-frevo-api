@@ -34,7 +34,7 @@ class EventService implements IEventService {
       const error = new ValidationError();
       error.constraints = { associationId: 'The association does not exists' };
 
-      return new ValidationResponse(event, [error], false);
+      return new ValidationResponse(event, [error]);
     }
 
     event.association = association;
@@ -42,11 +42,7 @@ class EventService implements IEventService {
     const isValid = await event.isValid();
 
     if (!isValid) {
-      return new ValidationResponse(
-        event,
-        await event.validateCreation(),
-        isValid,
-      );
+      return new ValidationResponse(event, await event.validateCreation());
     }
 
     const insertResponse = await this._eventRepository.createEvent(event);
@@ -54,7 +50,6 @@ class EventService implements IEventService {
     return new ValidationResponse(
       insertResponse,
       await event.validateCreation(),
-      isValid,
     );
   }
 
@@ -71,11 +66,7 @@ class EventService implements IEventService {
     const isValid = await event.isValid();
 
     if (!isValid) {
-      return new ValidationResponse(
-        event,
-        await event.validateCreation(),
-        isValid,
-      );
+      return new ValidationResponse(event, await event.validateCreation());
     }
 
     const updateResponse = await this._eventRepository.updateEvent(id, event);
@@ -83,7 +74,6 @@ class EventService implements IEventService {
     return new ValidationResponse(
       updateResponse,
       await event.validateCreation(),
-      isValid,
     );
   }
 

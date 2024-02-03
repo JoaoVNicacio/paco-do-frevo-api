@@ -33,8 +33,9 @@ class ContactService implements IContactService {
     if (!association) {
       const error = new ValidationError();
       error.constraints = { associationId: 'The association does not exists' };
+      error.property = 'id';
 
-      return new ValidationResponse(contact, [error], false);
+      return new ValidationResponse(contact, [error]);
     }
 
     contact.association = association;
@@ -42,11 +43,7 @@ class ContactService implements IContactService {
     const isValid = await contact.isValid();
 
     if (!isValid) {
-      return new ValidationResponse(
-        contact,
-        await contact.validateCreation(),
-        isValid,
-      );
+      return new ValidationResponse(contact, await contact.validateCreation());
     }
 
     const insertResponse = await this._contactRepository.createContact(contact);
@@ -54,7 +51,6 @@ class ContactService implements IContactService {
     return new ValidationResponse(
       insertResponse,
       await contact.validateCreation(),
-      isValid,
     );
   }
 
@@ -75,11 +71,7 @@ class ContactService implements IContactService {
     const isValid = await contact.isValid();
 
     if (!isValid) {
-      return new ValidationResponse(
-        contact,
-        await contact.validateCreation(),
-        isValid,
-      );
+      return new ValidationResponse(contact, await contact.validateCreation());
     }
 
     const updateResponse = await this._contactRepository.updateContact(
@@ -90,7 +82,6 @@ class ContactService implements IContactService {
     return new ValidationResponse(
       updateResponse,
       await contact.validateCreation(),
-      isValid,
     );
   }
 

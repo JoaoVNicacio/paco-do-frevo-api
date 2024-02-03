@@ -32,7 +32,6 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       return new ValidationResponse(
         otherFrevoEntity,
         await otherFrevoEntity.validateCreation(),
-        isValid,
       );
     }
 
@@ -42,7 +41,6 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     return new ValidationResponse(
       insertResponse,
       await otherFrevoEntity.validateCreation(),
-      isValid,
     );
   }
 
@@ -63,7 +61,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     const hasNextPage = results.total > page * pageSize;
 
     return new PagedResults(
-      results.otherFrevoEntitys,
+      results.otherFrevoEntities,
       hasNextPage,
       page,
       pageSize,
@@ -91,7 +89,6 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       return new ValidationResponse(
         otherFrevoEntity,
         await otherFrevoEntity.validateCreation(),
-        isValid,
       );
     }
 
@@ -104,7 +101,6 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     return new ValidationResponse(
       updateResponse,
       await otherFrevoEntity.validateCreation(),
-      isValid,
     );
   }
 

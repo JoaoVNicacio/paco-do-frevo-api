@@ -33,7 +33,6 @@ class AssociationService implements IAssociationService {
       return new ValidationResponse(
         association,
         await association.validateCreation(),
-        isValid,
       );
     }
 
@@ -51,7 +50,6 @@ class AssociationService implements IAssociationService {
     return new ValidationResponse(
       insertResponse,
       await association.validateCreation(),
-      isValid,
     );
   }
 
@@ -98,7 +96,6 @@ class AssociationService implements IAssociationService {
       return new ValidationResponse(
         association,
         await association.validateCreation(),
-        isValid,
       );
     }
 
@@ -116,7 +113,6 @@ class AssociationService implements IAssociationService {
     return new ValidationResponse(
       updateResponse,
       await association.validateCreation(),
-      isValid,
     );
   }
 

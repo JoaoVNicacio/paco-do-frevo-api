@@ -17,7 +17,14 @@ it provides methods for sending custom validation and response messages, as
 well as handling errors. */
 @ApiInternalServerErrorResponse({
   description: 'There was a internal server error on the operation',
-  type: Object,
+  schema: {
+    type: 'object',
+    properties: {
+      message: { type: 'string' },
+      error: { type: 'string', nullable: true },
+      statusCode: { type: 'number' },
+    },
+  },
 })
 class ControllerBase {
   /**

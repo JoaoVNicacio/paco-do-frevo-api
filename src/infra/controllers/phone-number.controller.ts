@@ -15,7 +15,6 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -23,6 +22,8 @@ import {
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 
 @ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
@@ -40,8 +41,12 @@ class PhoneNumberController extends ControllerBase {
     type: PhoneNumber,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
@@ -53,13 +58,12 @@ class PhoneNumberController extends ControllerBase {
     @Param() idParm: UUIDParam,
   ): Promise<PhoneNumber> {
     try {
-      const createdPhoneNumber =
+      return this.sendCustomValidationResponse<PhoneNumber>(
         await this._phoneNumberService.createPhoneNumber(
           phoneNumberDTO,
           idParm.id,
-        );
-
-      return this.sendCustomValidationResponse<PhoneNumber>(createdPhoneNumber);
+        ),
+      );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar phone number');
     }
@@ -70,10 +74,11 @@ class PhoneNumberController extends ControllerBase {
     description: 'The record has been successfully fetched.',
     type: PhoneNumber,
   })
-  @ApiNotFoundResponse({
-    description: 'The record was not found.',
-    type: String,
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
+  @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getAssociationById(
     @Param() idParam: UUIDParam,
@@ -94,8 +99,12 @@ class PhoneNumberController extends ControllerBase {
     type: PhoneNumber,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
@@ -107,13 +116,12 @@ class PhoneNumberController extends ControllerBase {
     @Body() phoneNumberDTO: PhoneNumberDTO,
   ): Promise<PhoneNumber> {
     try {
-      const updatePhoneNumber =
+      return this.sendCustomValidationResponse<PhoneNumber>(
         await this._phoneNumberService.updatePhoneNumber(
           idParam.id,
           phoneNumberDTO,
-        );
-
-      return this.sendCustomValidationResponse<PhoneNumber>(updatePhoneNumber);
+        ),
+      );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao atualizar phone number');
     }
@@ -124,6 +132,11 @@ class PhoneNumberController extends ControllerBase {
     description: 'The record has been successfully deleted.',
     type: Object,
   })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiNotFoundResponseWithSchema()
   public async deletePhoneNumber(@Param() idParam: UUIDParam): Promise<void> {
     try {
       await this._phoneNumberService.deletePhoneNumber(idParam.id);

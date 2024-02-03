@@ -1,30 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository as InjectContext } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
-import { Repository as DBContext } from 'typeorm';
+import { Repository as DBAccessor } from 'typeorm';
 
 @Injectable()
 class PhoneNumberRepository implements IPhoneNumberRepository {
   constructor(
-    @InjectContext(PhoneNumber)
-    private readonly _phoneNumberContext: DBContext<PhoneNumber>,
+    @InjectDBAccessor(PhoneNumber)
+    private readonly _phoneNumberDBAccessor: DBAccessor<PhoneNumber>,
   ) {}
 
   public async createPhoneNumber(
     phoneNumber: PhoneNumber,
   ): Promise<PhoneNumber> {
-    const createdPhoneNumber = this._phoneNumberContext.create(phoneNumber);
+    const createdPhoneNumber = this._phoneNumberDBAccessor.create(phoneNumber);
 
-    return await this._phoneNumberContext.save(createdPhoneNumber);
+    return await this._phoneNumberDBAccessor.save(createdPhoneNumber);
   }
 
   public async getAll(): Promise<Array<PhoneNumber>> {
-    return await this._phoneNumberContext.find();
+    return await this._phoneNumberDBAccessor.find();
   }
 
   public async getById(id: string): Promise<PhoneNumber> {
-    return await this._phoneNumberContext.findOne({
+    return await this._phoneNumberDBAccessor.findOne({
       where: { id },
       relations: ['address'],
     });
@@ -37,19 +37,19 @@ class PhoneNumberRepository implements IPhoneNumberRepository {
     const existingPhoneNumber = await this.getById(id);
 
     if (!existingPhoneNumber) {
-      throw new Error('Número de telefone não encontrado.');
+      throw new NotFoundException('Número de telefone não encontrado.');
     }
 
-    this._phoneNumberContext.merge(existingPhoneNumber, phoneNumber);
+    this._phoneNumberDBAccessor.merge(existingPhoneNumber, phoneNumber);
 
-    return await this._phoneNumberContext.save(existingPhoneNumber);
+    return await this._phoneNumberDBAccessor.save(existingPhoneNumber);
   }
 
   public async deletePhoneNumber(id: string): Promise<void> {
-    const result = await this._phoneNumberContext.delete(id);
+    const result = await this._phoneNumberDBAccessor.delete(id);
 
     if (result.affected === 0) {
-      throw new Error('Número de telefone não encontrado.');
+      throw new NotFoundException('Número de telefone não encontrado.');
     }
   }
 }
