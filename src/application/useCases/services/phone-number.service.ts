@@ -37,7 +37,7 @@ class PhoneNumberService implements IPhoneNumberService {
       const error = new ValidationError();
       error.constraints = { contactId: 'The association does not exists' };
 
-      return new ValidationResponse(phoneNumber, [error], false);
+      return new ValidationResponse(phoneNumber, [error]);
     }
 
     phoneNumber.contact = contact;
@@ -48,7 +48,6 @@ class PhoneNumberService implements IPhoneNumberService {
       return new ValidationResponse(
         phoneNumber,
         await phoneNumber.validateCreation(),
-        isValid,
       );
     }
 
@@ -58,7 +57,6 @@ class PhoneNumberService implements IPhoneNumberService {
     return new ValidationResponse(
       insertResponse,
       await phoneNumber.validateCreation(),
-      isValid,
     );
   }
 
@@ -86,7 +84,6 @@ class PhoneNumberService implements IPhoneNumberService {
       return new ValidationResponse(
         phoneNumber,
         await phoneNumber.validateCreation(),
-        isValid,
       );
     }
 
@@ -98,7 +95,6 @@ class PhoneNumberService implements IPhoneNumberService {
     return new ValidationResponse(
       updateResponse,
       await phoneNumber.validateCreation(),
-      isValid,
     );
   }
 

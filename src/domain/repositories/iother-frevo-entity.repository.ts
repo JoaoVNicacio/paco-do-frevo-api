@@ -8,7 +8,7 @@ interface IOtherFrevoEntityRepository {
     page: number,
     pageSize: number,
   ): Promise<{
-    otherFrevoEntitys: Array<OtherFrevoEntity>;
+    otherFrevoEntities: Array<OtherFrevoEntity>;
     total: number;
   }>;
   updateOtherFrevoEntity(

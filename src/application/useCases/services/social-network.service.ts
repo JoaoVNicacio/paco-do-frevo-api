@@ -38,7 +38,7 @@ class SocialNetworkService implements ISocialNetworkService {
       const error = new ValidationError();
       error.constraints = { associationId: 'The association does not exists' };
 
-      return new ValidationResponse(socialNetwork, [error], false);
+      return new ValidationResponse(socialNetwork, [error]);
     }
 
     socialNetwork.association = association;
@@ -49,7 +49,6 @@ class SocialNetworkService implements ISocialNetworkService {
       return new ValidationResponse(
         socialNetwork,
         await socialNetwork.validateCreation(),
-        isValid,
       );
     }
 
@@ -59,7 +58,6 @@ class SocialNetworkService implements ISocialNetworkService {
     return new ValidationResponse(
       insertResponse,
       await socialNetwork.validateCreation(),
-      isValid,
     );
   }
 
@@ -87,7 +85,6 @@ class SocialNetworkService implements ISocialNetworkService {
       return new ValidationResponse(
         socialNetwork,
         await socialNetwork.validateCreation(),
-        isValid,
       );
     }
 
@@ -100,7 +97,6 @@ class SocialNetworkService implements ISocialNetworkService {
     return new ValidationResponse(
       updateResponse,
       await socialNetwork.validateCreation(),
-      isValid,
     );
   }
 
