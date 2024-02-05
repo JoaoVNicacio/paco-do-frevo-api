@@ -133,8 +133,9 @@ class AssociationService implements IAssociationService {
   }
 
   public async deleteAssociation(id: string): Promise<void> {
-    await this._associationRepository.deleteAssociation(id);
-    await this._cacheManager.del(`associations/id/${id}`);
+    await this._associationRepository
+      .deleteAssociation(id)
+      .then(() => this._cacheManager.del(`associations/id/${id}`));
   }
 }
 
