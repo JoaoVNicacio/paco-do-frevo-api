@@ -94,7 +94,7 @@ class AssociationController extends ControllerBase {
 
   @Get('/paged')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(5000)
+  @CacheTTL(20000)
   @ApiPagedResultsResponse(Association)
   @ApiNoContentResponse({
     description: 'The request returned no records.',

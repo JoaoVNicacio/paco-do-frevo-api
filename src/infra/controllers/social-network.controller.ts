@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
@@ -24,6 +25,7 @@ import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')
@@ -70,6 +72,8 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: SocialNetwork,

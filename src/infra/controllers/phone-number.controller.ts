@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
@@ -24,6 +25,7 @@ import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
@@ -94,6 +96,8 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: PhoneNumber,
