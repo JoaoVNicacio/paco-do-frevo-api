@@ -8,6 +8,7 @@ import {
   Body,
   Query,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
@@ -31,6 +32,7 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('Association')
 @Controller('associations')
@@ -68,6 +70,8 @@ class AssociationController extends ControllerBase {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(5000)
   @ApiOkResponse({
     description: 'The records have been successfully fetched.',
     schema: {
@@ -89,6 +93,8 @@ class AssociationController extends ControllerBase {
   }
 
   @Get('/paged')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(5000)
   @ApiPagedResultsResponse(Association)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
@@ -115,6 +121,8 @@ class AssociationController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(30000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Association,
