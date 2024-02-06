@@ -7,6 +7,7 @@ import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.e
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
@@ -19,6 +20,9 @@ class PhoneNumberService implements IPhoneNumberService {
 
     @Inject('IMapper')
     private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createPhoneNumber(
@@ -60,10 +64,6 @@ class PhoneNumberService implements IPhoneNumberService {
     );
   }
 
-  public async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
-    return await this._phoneNumberRepository.getAll();
-  }
-
   public async getPhoneNumberById(id: string): Promise<PhoneNumber> {
     return this._phoneNumberRepository.getById(id);
   }
@@ -92,6 +92,8 @@ class PhoneNumberService implements IPhoneNumberService {
       phoneNumber,
     );
 
+    await this._cacheManager.del(`phone-numbers/id/${id}`);
+
     return new ValidationResponse(
       updateResponse,
       await phoneNumber.validateCreation(),
@@ -99,7 +101,9 @@ class PhoneNumberService implements IPhoneNumberService {
   }
 
   public async deletePhoneNumber(id: string): Promise<void> {
-    return await this._phoneNumberRepository.deletePhoneNumber(id);
+    return await this._phoneNumberRepository
+      .deletePhoneNumber(id)
+      .then(async () => await this._cacheManager.del(`phone-numbers/id/${id}`));
   }
 }
 

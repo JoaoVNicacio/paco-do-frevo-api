@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
@@ -24,6 +25,8 @@ import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { CacheInterceptor } from '@nestjs/cache-manager/dist/interceptors/cache.interceptor';
+import { CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('Events')
 @Controller('event')
@@ -63,6 +66,8 @@ class EventController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Event,

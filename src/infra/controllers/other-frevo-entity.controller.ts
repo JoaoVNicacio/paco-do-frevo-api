@@ -8,6 +8,7 @@ import {
   Body,
   Query,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ControllerBase from './base.controller';
@@ -31,6 +32,7 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
@@ -70,6 +72,8 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The records have been successfully fetched.',
     schema: {
@@ -94,6 +98,8 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Get('/paged')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiPagedResultsResponse(OtherFrevoEntity)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
@@ -110,8 +116,8 @@ class OtherFrevoEntityController extends ControllerBase {
     try {
       return this.sendCustomResponse(
         await this._otherFrevoEntityService.getPagedOtherFrevoEntities(
-          pagingParams.page,
-          pagingParams.pageSize,
+          Number(pagingParams.page),
+          Number(pagingParams.pageSize),
         ),
       );
     } catch (error) {
@@ -123,6 +129,8 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: OtherFrevoEntity,

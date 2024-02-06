@@ -6,6 +6,7 @@ import ValidationResponse from 'src/application/responseObjects/validation.respo
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import IOtherFrevoEntityService from 'src/domain/services/iother-frevo-entity.service';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class OtherFrevoEntityService implements IOtherFrevoEntityService {
@@ -15,6 +16,9 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     @Inject('IMapper')
     private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createOtherFrevoEntity(
@@ -37,6 +41,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     const insertResponse =
       await this._otherFrevoEntityRepository.createResume(otherFrevoEntity);
+
+    await this._cacheManager.del(`other-frevo-entities`);
 
     return new ValidationResponse(
       insertResponse,
@@ -98,6 +104,9 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
         otherFrevoEntity,
       );
 
+    await this._cacheManager.del(`other-frevo-entities/id/${id}`);
+    await this._cacheManager.del(`other-frevo-entities`);
+
     return new ValidationResponse(
       updateResponse,
       await otherFrevoEntity.validateCreation(),
@@ -105,7 +114,12 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
   }
 
   public async deleteOtherFrevoEntity(id: string): Promise<void> {
-    return await this._otherFrevoEntityRepository.deleteOtherFrevoEntity(id);
+    return await this._otherFrevoEntityRepository
+      .deleteOtherFrevoEntity(id)
+      .then(async () => {
+        await this._cacheManager.del(`other-frevo-entities/id/${id}`);
+        await this._cacheManager.del(`other-frevo-entities`);
+      });
   }
 }
 

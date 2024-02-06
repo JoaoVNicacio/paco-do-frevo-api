@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
@@ -24,6 +25,7 @@ import IContactService from 'src/domain/services/icontact.service';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('Contacts')
 @Controller('contacts')
@@ -63,6 +65,8 @@ class ContactController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Contact,
