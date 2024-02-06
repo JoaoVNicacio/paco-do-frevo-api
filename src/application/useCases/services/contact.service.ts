@@ -92,7 +92,7 @@ class ContactService implements IContactService {
   public async deleteContact(id: string): Promise<void> {
     return await this._contactRepository
       .deleteContact(id)
-      .then(() => this._cacheManager.del(`contacts/id/${id}`));
+      .then(async () => await this._cacheManager.del(`contacts/id/${id}`));
   }
 }
 

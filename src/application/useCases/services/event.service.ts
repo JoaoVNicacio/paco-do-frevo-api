@@ -7,6 +7,7 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import IEventService from 'src/domain/services/ievent.service';
 import { Mapper as IMapper } from '@automapper/core';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class EventService implements IEventService {
@@ -19,6 +20,9 @@ class EventService implements IEventService {
 
     @Inject('IMapper')
     private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createEvent(
@@ -63,13 +67,13 @@ class EventService implements IEventService {
   ): Promise<ValidationResponse<Event>> {
     const event = this._mapper.map(eventDto, EventDTO, Event);
 
-    const isValid = await event.isValid();
-
-    if (!isValid) {
+    if (!(await event.isValid())) {
       return new ValidationResponse(event, await event.validateCreation());
     }
 
     const updateResponse = await this._eventRepository.updateEvent(id, event);
+
+    await this._cacheManager.del(`events/id/${id}`);
 
     return new ValidationResponse(
       updateResponse,
@@ -78,7 +82,9 @@ class EventService implements IEventService {
   }
 
   public async deleteEvent(id: string): Promise<void> {
-    return await this._eventRepository.deleteEvent(id);
+    return await this._eventRepository
+      .deleteEvent(id)
+      .then(async () => await this._cacheManager.del(`events/id/${id}`));
   }
 }
 
