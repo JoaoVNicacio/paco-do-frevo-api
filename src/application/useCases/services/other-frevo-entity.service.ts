@@ -1,41 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Mapper as IMapper } from '@automapper/core';
+import { Inject, Injectable } from '@nestjs/common';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
-import OtherFrevoEntityMapper from 'src/application/mappers/other-frevo-entity.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import IOtherFrevoEntityService from 'src/domain/services/iother-frevo-entity.service';
-import OtherFrevoEntityRepository from 'src/infra/repositories/other-frevo-entity.repository';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class OtherFrevoEntityService implements IOtherFrevoEntityService {
   constructor(
-    private readonly _otherFrevoEntityRepository: OtherFrevoEntityRepository,
-    private readonly _otherFrevoEntityMapper: OtherFrevoEntityMapper,
+    @Inject(IOtherFrevoEntityRepository)
+    private readonly _otherFrevoEntityRepository: IOtherFrevoEntityRepository,
+
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createOtherFrevoEntity(
     otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<ValidationResponse<OtherFrevoEntity>> {
-    const otherFrevoEntity =
-      this._otherFrevoEntityMapper.dtoToEntity(otherFrevoEntityDTO);
+    const otherFrevoEntity = this._mapper.map(
+      otherFrevoEntityDTO,
+      OtherFrevoEntityDTO,
+      OtherFrevoEntity,
+    );
+
     const isValid = await otherFrevoEntity.isValid();
 
     if (!isValid) {
       return new ValidationResponse(
         otherFrevoEntity,
         await otherFrevoEntity.validateCreation(),
-        isValid,
       );
     }
 
     const insertResponse =
       await this._otherFrevoEntityRepository.createResume(otherFrevoEntity);
 
+    await this._cacheManager.del(`other-frevo-entities`);
+
     return new ValidationResponse(
       insertResponse,
       await otherFrevoEntity.validateCreation(),
-      isValid,
     );
   }
 
@@ -48,7 +59,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     pageSize: number,
   ): Promise<PagedResults<OtherFrevoEntity>> {
     const results =
-      await this._otherFrevoEntityRepository.getPagedOtherFrevoEntitys(
+      await this._otherFrevoEntityRepository.getPagedOtherFrevoEntities(
         page,
         pageSize,
       );
@@ -56,7 +67,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     const hasNextPage = results.total > page * pageSize;
 
     return new PagedResults(
-      results.otherFrevoEntitys,
+      results.otherFrevoEntities,
       hasNextPage,
       page,
       pageSize,
@@ -72,15 +83,18 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     id: string,
     otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<ValidationResponse<OtherFrevoEntity>> {
-    const otherFrevoEntity =
-      this._otherFrevoEntityMapper.dtoToEntity(otherFrevoEntityDTO);
+    const otherFrevoEntity = this._mapper.map(
+      otherFrevoEntityDTO,
+      OtherFrevoEntityDTO,
+      OtherFrevoEntity,
+    );
+
     const isValid = await otherFrevoEntity.isValid();
 
     if (!isValid) {
       return new ValidationResponse(
         otherFrevoEntity,
         await otherFrevoEntity.validateCreation(),
-        isValid,
       );
     }
 
@@ -90,15 +104,22 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
         otherFrevoEntity,
       );
 
+    await this._cacheManager.del(`other-frevo-entities/id/${id}`);
+    await this._cacheManager.del(`other-frevo-entities`);
+
     return new ValidationResponse(
       updateResponse,
       await otherFrevoEntity.validateCreation(),
-      isValid,
     );
   }
 
   public async deleteOtherFrevoEntity(id: string): Promise<void> {
-    return await this._otherFrevoEntityRepository.deleteOtherFrevoEntity(id);
+    return await this._otherFrevoEntityRepository
+      .deleteOtherFrevoEntity(id)
+      .then(async () => {
+        await this._cacheManager.del(`other-frevo-entities/id/${id}`);
+        await this._cacheManager.del(`other-frevo-entities`);
+      });
   }
 }
 

@@ -1,31 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Mapper as IMapper } from '@automapper/core';
+import { Inject, Injectable } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import AssociationMapper from 'src/application/mappers/association.mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import CleanStringBuilder from 'src/application/utils/clean-string.builder';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IAssociationService from 'src/domain/services/iassociation.service';
-import AssociationRepository from 'src/infra/repositories/association.repository';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class AssociationService implements IAssociationService {
   constructor(
-    private readonly _associationRepository: AssociationRepository,
-    private readonly _associationMapper: AssociationMapper,
+    @Inject(IAssociationRepository)
+    private readonly _associationRepository: IAssociationRepository,
+
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createAssociation(
     associationDTO: AssociationDTO,
   ): Promise<ValidationResponse<Association>> {
-    const association = this._associationMapper.dtoToEntity(associationDTO);
+    const association = this._mapper.map(
+      associationDTO,
+      AssociationDTO,
+      Association,
+    );
+
     const isValid = await association.isValid();
 
     if (!isValid) {
       return new ValidationResponse(
         association,
         await association.validateCreation(),
-        isValid,
       );
     }
 
@@ -40,11 +51,16 @@ class AssociationService implements IAssociationService {
     const insertResponse =
       await this._associationRepository.createAssociation(association);
 
-    return new ValidationResponse(
+    const response = new ValidationResponse(
       insertResponse,
       await association.validateCreation(),
-      isValid,
     );
+
+    if (response.isValid) {
+      await this._cacheManager.del(`associations`);
+    }
+
+    return response;
   }
 
   public async getAllAssociations(): Promise<Array<Association>> {
@@ -79,14 +95,17 @@ class AssociationService implements IAssociationService {
     id: string,
     associationDTO: AssociationDTO,
   ): Promise<ValidationResponse<Association>> {
-    const association = this._associationMapper.dtoToEntity(associationDTO);
+    const association = this._mapper.map(
+      associationDTO,
+      AssociationDTO,
+      Association,
+    );
     const isValid = await association.isValid();
 
     if (!isValid) {
       return new ValidationResponse(
         association,
         await association.validateCreation(),
-        isValid,
       );
     }
 
@@ -101,15 +120,22 @@ class AssociationService implements IAssociationService {
       association,
     );
 
-    return new ValidationResponse(
+    const response = new ValidationResponse(
       updateResponse,
       await association.validateCreation(),
-      isValid,
     );
+
+    await this._cacheManager.del(`associations/id/${id}`);
+    await this._cacheManager.del(`associations`);
+
+    return response;
   }
 
   public async deleteAssociation(id: string): Promise<void> {
-    return await this._associationRepository.deleteAssociation(id);
+    await this._associationRepository.deleteAssociation(id).then(async () => {
+      await this._cacheManager.del(`associations/id/${id}`);
+      await this._cacheManager.del(`associations`);
+    });
   }
 }
 

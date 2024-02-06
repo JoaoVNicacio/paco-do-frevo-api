@@ -7,7 +7,6 @@ interface IPhoneNumberService {
     phoneNumberDTO: PhoneNumberDTO,
     contactId: string,
   ): Promise<ValidationResponse<PhoneNumber>>;
-  getAllPhoneNumbers(): Promise<Array<PhoneNumber>>;
   getPhoneNumberById(id: string): Promise<PhoneNumber>;
   updatePhoneNumber(
     id: string,
@@ -15,5 +14,7 @@ interface IPhoneNumberService {
   ): Promise<ValidationResponse<PhoneNumber>>;
   deletePhoneNumber(id: string): Promise<void>;
 }
+
+const IPhoneNumberService = Symbol('IPhoneNumberService');
 
 export default IPhoneNumberService;

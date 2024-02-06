@@ -1,26 +1,26 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
+import { Repository as DBAccessor } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 
 @Injectable()
 class AssociationRepository implements IAssociationRepository {
   constructor(
-    @InjectRepository(Association)
-    private readonly _associationRepository: Repository<Association>,
+    @InjectDBAccessor(Association)
+    private readonly _associationDBAccessor: DBAccessor<Association>,
   ) {}
 
   public async createAssociation(
     association: Association,
   ): Promise<Association> {
-    const createdAssociation = this._associationRepository.create(association);
+    const createdAssociation = this._associationDBAccessor.create(association);
 
-    return await this._associationRepository.save(createdAssociation);
+    return await this._associationDBAccessor.save(createdAssociation);
   }
 
   public async getAll(): Promise<Array<Association>> {
-    return this._associationRepository.find();
+    return this._associationDBAccessor.find();
   }
 
   public async getPagedAssociations(
@@ -30,8 +30,8 @@ class AssociationRepository implements IAssociationRepository {
     associations: Array<Association>;
     total: number;
   }> {
-    // eslint-disable-next-line prettier/prettier
-    const queryBuilder = this._associationRepository.createQueryBuilder('association');
+    const queryBuilder =
+      this._associationDBAccessor.createQueryBuilder('association');
 
     const [associations, total] = await queryBuilder
       .skip((page - 1) * pageSize)
@@ -42,7 +42,7 @@ class AssociationRepository implements IAssociationRepository {
   }
 
   public async getById(id: string): Promise<Association> {
-    return await this._associationRepository.findOne({
+    return await this._associationDBAccessor.findOne({
       where: { id },
       relations: ['address', 'events', 'members', 'socialNetworks', 'contacts'],
     });
@@ -55,19 +55,19 @@ class AssociationRepository implements IAssociationRepository {
     const existingAssociation = await this.getById(id);
 
     if (!existingAssociation) {
-      throw new Error('Associação não encontrada.');
+      throw new NotFoundException('Associação não encontrada.');
     }
 
-    this._associationRepository.merge(existingAssociation, association);
+    this._associationDBAccessor.merge(existingAssociation, association);
 
-    return await this._associationRepository.save(existingAssociation);
+    return await this._associationDBAccessor.save(existingAssociation);
   }
 
   public async deleteAssociation(id: string): Promise<void> {
-    const result = await this._associationRepository.delete(id);
+    const result = await this._associationDBAccessor.delete(id);
 
     if (result.affected === 0) {
-      throw new Error('Associação não encontrada.');
+      throw new NotFoundException('Associação não encontrada.');
     }
   }
 }

@@ -7,7 +7,6 @@ interface IContactService {
     contactDTO: ContactDTO,
     associationId: string,
   ): Promise<ValidationResponse<Contact>>;
-  getAllContacts(): Promise<Array<Contact>>;
   getContactById(id: string): Promise<Contact>;
   updateContact(
     id: string,
@@ -15,5 +14,7 @@ interface IContactService {
   ): Promise<ValidationResponse<Contact>>;
   deleteContact(id: string): Promise<void>;
 }
+
+const IContactService = Symbol('IContactService');
 
 export default IContactService;

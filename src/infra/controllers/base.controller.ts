@@ -5,11 +5,27 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/validation-error-signature.dto';
+import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import mapper from 'src/application/mappers/mapper';
+import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 
 /** The `ControllerBase` is a base class for the project's NestJS controllers.
 it provides methods for sending custom validation and response messages, as
 well as handling errors. */
+@ApiInternalServerErrorResponse({
+  description: 'There was a internal server error on the operation',
+  schema: {
+    type: 'object',
+    properties: {
+      message: { type: 'string' },
+      error: { type: 'string', nullable: true },
+      statusCode: { type: 'number' },
+    },
+  },
+})
 class ControllerBase {
   /**
    * The function sends a custom validation response and throws a BadRequestException if the validation
@@ -22,23 +38,19 @@ class ControllerBase {
     validationResponse: ValidationResponse<T>,
   ): T {
     if (!validationResponse.isValid) {
-      const formattedErrors = validationResponse.validationResult.map(
-        (error) => ({
-          property: error.property,
-          constraints: error.constraints,
-          children: error.children,
-          contexts: error.contexts,
-        }),
+      const formattedErrors = mapper.mapArray(
+        validationResponse.validationResult as Array<ValidationErrorCopy>,
+        ValidationErrorCopy,
+        ValidationErrorDTO,
       );
 
       throw new BadRequestException({
-        message: `The given ${typeof validationResponse.output} is invalid.`,
+        message: `A requisição com ${typeof validationResponse.output} é inválida.`,
         errors: formattedErrors,
       });
     }
 
     return validationResponse.output;
-    // eslint-disable-next-line prettier/prettier
   }
 
   /**
@@ -49,10 +61,13 @@ class ControllerBase {
    */
   protected sendCustomResponse<T>(response: T): T {
     if (!response) {
-      throw new NotFoundException('The requested item was not found.');
+      throw new NotFoundException('O item requisitado não foi encontrado.');
     }
 
-    if (response instanceof Array && response.length === 0) {
+    if (
+      (response instanceof Array && response.length === 0) ||
+      (response instanceof PagedResults && response.result.length === 0)
+    ) {
       throw new HttpException(null, HttpStatus.NO_CONTENT);
     }
 
@@ -70,7 +85,7 @@ class ControllerBase {
   protected throwInternalError(error, message: string): void {
     if (!(error instanceof HttpException)) {
       throw new InternalServerErrorException(
-        `Oops, ${message.trim()}. Please contact our support`,
+        `Oops, ${message.trim()}. Por favor, relate ao suporte.`,
       );
     }
 

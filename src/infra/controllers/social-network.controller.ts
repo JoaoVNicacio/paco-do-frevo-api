@@ -6,126 +6,143 @@ import {
   Delete,
   Param,
   Body,
-  Query,
+  Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
-import SocialNetworkService from 'src/application/useCases/services/social-network.service';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import ControllerBase from './base.controller';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import ISocialNetworkService from 'src/domain/services/isocial-network.service';
+import UUIDParam from 'src/application/requestObjects/uuid.param';
+import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')
 class SocialNetworkController extends ControllerBase {
-  constructor(private readonly socialNetworkService: SocialNetworkService) {
+  constructor(
+    @Inject(ISocialNetworkService)
+    private readonly _socialNetworkService: ISocialNetworkService,
+  ) {
     super();
   }
 
-  @Post('association/:associationId')
+  @Post('association/:id')
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+    type: SocialNetwork,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an error on the sent object.',
+    type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
+  @ApiBody({
+    description: 'The record data.',
+    type: SocialNetworkDTO,
+  })
   public async createSocialNetwork(
     @Body() socialNetworkDTO: SocialNetworkDTO,
-    @Param('associationId') associationId: string,
+    @Param() idParam: UUIDParam,
   ): Promise<SocialNetwork> {
     try {
-      // eslint-disable-next-line prettier/prettier
-      const createdSocialNetwork =
-        await this.socialNetworkService.createSocialNetwork(
-          socialNetworkDTO,
-          associationId,
-        );
-
       return this.sendCustomValidationResponse<SocialNetwork>(
-        createdSocialNetwork,
+        await this._socialNetworkService.createSocialNetwork(
+          socialNetworkDTO,
+          idParam.id,
+        ),
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(error, 'There was an error creating the network');
-    }
-  }
-
-  @Get()
-  public async getAllSocialNetworks(): Promise<SocialNetwork[]> {
-    try {
-      const socialNetwork =
-        await this.socialNetworkService.getAllSocialNetwork();
-
-      return socialNetwork;
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error retriving the networks',
-      );
-    }
-  }
-
-  @Get('paged')
-  public async getPagedSocialNetworks(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-  ): Promise<PagedResults<SocialNetwork>> {
-    try {
-      const result = await this.socialNetworkService.getPagedSocialNetworks(
-        page,
-        pageSize,
-      );
-
-      return result;
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error retrieving the networks',
-      );
+    } catch (error) {
+      this.throwInternalError(error, 'houve um erro ao criar network');
     }
   }
 
   @Get('id/:id')
-  public async getById(@Param('id') id: string): Promise<SocialNetwork> {
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
+  @ApiOkResponse({
+    description: 'The record has been successfully fetched.',
+    type: SocialNetwork,
+  })
+  @ApiNotFoundResponseWithSchema()
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
+  public async getById(@Param() idParam: UUIDParam): Promise<SocialNetwork> {
     try {
-      return this.sendCustomResponse(await this.getById(id));
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch(error){
-      this.throwInternalError(error, 'There was an error creating the contact');
+      return this.sendCustomResponse(
+        await this._socialNetworkService.getSocialNetworkById(idParam.id),
+      );
+    } catch (error) {
+      this.throwInternalError(error, 'houve um erro ao criar contact');
     }
   }
 
   @Put('id/:id')
+  @ApiOkResponse({
+    description: 'The record has been successfully updated.',
+    type: SocialNetwork,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an error on the sent object.',
+    type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiParam({ name: 'id', description: 'The record id.' })
+  @ApiBody({
+    description: 'The record data.',
+    type: SocialNetworkDTO,
+  })
   public async updateSocialNetwork(
-    @Param('id') id: string,
-    @Body() socialNetwork_DTO: SocialNetworkDTO,
+    @Param() idParam: UUIDParam,
+    @Body() socialNetworkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     try {
-      // eslint-disable-next-line prettier/prettier
-      const updatedSocialNetwork =
-        await this.socialNetworkService.updateSocialNetwork(
-          id,
-          socialNetwork_DTO,
-        );
-
       return this.sendCustomValidationResponse<SocialNetwork>(
-        updatedSocialNetwork,
+        await this._socialNetworkService.updateSocialNetwork(
+          idParam.id,
+          socialNetworkDTO,
+        ),
       );
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(error, 'There was an error updating the network');
+    } catch (error) {
+      this.throwInternalError(error, 'houve um erro ao atualizar network');
     }
   }
 
   @Delete('id/:id')
-  public async deleteSocialNetwork(@Param('id') id: string): Promise<void> {
+  @ApiOkResponse({
+    description: 'The record has been successfully deleted.',
+    type: Object,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiNotFoundResponseWithSchema()
+  public async deleteSocialNetwork(@Param() idParam: UUIDParam): Promise<void> {
     try {
-      await this.socialNetworkService.deleteSocialNetwork(id);
-      // eslint-disable-next-line prettier/prettier
-    }
-    catch (error) {
-      this.throwInternalError(error, 'There was an error deleting the network');
+      await this._socialNetworkService.deleteSocialNetwork(idParam.id);
+    } catch (error) {
+      this.throwInternalError(error, 'houve um erro ao remover network');
     }
   }
 }

@@ -16,42 +16,57 @@ import {
   validate,
 } from 'class-validator';
 import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
+import { AutoMap } from '@automapper/classes';
+import { ApiProperty } from '@nestjs/swagger';
 
-/* This class represents an Carnival Association with its various properties, relationships and behaviour. */
+/** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'OtherFrevoEntities' })
 class OtherFrevoEntity {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   public id: string;
 
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
+  @ApiProperty()
   public name: string;
 
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
+  @ApiProperty()
   public type: string;
 
   @IsNotEmpty()
   @IsString()
   @Column('text')
+  @AutoMap()
+  @ApiProperty()
   public entityHistoryNotes: string;
 
   @IsInt()
   @Column('int')
+  @AutoMap()
+  @ApiProperty()
   public actuationTimeInMonths: number;
 
   @CreateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public updatedAt: Date;
 
   @Column('uuid', { nullable: true })
+  @ApiProperty()
   public createdBy: string;
 
   @Column('uuid', { nullable: true })
+  @ApiProperty()
   public updatedBy: string;
 
   @OneToOne(
@@ -61,6 +76,8 @@ class OtherFrevoEntity {
   )
   @JoinColumn()
   @ValidateNested()
+  @AutoMap()
+  @ApiProperty()
   public address: OtherFrevoEntityAddress;
 
   public setCreationStamps(userId: string): void {

@@ -7,9 +7,11 @@ import Association from 'src/domain/entities/associationAggregate/association.en
 import ContactRepository from '../repositories/contact.repository';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import { PhoneNumberModule } from './phone-number.module';
-import ContactMapper from 'src/application/mappers/contact.mapper';
-import PhoneNumberMapper from 'src/application/mappers/phone-number.mapper';
 import AssociationRepository from '../repositories/association.repository';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
+import IContactRepository from 'src/domain/repositories/icontact.repository';
+import IContactService from 'src/domain/services/icontact.service';
+import mapper from 'src/application/mappers/mapper';
 
 @Module({
   imports: [
@@ -18,11 +20,27 @@ import AssociationRepository from '../repositories/association.repository';
   ],
   controllers: [ContactController],
   providers: [
-    ContactRepository,
-    ContactMapper,
-    ContactService,
-    AssociationRepository,
-    PhoneNumberMapper,
+    // Services:
+    {
+      provide: IContactService,
+      useClass: ContactService,
+    },
+
+    // Repositories:
+    {
+      provide: IContactRepository,
+      useClass: ContactRepository,
+    },
+    {
+      provide: IAssociationRepository,
+      useClass: AssociationRepository,
+    },
+
+    // Mappers:
+    {
+      provide: 'IMapper',
+      useValue: mapper,
+    },
   ],
 })
 export class ContactModule {}

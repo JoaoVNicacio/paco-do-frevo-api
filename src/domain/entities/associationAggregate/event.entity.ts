@@ -15,23 +15,32 @@ import {
 } from 'class-validator';
 import Association from './association.entity';
 import { Type } from 'class-transformer';
+import { AutoMap } from '@automapper/classes';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('Events')
 class Event {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   public id: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'Event type is required' })
+  @AutoMap()
+  @ApiProperty()
   public eventType: string;
 
   @Column({ type: 'timestamp' })
   @Type(() => Date)
+  @AutoMap()
+  @ApiProperty()
   public dateOfAccomplishment: Date;
 
   @Column({ type: 'int' })
   @IsInt({ message: 'Participants amount must be an integer' })
   @Min(0)
+  @AutoMap()
+  @ApiProperty()
   public participantsAmount: number;
 
   @ManyToOne(() => Association, (association) => association.events, {
@@ -40,18 +49,23 @@ class Event {
   public association: Association;
 
   @Column('uuid')
+  @ApiProperty()
   public associationId: string;
 
   @CreateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
+  @ApiProperty()
   public updatedAt: Date;
 
   @Column('uuid', { nullable: true })
+  @ApiProperty()
   public createdBy: string;
 
   @Column('uuid', { nullable: true })
+  @ApiProperty()
   public updatedBy: string;
 
   public async isValid(): Promise<boolean> {

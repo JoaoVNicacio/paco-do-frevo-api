@@ -1,24 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
-import { Repository } from 'typeorm';
+import { Repository as DBAccessor } from 'typeorm';
 
 @Injectable()
 class EventRepository implements IEventRepository {
   constructor(
-    @InjectRepository(Event)
-    private readonly _eventRepository: Repository<Event>,
+    @InjectDBAccessor(Event)
+    private readonly _eventDBAccessor: DBAccessor<Event>,
   ) {}
 
   public async createEvent(event: Event): Promise<Event> {
-    const createdEvent = this._eventRepository.create(event);
+    const createdEvent = this._eventDBAccessor.create(event);
 
-    return await this._eventRepository.save(createdEvent);
+    return await this._eventDBAccessor.save(createdEvent);
   }
 
   public async findById(id: string): Promise<Event> {
-    return await this._eventRepository.findOne({
+    return await this._eventDBAccessor.findOne({
       where: { id },
     });
   }
@@ -27,19 +27,19 @@ class EventRepository implements IEventRepository {
     const existingEvent = await this.findById(id);
 
     if (!existingEvent) {
-      throw new Error('Número de telefone não encontrado.');
+      throw new NotFoundException('Número de telefone não encontrado.');
     }
 
-    this._eventRepository.merge(existingEvent, event);
+    this._eventDBAccessor.merge(existingEvent, event);
 
-    return await this._eventRepository.save(existingEvent);
+    return await this._eventDBAccessor.save(existingEvent);
   }
 
   public async deleteEvent(id: string): Promise<void> {
-    const result = await this._eventRepository.delete(id);
+    const result = await this._eventDBAccessor.delete(id);
 
     if (result.affected === 0) {
-      throw new Error('Número de telefone não encontrado.');
+      throw new NotFoundException('Número de telefone não encontrado.');
     }
   }
 }

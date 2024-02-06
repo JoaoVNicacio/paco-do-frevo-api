@@ -1,26 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
-import EventMapper from 'src/application/mappers/event.mapper';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
+import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
+import IEventRepository from 'src/domain/repositories/ievent.repository';
 import IEventService from 'src/domain/services/ievent.service';
-import AssociationRepository from 'src/infra/repositories/association.repository';
-import EventRepository from 'src/infra/repositories/event.repository';
+import { Mapper as IMapper } from '@automapper/core';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class EventService implements IEventService {
   constructor(
-    private readonly _eventRepository: EventRepository,
-    private readonly _associationRepository: AssociationRepository,
-    private readonly _eventMapper: EventMapper,
+    @Inject(IEventRepository)
+    private readonly _eventRepository: IEventRepository,
+
+    @Inject(IAssociationRepository)
+    private readonly _associationRepository: IAssociationRepository,
+
+    @Inject('IMapper')
+    private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createEvent(
     eventDto: EventDTO,
     associationId: string,
   ): Promise<ValidationResponse<Event>> {
-    const event = this._eventMapper.dtoToEntity(eventDto);
+    const event = this._mapper.map(eventDto, EventDTO, Event);
 
     const association =
       await this._associationRepository.getById(associationId);
@@ -29,7 +38,7 @@ class EventService implements IEventService {
       const error = new ValidationError();
       error.constraints = { associationId: 'The association does not exists' };
 
-      return new ValidationResponse(event, [error], false);
+      return new ValidationResponse(event, [error]);
     }
 
     event.association = association;
@@ -37,11 +46,7 @@ class EventService implements IEventService {
     const isValid = await event.isValid();
 
     if (!isValid) {
-      return new ValidationResponse(
-        event,
-        await event.validateCreation(),
-        isValid,
-      );
+      return new ValidationResponse(event, await event.validateCreation());
     }
 
     const insertResponse = await this._eventRepository.createEvent(event);
@@ -49,7 +54,6 @@ class EventService implements IEventService {
     return new ValidationResponse(
       insertResponse,
       await event.validateCreation(),
-      isValid,
     );
   }
 
@@ -61,29 +65,26 @@ class EventService implements IEventService {
     id: string,
     eventDto: EventDTO,
   ): Promise<ValidationResponse<Event>> {
-    const event = this._eventMapper.dtoToEntity(eventDto);
+    const event = this._mapper.map(eventDto, EventDTO, Event);
 
-    const isValid = await event.isValid();
-
-    if (!isValid) {
-      return new ValidationResponse(
-        event,
-        await event.validateCreation(),
-        isValid,
-      );
+    if (!(await event.isValid())) {
+      return new ValidationResponse(event, await event.validateCreation());
     }
 
     const updateResponse = await this._eventRepository.updateEvent(id, event);
 
+    await this._cacheManager.del(`events/id/${id}`);
+
     return new ValidationResponse(
       updateResponse,
       await event.validateCreation(),
-      isValid,
     );
   }
 
   public async deleteEvent(id: string): Promise<void> {
-    return await this._eventRepository.deleteEvent(id);
+    return await this._eventRepository
+      .deleteEvent(id)
+      .then(async () => await this._cacheManager.del(`events/id/${id}`));
   }
 }
 

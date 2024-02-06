@@ -4,17 +4,14 @@ import { ValidationError } from 'class-validator';
 validation result, and whether it is valid or not. */
 class ValidationResponse<TEntity> {
   public output: TEntity;
-  public validationResult: Array<ValidationError>;
-  public isValid: boolean;
+  public validationResult: Array<ValidationError> = [];
+  public get isValid() {
+    return this.validationResult.length === 0;
+  }
 
-  constructor(
-    output: TEntity,
-    validationResult: Array<ValidationError>,
-    isValid: boolean,
-  ) {
+  constructor(output: TEntity, validationResult: Array<ValidationError>) {
     this.output = output;
     this.validationResult = validationResult;
-    this.isValid = isValid;
   }
 }
 
