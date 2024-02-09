@@ -8,6 +8,7 @@ import {
   Body,
   Query,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ControllerBase from './base.controller';
@@ -16,7 +17,6 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiQuery,
@@ -31,6 +31,8 @@ import PagingParams from 'src/application/requestObjects/paging.params';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
@@ -48,7 +50,7 @@ class OtherFrevoEntityController extends ControllerBase {
     type: OtherFrevoEntity,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
   })
   @ApiBody({
@@ -59,13 +61,10 @@ class OtherFrevoEntityController extends ControllerBase {
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
     try {
-      const createdOtherFrevoEntity =
+      return this.sendCustomValidationResponse<OtherFrevoEntity>(
         await this._otherFrevoEntityService.createOtherFrevoEntity(
           otherFrevoEntityDTO,
-        );
-
-      return this.sendCustomValidationResponse<OtherFrevoEntity>(
-        createdOtherFrevoEntity,
+        ),
       );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
@@ -73,6 +72,8 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The records have been successfully fetched.',
     schema: {
@@ -97,12 +98,14 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Get('/paged')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiPagedResultsResponse(OtherFrevoEntity)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationPipeResponseRepresentation,
   })
   @ApiQuery({ name: 'page', description: 'The page index of the request' })
@@ -113,8 +116,8 @@ class OtherFrevoEntityController extends ControllerBase {
     try {
       return this.sendCustomResponse(
         await this._otherFrevoEntityService.getPagedOtherFrevoEntities(
-          pagingParams.page,
-          pagingParams.pageSize,
+          Number(pagingParams.page),
+          Number(pagingParams.pageSize),
         ),
       );
     } catch (error) {
@@ -126,13 +129,16 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: OtherFrevoEntity,
   })
-  @ApiNotFoundResponse({
-    description: 'The record was not found.',
-    type: String,
+  @ApiNotFoundResponseWithSchema()
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getOtherFrevoEntityById(
@@ -153,8 +159,12 @@ class OtherFrevoEntityController extends ControllerBase {
     type: OtherFrevoEntity,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
@@ -166,14 +176,11 @@ class OtherFrevoEntityController extends ControllerBase {
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
     try {
-      const updatedOtherFrevoEntity =
+      return this.sendCustomValidationResponse<OtherFrevoEntity>(
         await this._otherFrevoEntityService.updateOtherFrevoEntity(
           idParam.id,
           otherFrevoEntityDTO,
-        );
-
-      return this.sendCustomValidationResponse<OtherFrevoEntity>(
-        updatedOtherFrevoEntity,
+        ),
       );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
@@ -183,8 +190,13 @@ class OtherFrevoEntityController extends ControllerBase {
   @Delete('id/:id')
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
-    type: Object,
+    type: null,
   })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiNotFoundResponseWithSchema()
   public async deleteOtherFrevoEntity(
     @Param() idParam: UUIDParam,
   ): Promise<void> {

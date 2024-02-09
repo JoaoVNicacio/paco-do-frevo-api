@@ -8,6 +8,7 @@ import {
   Body,
   Query,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
@@ -18,7 +19,6 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiQuery,
@@ -31,6 +31,8 @@ import IAssociationService from 'src/domain/services/iassociation.service';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('Association')
 @Controller('associations')
@@ -48,7 +50,7 @@ class AssociationController extends ControllerBase {
     type: Association,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
   })
   @ApiBody({
@@ -59,16 +61,17 @@ class AssociationController extends ControllerBase {
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
     try {
-      const createdAssociation =
-        await this._associationService.createAssociation(associationDTO);
-
-      return this.sendCustomValidationResponse<Association>(createdAssociation);
+      return this.sendCustomValidationResponse<Association>(
+        await this._associationService.createAssociation(associationDTO),
+      );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar association');
     }
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(5000)
   @ApiOkResponse({
     description: 'The records have been successfully fetched.',
     schema: {
@@ -90,12 +93,14 @@ class AssociationController extends ControllerBase {
   }
 
   @Get('/paged')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiPagedResultsResponse(Association)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationPipeResponseRepresentation,
   })
   @ApiQuery({ name: 'page', description: 'The page index of the request' })
@@ -116,14 +121,17 @@ class AssociationController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(30000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Association,
   })
-  @ApiNotFoundResponse({
-    description: 'The record was not found.',
-    type: String,
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
+  @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getAssociationById(
     @Param() idParam: UUIDParam,
@@ -143,8 +151,12 @@ class AssociationController extends ControllerBase {
     type: Association,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
@@ -156,13 +168,12 @@ class AssociationController extends ControllerBase {
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
     try {
-      const updatedAssociation =
+      return this.sendCustomValidationResponse<Association>(
         await this._associationService.updateAssociation(
           idParam.id,
           associationDTO,
-        );
-
-      return this.sendCustomValidationResponse<Association>(updatedAssociation);
+        ),
+      );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao editar association');
     }
@@ -171,8 +182,13 @@ class AssociationController extends ControllerBase {
   @Delete('id/:id')
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
-    type: Object,
+    type: null,
   })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async deleteAssociation(@Param() idParam: UUIDParam): Promise<void> {
     try {

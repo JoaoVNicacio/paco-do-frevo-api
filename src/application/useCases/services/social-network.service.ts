@@ -7,6 +7,7 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social-netwo
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import ISocialNetworkService from 'src/domain/services/isocial-network.service';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class SocialNetworkService implements ISocialNetworkService {
@@ -19,6 +20,9 @@ class SocialNetworkService implements ISocialNetworkService {
 
     @Inject('IMapper')
     private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createSocialNetwork(
@@ -38,7 +42,7 @@ class SocialNetworkService implements ISocialNetworkService {
       const error = new ValidationError();
       error.constraints = { associationId: 'The association does not exists' };
 
-      return new ValidationResponse(socialNetwork, [error], false);
+      return new ValidationResponse(socialNetwork, [error]);
     }
 
     socialNetwork.association = association;
@@ -49,7 +53,6 @@ class SocialNetworkService implements ISocialNetworkService {
       return new ValidationResponse(
         socialNetwork,
         await socialNetwork.validateCreation(),
-        isValid,
       );
     }
 
@@ -59,12 +62,7 @@ class SocialNetworkService implements ISocialNetworkService {
     return new ValidationResponse(
       insertResponse,
       await socialNetwork.validateCreation(),
-      isValid,
     );
-  }
-
-  public async getAllSocialNetworks(): Promise<Array<SocialNetwork>> {
-    return await this._socialNetworkRepository.getAll();
   }
 
   public async getSocialNetworkById(id: string): Promise<SocialNetwork> {
@@ -87,7 +85,6 @@ class SocialNetworkService implements ISocialNetworkService {
       return new ValidationResponse(
         socialNetwork,
         await socialNetwork.validateCreation(),
-        isValid,
       );
     }
 
@@ -97,15 +94,20 @@ class SocialNetworkService implements ISocialNetworkService {
         socialNetwork,
       );
 
+    await this._cacheManager.del(`social-networks/id/${id}`);
+
     return new ValidationResponse(
       updateResponse,
       await socialNetwork.validateCreation(),
-      isValid,
     );
   }
 
   public async deleteSocialNetwork(id: string): Promise<void> {
-    return await this._socialNetworkRepository.deleteSocialNetwork(id);
+    return await this._socialNetworkRepository
+      .deleteSocialNetwork(id)
+      .then(
+        async () => await this._cacheManager.del(`social-networks/id/${id}`),
+      );
   }
 }
 

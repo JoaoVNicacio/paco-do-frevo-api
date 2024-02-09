@@ -7,7 +7,6 @@ interface ISocialNetworkService {
     socialNetowrkDTO: SocialNetworkDTO,
     associationId: string,
   ): Promise<ValidationResponse<SocialNetwork>>;
-  getAllSocialNetworks(): Promise<Array<SocialNetwork>>;
   getSocialNetworkById(id: string): Promise<SocialNetwork>;
   updateSocialNetwork(
     id: string,

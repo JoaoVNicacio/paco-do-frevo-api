@@ -7,7 +7,6 @@ interface IPhoneNumberService {
     phoneNumberDTO: PhoneNumberDTO,
     contactId: string,
   ): Promise<ValidationResponse<PhoneNumber>>;
-  getAllPhoneNumbers(): Promise<Array<PhoneNumber>>;
   getPhoneNumberById(id: string): Promise<PhoneNumber>;
   updatePhoneNumber(
     id: string,

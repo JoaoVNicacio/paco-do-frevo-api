@@ -7,6 +7,7 @@ import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.e
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
@@ -19,6 +20,9 @@ class PhoneNumberService implements IPhoneNumberService {
 
     @Inject('IMapper')
     private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createPhoneNumber(
@@ -37,7 +41,7 @@ class PhoneNumberService implements IPhoneNumberService {
       const error = new ValidationError();
       error.constraints = { contactId: 'The association does not exists' };
 
-      return new ValidationResponse(phoneNumber, [error], false);
+      return new ValidationResponse(phoneNumber, [error]);
     }
 
     phoneNumber.contact = contact;
@@ -48,7 +52,6 @@ class PhoneNumberService implements IPhoneNumberService {
       return new ValidationResponse(
         phoneNumber,
         await phoneNumber.validateCreation(),
-        isValid,
       );
     }
 
@@ -58,12 +61,7 @@ class PhoneNumberService implements IPhoneNumberService {
     return new ValidationResponse(
       insertResponse,
       await phoneNumber.validateCreation(),
-      isValid,
     );
-  }
-
-  public async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
-    return await this._phoneNumberRepository.getAll();
   }
 
   public async getPhoneNumberById(id: string): Promise<PhoneNumber> {
@@ -86,7 +84,6 @@ class PhoneNumberService implements IPhoneNumberService {
       return new ValidationResponse(
         phoneNumber,
         await phoneNumber.validateCreation(),
-        isValid,
       );
     }
 
@@ -95,15 +92,18 @@ class PhoneNumberService implements IPhoneNumberService {
       phoneNumber,
     );
 
+    await this._cacheManager.del(`phone-numbers/id/${id}`);
+
     return new ValidationResponse(
       updateResponse,
       await phoneNumber.validateCreation(),
-      isValid,
     );
   }
 
   public async deletePhoneNumber(id: string): Promise<void> {
-    return await this._phoneNumberRepository.deletePhoneNumber(id);
+    return await this._phoneNumberRepository
+      .deletePhoneNumber(id)
+      .then(async () => await this._cacheManager.del(`phone-numbers/id/${id}`));
   }
 }
 

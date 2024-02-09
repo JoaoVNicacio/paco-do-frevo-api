@@ -1,8 +1,6 @@
-/* eslint-disable */
-import { InjectRepository as InjectContext } from '@nestjs/typeorm';
-import { Repository as DBContext } from 'typeorm';
-import { Injectable } from '@nestjs/common';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
+import { Repository as DBAccessor } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
@@ -10,21 +8,21 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social-netwo
 @Injectable()
 class SocialNetworkRepository implements ISocialNetworkRepository {
   constructor(
-    @InjectContext(SocialNetwork)
-    private readonly _socialNetworkContext: DBContext<SocialNetwork>,
+    @InjectDBAccessor(SocialNetwork)
+    private readonly _socialNetworkDBAccessor: DBAccessor<SocialNetwork>,
   ) {}
 
   public async createSocialNetwork(
     socialNetwork: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     const createdSocialNetwork =
-      this._socialNetworkContext.create(socialNetwork);
+      this._socialNetworkDBAccessor.create(socialNetwork);
 
-    return await this._socialNetworkContext.save(createdSocialNetwork);
+    return await this._socialNetworkDBAccessor.save(createdSocialNetwork);
   }
 
   public async getAll(): Promise<Array<SocialNetwork>> {
-    return this._socialNetworkContext.find();
+    return this._socialNetworkDBAccessor.find();
   }
 
   public async getPagedSocialNetworks(
@@ -35,7 +33,7 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
     total: number;
   }> {
     const queryBuilder =
-      this._socialNetworkContext.createQueryBuilder('socialNetwork');
+      this._socialNetworkDBAccessor.createQueryBuilder('socialNetwork');
 
     const [socialNetwork, total] = await queryBuilder
       .skip((page - 1) * pageSize)
@@ -46,7 +44,7 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
   }
 
   public async getById(id: string): Promise<SocialNetwork> {
-    return this._socialNetworkContext.findOne({
+    return this._socialNetworkDBAccessor.findOne({
       where: { id },
       relations: ['address'],
     });
@@ -59,19 +57,19 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
     const existingSocialNetwork = await this.getById(id);
 
     if (!existingSocialNetwork) {
-      throw new Error('Rede social não encontrada.');
+      throw new NotFoundException('Rede social não encontrada.');
     }
 
-    this._socialNetworkContext.merge(existingSocialNetwork, socialNetwork);
+    this._socialNetworkDBAccessor.merge(existingSocialNetwork, socialNetwork);
 
-    return this._socialNetworkContext.save(existingSocialNetwork);
+    return this._socialNetworkDBAccessor.save(existingSocialNetwork);
   }
 
   public async deleteSocialNetwork(id: string): Promise<void> {
-    const result = await this._socialNetworkContext.delete(id);
+    const result = await this._socialNetworkDBAccessor.delete(id);
 
     if (result.affected === 0) {
-      throw new Error('Rede social não encontrada.');
+      throw new NotFoundException('Rede social não encontrada.');
     }
   }
 }

@@ -7,6 +7,7 @@ import CleanStringBuilder from 'src/application/utils/clean-string.builder';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IAssociationService from 'src/domain/services/iassociation.service';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class AssociationService implements IAssociationService {
@@ -16,6 +17,9 @@ class AssociationService implements IAssociationService {
 
     @Inject('IMapper')
     private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createAssociation(
@@ -33,7 +37,6 @@ class AssociationService implements IAssociationService {
       return new ValidationResponse(
         association,
         await association.validateCreation(),
-        isValid,
       );
     }
 
@@ -48,11 +51,16 @@ class AssociationService implements IAssociationService {
     const insertResponse =
       await this._associationRepository.createAssociation(association);
 
-    return new ValidationResponse(
+    const response = new ValidationResponse(
       insertResponse,
       await association.validateCreation(),
-      isValid,
     );
+
+    if (response.isValid) {
+      await this._cacheManager.del(`associations`);
+    }
+
+    return response;
   }
 
   public async getAllAssociations(): Promise<Array<Association>> {
@@ -98,7 +106,6 @@ class AssociationService implements IAssociationService {
       return new ValidationResponse(
         association,
         await association.validateCreation(),
-        isValid,
       );
     }
 
@@ -113,15 +120,22 @@ class AssociationService implements IAssociationService {
       association,
     );
 
-    return new ValidationResponse(
+    const response = new ValidationResponse(
       updateResponse,
       await association.validateCreation(),
-      isValid,
     );
+
+    await this._cacheManager.del(`associations/id/${id}`);
+    await this._cacheManager.del(`associations`);
+
+    return response;
   }
 
   public async deleteAssociation(id: string): Promise<void> {
-    return await this._associationRepository.deleteAssociation(id);
+    await this._associationRepository.deleteAssociation(id).then(async () => {
+      await this._cacheManager.del(`associations/id/${id}`);
+      await this._cacheManager.del(`associations`);
+    });
   }
 }
 

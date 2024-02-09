@@ -1,49 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository as InjectContext } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
-import { Repository as DBContext } from 'typeorm';
+import { Repository as DBAccessor } from 'typeorm';
 
 @Injectable()
 class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
   constructor(
-    @InjectContext(OtherFrevoEntity)
-    private _otherFrevoEntityContext: DBContext<OtherFrevoEntity>,
+    @InjectDBAccessor(OtherFrevoEntity)
+    private _otherFrevoEntityDBAccessor: DBAccessor<OtherFrevoEntity>,
   ) {}
 
   public async createResume(
     otherFrevoEntity: OtherFrevoEntity,
   ): Promise<OtherFrevoEntity> {
     const createdOtherFrevoEntity =
-      this._otherFrevoEntityContext.create(otherFrevoEntity);
+      this._otherFrevoEntityDBAccessor.create(otherFrevoEntity);
 
-    return await this._otherFrevoEntityContext.save(createdOtherFrevoEntity);
+    return await this._otherFrevoEntityDBAccessor.save(createdOtherFrevoEntity);
   }
 
   public async getAll(): Promise<Array<OtherFrevoEntity>> {
-    return this._otherFrevoEntityContext.find();
+    return this._otherFrevoEntityDBAccessor.find();
   }
 
   public async getPagedOtherFrevoEntities(
     page: number,
     pageSize: number,
   ): Promise<{
-    otherFrevoEntitys: Array<OtherFrevoEntity>;
+    otherFrevoEntities: Array<OtherFrevoEntity>;
     total: number;
   }> {
     const queryBuilder =
-      this._otherFrevoEntityContext.createQueryBuilder('otherFrevoEntity');
+      this._otherFrevoEntityDBAccessor.createQueryBuilder('otherFrevoEntity');
 
-    const [otherFrevoEntitys, total] = await queryBuilder
+    const [otherFrevoEntities, total] = await queryBuilder
       .skip((page - 1) * pageSize)
       .take(pageSize)
       .getManyAndCount();
 
-    return { otherFrevoEntitys, total };
+    return { otherFrevoEntities, total };
   }
 
   public async getById(id: string): Promise<OtherFrevoEntity> {
-    return await this._otherFrevoEntityContext.findOne({
+    return await this._otherFrevoEntityDBAccessor.findOne({
       where: { id },
       relations: ['address'],
     });
@@ -56,22 +56,24 @@ class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
     const existingOtherFrevoEntity = await this.getById(id);
 
     if (!existingOtherFrevoEntity) {
-      throw new Error('Entidade do frevo não encontrada.');
+      throw new NotFoundException('Entidade do frevo não encontrada.');
     }
 
-    this._otherFrevoEntityContext.merge(
+    this._otherFrevoEntityDBAccessor.merge(
       existingOtherFrevoEntity,
       otherFrevoEntity,
     );
 
-    return await this._otherFrevoEntityContext.save(existingOtherFrevoEntity);
+    return await this._otherFrevoEntityDBAccessor.save(
+      existingOtherFrevoEntity,
+    );
   }
 
   public async deleteOtherFrevoEntity(id: string): Promise<void> {
-    const result = await this._otherFrevoEntityContext.delete(id);
+    const result = await this._otherFrevoEntityDBAccessor.delete(id);
 
     if (result.affected === 0) {
-      throw new Error('Entidade do frevo não encontrada.');
+      throw new NotFoundException('Entidade do frevo não encontrada.');
     }
   }
 }

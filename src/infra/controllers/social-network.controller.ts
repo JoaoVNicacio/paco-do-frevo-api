@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
@@ -15,7 +16,6 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -23,6 +23,9 @@ import {
 import ISocialNetworkService from 'src/domain/services/isocial-network.service';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')
@@ -40,8 +43,12 @@ class SocialNetworkController extends ControllerBase {
     type: SocialNetwork,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
@@ -53,14 +60,11 @@ class SocialNetworkController extends ControllerBase {
     @Param() idParam: UUIDParam,
   ): Promise<SocialNetwork> {
     try {
-      const createdSocialNetwork =
+      return this.sendCustomValidationResponse<SocialNetwork>(
         await this._socialNetworkService.createSocialNetwork(
           socialNetworkDTO,
           idParam.id,
-        );
-
-      return this.sendCustomValidationResponse<SocialNetwork>(
-        createdSocialNetwork,
+        ),
       );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar network');
@@ -68,13 +72,16 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: SocialNetwork,
   })
-  @ApiNotFoundResponse({
-    description: 'The record was not found.',
-    type: String,
+  @ApiNotFoundResponseWithSchema()
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getById(@Param() idParam: UUIDParam): Promise<SocialNetwork> {
@@ -93,8 +100,12 @@ class SocialNetworkController extends ControllerBase {
     type: SocialNetwork,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
@@ -106,14 +117,11 @@ class SocialNetworkController extends ControllerBase {
     @Body() socialNetworkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
     try {
-      const updatedSocialNetwork =
+      return this.sendCustomValidationResponse<SocialNetwork>(
         await this._socialNetworkService.updateSocialNetwork(
           idParam.id,
           socialNetworkDTO,
-        );
-
-      return this.sendCustomValidationResponse<SocialNetwork>(
-        updatedSocialNetwork,
+        ),
       );
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao atualizar network');
@@ -125,6 +133,11 @@ class SocialNetworkController extends ControllerBase {
     description: 'The record has been successfully deleted.',
     type: Object,
   })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiNotFoundResponseWithSchema()
   public async deleteSocialNetwork(@Param() idParam: UUIDParam): Promise<void> {
     try {
       await this._socialNetworkService.deleteSocialNetwork(idParam.id);

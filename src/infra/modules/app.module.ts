@@ -18,18 +18,23 @@ import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/othe
 import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 import { OtherFrevoEntityModule } from './other-frevo-entity.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 dotenv.config();
 
 @Module({
   imports: [
-    UserModule,
+    // Application Modules:
     EventModule,
     PhoneNumberModule,
     AssociationModule,
     ContactModule,
     SocialNetworkModule,
     OtherFrevoEntityModule,
+    UserModule,
+
+    // TypeORM config:
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DB_URL,
@@ -51,7 +56,24 @@ dotenv.config();
       migrations: ['src/migration/**/*.ts'],
       subscribers: ['src/subscriber/**/*.ts'],
     }),
+
+    // MongoDB Config:
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
+
+    // Redis Cache config:
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => ({
+        store: await redisStore({
+          socket: {
+            host: process.env.REDIS_HOST,
+            port: parseInt(process.env.REDIS_PORT!),
+          },
+          password: process.env.REDIS_PASSWORD,
+        }),
+        // ttl: 10000,
+      }),
+    }),
   ],
   controllers: [],
   providers: [],

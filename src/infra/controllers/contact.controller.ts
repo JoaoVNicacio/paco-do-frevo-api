@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   Inject,
+  UseInterceptors,
 } from '@nestjs/common';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
@@ -15,7 +16,6 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -23,6 +23,9 @@ import {
 import UUIDParam from '../../application/requestObjects/uuid.param';
 import IContactService from 'src/domain/services/icontact.service';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('Contacts')
 @Controller('contacts')
@@ -40,7 +43,7 @@ class ContactController extends ControllerBase {
     type: Contact,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
@@ -53,26 +56,22 @@ class ContactController extends ControllerBase {
     @Param() idParam: UUIDParam,
   ): Promise<Contact> {
     try {
-      const createdContact = await this.contactService.createContact(
-        contactDTO,
-        idParam.id,
+      return this.sendCustomValidationResponse<Contact>(
+        await this.contactService.createContact(contactDTO, idParam.id),
       );
-
-      return this.sendCustomValidationResponse<Contact>(createdContact);
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao criar contact');
     }
   }
 
   @Get('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Contact,
   })
-  @ApiNotFoundResponse({
-    description: 'The record was not found.',
-    type: String,
-  })
+  @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getContactById(@Param() idParam: UUIDParam): Promise<Contact> {
     try {
@@ -90,9 +89,10 @@ class ContactController extends ControllerBase {
     type: Contact,
   })
   @ApiBadRequestResponse({
-    description: 'The record has an error on the sent object.',
+    description: 'The request has an error on the sent object.',
     type: ValidationErrorDTO,
   })
+  @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
     description: 'The record data.',
@@ -103,12 +103,9 @@ class ContactController extends ControllerBase {
     @Body() contactDTO: ContactDTO,
   ): Promise<Contact> {
     try {
-      const updatedContact = await this.contactService.updateContact(
-        idParam.id,
-        contactDTO,
+      return this.sendCustomValidationResponse<Contact>(
+        await this.contactService.updateContact(idParam.id, contactDTO),
       );
-
-      return this.sendCustomValidationResponse<Contact>(updatedContact);
     } catch (error) {
       this.throwInternalError(error, 'houve um erro ao atualizar contact');
     }
@@ -117,8 +114,14 @@ class ContactController extends ControllerBase {
   @Delete('id/:id')
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
-    type: Object,
+    type: null,
   })
+  @ApiBadRequestResponse({
+    description: 'The request has an invalid id format.',
+    type: ValidationPipeResponseRepresentation,
+  })
+  @ApiNotFoundResponseWithSchema()
+  @ApiParam({ name: 'id', description: 'The record id.' })
   public async deleteContact(@Param() id: string): Promise<void> {
     try {
       await this.contactService.deleteContact(id);

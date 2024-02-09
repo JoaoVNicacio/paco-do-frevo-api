@@ -7,7 +7,6 @@ interface IContactService {
     contactDTO: ContactDTO,
     associationId: string,
   ): Promise<ValidationResponse<Contact>>;
-  getAllContacts(): Promise<Array<Contact>>;
   getContactById(id: string): Promise<Contact>;
   updateContact(
     id: string,

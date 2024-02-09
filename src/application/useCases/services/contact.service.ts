@@ -7,6 +7,7 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IContactService from 'src/domain/services/icontact.service';
 import { Mapper as IMapper } from '@automapper/core';
+import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 class ContactService implements IContactService {
@@ -19,6 +20,9 @@ class ContactService implements IContactService {
 
     @Inject('IMapper')
     private readonly _mapper: IMapper,
+
+    @Inject(CacheManager)
+    private readonly _cacheManager: Cache,
   ) {}
 
   public async createContact(
@@ -33,8 +37,9 @@ class ContactService implements IContactService {
     if (!association) {
       const error = new ValidationError();
       error.constraints = { associationId: 'The association does not exists' };
+      error.property = 'associationId';
 
-      return new ValidationResponse(contact, [error], false);
+      return new ValidationResponse(contact, [error]);
     }
 
     contact.association = association;
@@ -42,11 +47,7 @@ class ContactService implements IContactService {
     const isValid = await contact.isValid();
 
     if (!isValid) {
-      return new ValidationResponse(
-        contact,
-        await contact.validateCreation(),
-        isValid,
-      );
+      return new ValidationResponse(contact, await contact.validateCreation());
     }
 
     const insertResponse = await this._contactRepository.createContact(contact);
@@ -54,7 +55,6 @@ class ContactService implements IContactService {
     return new ValidationResponse(
       insertResponse,
       await contact.validateCreation(),
-      isValid,
     );
   }
 
@@ -75,11 +75,7 @@ class ContactService implements IContactService {
     const isValid = await contact.isValid();
 
     if (!isValid) {
-      return new ValidationResponse(
-        contact,
-        await contact.validateCreation(),
-        isValid,
-      );
+      return new ValidationResponse(contact, await contact.validateCreation());
     }
 
     const updateResponse = await this._contactRepository.updateContact(
@@ -90,12 +86,13 @@ class ContactService implements IContactService {
     return new ValidationResponse(
       updateResponse,
       await contact.validateCreation(),
-      isValid,
     );
   }
 
   public async deleteContact(id: string): Promise<void> {
-    return await this._contactRepository.deleteContact(id);
+    return await this._contactRepository
+      .deleteContact(id)
+      .then(async () => await this._cacheManager.del(`contacts/id/${id}`));
   }
 }
 
