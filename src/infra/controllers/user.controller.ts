@@ -1,8 +1,9 @@
-import { Controller, Inject } from '@nestjs/common';
+import { Body, Controller, Inject } from '@nestjs/common';
 import ControllerBase from './base.controller';
 import { ApiTags } from '@nestjs/swagger';
 import IUserService from 'src/domain/services/iuser.service';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
+import UserDTO from 'src/application/dtos/userDtos/user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -14,8 +15,14 @@ class UserController extends ControllerBase {
     super();
   }
 
-  public async createUser(user: UserForCreationDTO) {
-    return await this._userService.createUser(user);
+  public async createUser(@Body() user: UserForCreationDTO): Promise<UserDTO> {
+    try {
+      return this.sendCustomValidationResponse(
+        await this._userService.createUser(user),
+      );
+    } catch (error) {
+      this.throwInternalError(error, 'Houve um erro criando o usuário');
+    }
   }
 }
 

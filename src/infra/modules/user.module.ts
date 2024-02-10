@@ -7,6 +7,9 @@ import UserController from '../controllers/user.controller';
 import IUserRepository from 'src/domain/repositories/iuser.repository';
 import IUserService from 'src/domain/services/iuser.service';
 import mapper from 'src/application/mappers/mapper';
+import IHashingHandler from 'src/domain/handlers/ihashing.handler';
+import HashingHandler from '../handlers/hashing.handler';
+import HashingPipe from 'src/application/pipes/hashing.pipe';
 
 @Module({
   imports: [
@@ -31,11 +34,20 @@ import mapper from 'src/application/mappers/mapper';
       useClass: UserService,
     },
 
+    // Handlers:
+    {
+      provide: IHashingHandler,
+      useClass: HashingHandler,
+    },
+
     // Mappers:
     {
       provide: 'IMapper',
       useValue: mapper,
     },
+
+    // Pipes:
+    HashingPipe,
   ],
 })
 export class UserModule {}

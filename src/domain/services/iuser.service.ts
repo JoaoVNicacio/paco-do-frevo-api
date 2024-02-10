@@ -1,8 +1,9 @@
-import User from '../entities/userAggregate/user.entity';
+import ValidationResponse from 'src/application/responseObjects/validation.response';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
+import UserDTO from 'src/application/dtos/userDtos/user.dto';
 
 interface IUserService {
-  createUser(user: UserForCreationDTO): Promise<User>;
+  createUser(userDto: UserForCreationDTO): Promise<ValidationResponse<UserDTO>>;
 }
 
 const IUserService = Symbol('IUserService');

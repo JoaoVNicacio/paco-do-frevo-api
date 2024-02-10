@@ -20,6 +20,7 @@ import { OtherFrevoEntityModule } from './other-frevo-entity.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { AuthModule } from './auth.module';
 
 dotenv.config();
 
@@ -74,6 +75,8 @@ dotenv.config();
         // ttl: 10000,
       }),
     }),
+
+    AuthModule,
   ],
   controllers: [],
   providers: [],

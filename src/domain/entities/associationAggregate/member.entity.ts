@@ -58,7 +58,7 @@ class Member {
   public isFrevoTheMainRevenueIncome: boolean;
 
   @ManyToOne(() => Association, (association) => association.members, {
-    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   public association: Association;

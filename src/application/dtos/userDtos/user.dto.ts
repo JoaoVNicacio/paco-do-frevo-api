@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import EUserRoles from 'src/domain/entities/userAggregate/enums/euser-roles';
 
-class UserForCreationDTO {
+class UserDTO {
   @AutoMap()
   @ApiProperty()
   public firstName: string;
@@ -18,10 +18,6 @@ class UserForCreationDTO {
   @AutoMap()
   @ApiProperty()
   public email: string;
-
-  @AutoMap()
-  @ApiProperty()
-  public password: string;
 }
 
-export default UserForCreationDTO;
+export default UserDTO;
