@@ -51,6 +51,14 @@ class UserService implements IUserService {
       validationResult,
     );
   }
+
+  public async findById(id: string): Promise<User> {
+    return await this._userRepository.findById(id);
+  }
+
+  public async findByEmail(email: string): Promise<User> {
+    return await this._userRepository.findByEmail(email);
+  }
 }
 
 export default UserService;

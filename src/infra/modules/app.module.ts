@@ -34,6 +34,7 @@ dotenv.config();
     SocialNetworkModule,
     OtherFrevoEntityModule,
     UserModule,
+    AuthModule,
 
     // TypeORM config:
     TypeOrmModule.forRoot({
@@ -75,8 +76,6 @@ dotenv.config();
         // ttl: 10000,
       }),
     }),
-
-    AuthModule,
   ],
   controllers: [],
   providers: [],

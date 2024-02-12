@@ -49,5 +49,18 @@ import HashingPipe from 'src/application/pipes/hashing.pipe';
     // Pipes:
     HashingPipe,
   ],
+  exports: [
+    // Repositories:
+    {
+      provide: IUserRepository,
+      useClass: UserRepository,
+    },
+
+    // Services:
+    {
+      provide: IUserService,
+      useClass: UserService,
+    },
+  ],
 })
 export class UserModule {}

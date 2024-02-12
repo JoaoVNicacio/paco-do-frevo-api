@@ -65,6 +65,10 @@ class User {
     this.passwordHash = passwordHash;
   }
 
+  public get hashedPassword() {
+    return this.passwordHash;
+  }
+
   /**
    * The setter sets the value of the password property.
    * Use this to set the password to be validated before hashing
