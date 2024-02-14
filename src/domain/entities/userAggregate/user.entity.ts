@@ -42,6 +42,8 @@ class User {
   public lastName: string;
 
   @Prop({ type: String, enum: EUserRoles, default: EUserRoles.DataVisualizer })
+  @IsNotEmpty()
+  @AutoMap()
   public role: EUserRoles;
 
   @Prop({ required: true, unique: true })
@@ -54,7 +56,7 @@ class User {
   private _password: string;
 
   @Prop({ required: true })
-  private passwordHash: string;
+  public passwordHash: string;
 
   /**
    * This setter sets the password hash value for the object.
@@ -65,7 +67,7 @@ class User {
     this.passwordHash = passwordHash;
   }
 
-  public get hashedPassword() {
+  public getPasswordHash(): string {
     return this.passwordHash;
   }
 

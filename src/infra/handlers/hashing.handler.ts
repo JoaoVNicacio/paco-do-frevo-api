@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import IHashingHandler from 'src/domain/handlers/ihashing.handler';
+import IHashingHandler from 'src/application/handlers/ihashing.handler';
 
 @Injectable()
 class HashingHandler implements IHashingHandler {
-  public compareHashes(firstValue: string, secondValue: string): boolean {
-    return bcrypt.compareSync(firstValue, secondValue);
+  public comparePlainTextToHash(plainText: string, hash: string): boolean {
+    return bcrypt.compareSync(plainText, hash);
   }
 
   public hashValue(value: string): string {

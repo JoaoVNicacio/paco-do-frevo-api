@@ -12,7 +12,9 @@ class UserDTO {
   public lastName: string;
 
   @AutoMap()
-  @ApiProperty()
+  @ApiProperty({
+    enum: ['Application Admin', 'Association Admin', 'Data Visualizer'],
+  })
   public role: EUserRoles;
 
   @AutoMap()

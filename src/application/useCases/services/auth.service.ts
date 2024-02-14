@@ -4,8 +4,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import UserForLoginDTO from 'src/application/dtos/userDtos/user-for-login.dto';
-import IHashingHandler from 'src/domain/handlers/ihashing.handler';
+import IJwtPayload from 'src/application/requestObjects/ijwt.payload';
+import IHashingHandler from 'src/application/handlers/ihashing.handler';
 import IAuthService from 'src/domain/services/iauth.service';
 import IUserService from 'src/domain/services/iuser.service';
 
@@ -17,6 +19,8 @@ class AuthService implements IAuthService {
 
     @Inject(IHashingHandler)
     private readonly _hashingHandler: IHashingHandler,
+
+    private readonly _jwtService: JwtService,
   ) {}
 
   public async login(user: UserForLoginDTO): Promise<string> {
@@ -28,9 +32,9 @@ class AuthService implements IAuthService {
       );
     }
 
-    const passwordHashMatches = this._hashingHandler.compareHashes(
+    const passwordHashMatches = this._hashingHandler.comparePlainTextToHash(
       user.password,
-      userFromDb.hashedPassword,
+      userFromDb.passwordHash,
     );
 
     if (!passwordHashMatches) {
@@ -39,7 +43,13 @@ class AuthService implements IAuthService {
       );
     }
 
-    return '';
+    const payload = {
+      sub: userFromDb.id,
+      userName: `${userFromDb.firstName} ${userFromDb.lastName}`,
+      userRole: userFromDb.role,
+    } satisfies IJwtPayload;
+
+    return await this._jwtService.signAsync(payload);
   }
 }
 

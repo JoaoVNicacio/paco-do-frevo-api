@@ -7,13 +7,14 @@ interface IHashingHandler {
   hashValue(value: string): string;
 
   /**
-   * This method compares two hashes based on the rules
+   * This method compares a plain text to its
+   * possible hash based on the rules
    * defined on the implementation of this abstraction.
    * and return if both are compatible.
-   * @param firstValue : The first hashed value
-   * @param secondValue : The second hashed value
+   * @param plainText : The plain text value
+   * @param hash : The hashed value
    */
-  compareHashes(firstValue: string, secondValue: string): boolean;
+  comparePlainTextToHash(plainText: string, hash: string): boolean;
 }
 
 const IHashingHandler = Symbol('IHashingHandler');

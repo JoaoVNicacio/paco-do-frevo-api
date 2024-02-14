@@ -31,15 +31,24 @@ class UserService implements IUserService {
     const validationResult = await newUser.validateCreation();
 
     if (!isValid) {
-      return new ValidationResponse(newUser, validationResult);
+      return new ValidationResponse(
+        this._mapper.map(newUser, User, UserDTO),
+        validationResult,
+      );
     }
 
-    if (this._userRepository.findByEmail(userDto.email)) {
+    if (await this._userRepository.findByEmail(userDto.email)) {
       const error = new ValidationError();
       error.constraints = { alreadyUsed: 'The given email is already used.' };
       error.property = 'email';
+      error.children = [];
 
       validationResult.push(error);
+
+      return new ValidationResponse(
+        this._mapper.map(newUser, User, UserDTO),
+        validationResult,
+      );
     }
 
     newUser.hashedPassword = this._hashingPipe.transform(userDto.password);
