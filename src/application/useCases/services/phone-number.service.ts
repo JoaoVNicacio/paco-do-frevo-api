@@ -41,6 +41,7 @@ class PhoneNumberService implements IPhoneNumberService {
       const error = new ValidationError();
       error.constraints = { notFound: 'The contact does not exists' };
       error.property = 'contactId';
+      error.children = [];
 
       return new ValidationResponse(phoneNumber, [error]);
     }

@@ -38,6 +38,7 @@ class EventService implements IEventService {
       const error = new ValidationError();
       error.constraints = { notFound: 'The association does not exists' };
       error.property = 'associationId';
+      error.children = [];
 
       return new ValidationResponse(event, [error]);
     }

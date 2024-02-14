@@ -42,6 +42,7 @@ class SocialNetworkService implements ISocialNetworkService {
       const error = new ValidationError();
       error.constraints = { notFound: 'The association does not exists' };
       error.property = 'associationId';
+      error.children = [];
 
       return new ValidationResponse(socialNetwork, [error]);
     }

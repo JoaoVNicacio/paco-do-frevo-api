@@ -38,6 +38,7 @@ class ContactService implements IContactService {
       const error = new ValidationError();
       error.constraints = { notFound: 'The association does not exists' };
       error.property = 'associationId';
+      error.children = [];
 
       return new ValidationResponse(contact, [error]);
     }
