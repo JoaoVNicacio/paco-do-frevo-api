@@ -1,3 +1,4 @@
+import { UserModule } from './user.module';
 import { EventModule } from './event.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,8 +17,10 @@ import { SocialNetworkModule } from './social-network.module';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 import { OtherFrevoEntityModule } from './other-frevo-entity.module';
+import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { AuthModule } from './auth.module';
 
 dotenv.config();
 
@@ -30,6 +33,8 @@ dotenv.config();
     ContactModule,
     SocialNetworkModule,
     OtherFrevoEntityModule,
+    UserModule,
+    AuthModule,
 
     // TypeORM config:
     TypeOrmModule.forRoot({
@@ -54,7 +59,10 @@ dotenv.config();
       subscribers: ['src/subscriber/**/*.ts'],
     }),
 
-    // Caching with Redis config:
+    // MongoDB Config:
+    MongooseModule.forRoot(process.env.MONGO_DB_URL),
+
+    // Redis Cache config:
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: async () => ({
