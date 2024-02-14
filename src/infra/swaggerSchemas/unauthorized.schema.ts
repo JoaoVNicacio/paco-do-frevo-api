@@ -1,10 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiUnauthorizedResponse } from '@nestjs/swagger';
 
-export function ApiNotFoundResponseWithSchema() {
+export function ApiUnauthorizedResponseWithSchema() {
   return applyDecorators(
-    ApiNotFoundResponse({
-      description: 'The record was not found.',
+    ApiUnauthorizedResponse({
+      description: 'You are unauthorized',
       schema: {
         type: 'object',
         properties: {

@@ -9,6 +9,8 @@ import {
 } from '@nestjs/swagger';
 import IAuthService from 'src/domain/services/iauth.service';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 
 @Controller('authorization')
 @ApiTags('Authorization')
@@ -29,6 +31,8 @@ class AuthController extends ControllerBase {
     description: 'The request has an error on the sent object.',
     type: ValidationPipeResponseRepresentation,
   })
+  @ApiNotFoundResponseWithSchema()
+  @ApiUnauthorizedResponseWithSchema()
   @ApiBody({
     description: 'The record data.',
     type: UserForLoginDTO,
