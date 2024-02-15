@@ -1,4 +1,14 @@
 <p align="center">
+  <a href="https://pacodofrevo.org.br/" target="blank"><img src="https://pacodofrevo.org.br/wp-content/uploads/2021/10/logo-paco.jpg" width="200" alt="Paço do Frevo Logo" /></a>
+</p>
+
+<h1 align="center"> PAÇO DO FREVO - API </h1>
+
+<br></br>
+<h2 align="center"> About the Framework we use: </h2>
+<br></br>
+
+<p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
