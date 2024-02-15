@@ -5,6 +5,23 @@
 <h1 align="center"> PAÇO DO FREVO - API </h1>
 
 <br></br>
+
+<p align="justify">
+Our software aims to store relevant data about the associations and the frevo community, including information about their history, structure and characteristics, even the profitability of these institutions wich are of great value and expression for Pernambuco's culture. Our objective is to facilitate the management and analysis of these informations for study purposes, action planning and statistical studies. In addition to automating and digitizing the work of Paço do Frevo
+</p>
+<hr>
+
+## Techincal Decisions:
+
+>### Architecture:
+> #### Clean Architecture: 
+>Gives us a good level of abstraction and less coupling with the implementation, leading to the separation of business rules, application  rules and the infrastructure of the API.
+> #### Aggregates: 
+>Separates the groups of entities into cluster of related entities, like: Association Aggregate an User Aggregate
+
+<br>
+
+<br></br>
 <h2 align="center"> About the Framework we use: </h2>
 <br></br>
 
