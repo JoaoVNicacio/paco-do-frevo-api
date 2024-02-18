@@ -7,6 +7,7 @@ import generateMemberProfile from '../member.profile';
 import generateOtherFrevoEntityProfile from '../other-frevo-entity.profile';
 import generatePhoneNumberProfile from '../phone-number.profile';
 import generateSocialNetworkProfile from '../social-network.profile';
+import generateUserProfile from '../user.profile';
 import generateValidationResponseProfile from '../validation-response.profile';
 
 /**
@@ -22,6 +23,7 @@ function injectProfiles() {
   generateMemberProfile(mapper);
   generateAssociationProfile(mapper);
   generateOtherFrevoEntityProfile(mapper);
+  generateUserProfile(mapper);
   generateValidationResponseProfile(mapper);
 }
 

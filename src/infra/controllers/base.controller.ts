@@ -1,14 +1,15 @@
+import { Mapper as IMapper } from '@automapper/core';
 import {
   BadRequestException,
   HttpException,
   HttpStatus,
+  Inject,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
 import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/validation-error-signature.dto';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
-import mapper from 'src/application/mappers/mapper';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 
@@ -27,6 +28,9 @@ well as handling errors. */
   },
 })
 class ControllerBase {
+  @Inject('IMapper')
+  protected readonly _mapper: IMapper;
+
   /**
    * The function sends a custom validation response and throws a BadRequestException if the validation
    * response is not valid.
@@ -38,7 +42,7 @@ class ControllerBase {
     validationResponse: ValidationResponse<T>,
   ): T {
     if (!validationResponse.isValid) {
-      const formattedErrors = mapper.mapArray(
+      const formattedErrors = this._mapper.mapArray(
         validationResponse.validationResult as Array<ValidationErrorCopy>,
         ValidationErrorCopy,
         ValidationErrorDTO,
@@ -82,7 +86,7 @@ class ControllerBase {
    * @param {string} message - The `message` parameter is a string that represents the error message to
    * be displayed. It is used to provide additional information about the error that occurred.
    */
-  protected throwInternalError(error, message: string): void {
+  protected throwInternalError(error: Error, message: string): void {
     if (!(error instanceof HttpException)) {
       throw new InternalServerErrorException(
         `Oops, ${message.trim()}. Por favor, relate ao suporte.`,

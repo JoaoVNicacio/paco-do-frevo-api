@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/infra/modules/app.module';
 
-describe('AppController (e2e)', () => {
+describe('AssociationController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -15,7 +15,11 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(async () => {
+    await app.close();
+  });
+
   it('/associations (GET)', () => {
-    return request(app.getHttpServer()).get('/').expect(200).expect([]);
+    return request(app.getHttpServer()).get('/associations').expect(200);
   });
 });
