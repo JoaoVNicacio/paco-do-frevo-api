@@ -28,10 +28,12 @@ import { ValidationPipeResponseRepresentation } from 'src/application/valueRepre
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 
 @ApiTags('Contacts')
 @Controller('contacts')
 @UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class ContactController extends ControllerBase {
   constructor(
     @Inject(IContactService)

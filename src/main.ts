@@ -23,10 +23,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Paço do Frevo - API')
-    .setDescription(
-      'API de cadastro de associações e outros fazedores que fazem o frevo, um patrimônio imaterial da humanidade, acontecer.',
-    )
+    .setDescription(apiDescription)
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -37,3 +36,8 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+const apiDescription = `Our software is like a trusted friend for frevo,
+the heartbeat of Pernambuco's culture and an intangible heritage of humanity.
+It's here to preserve all the magic of frevo, from its colorful history to
+the vibrant community that keeps it alive and kicking.`;

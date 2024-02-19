@@ -35,10 +35,12 @@ import { ValidationPipeResponseRepresentation } from 'src/application/valueRepre
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 
 @ApiTags('Association')
 @Controller('associations')
 @UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class AssociationController extends ControllerBase {
   constructor(
     @Inject(IAssociationService)

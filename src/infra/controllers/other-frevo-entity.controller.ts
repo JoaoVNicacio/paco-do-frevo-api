@@ -35,10 +35,12 @@ import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema'
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
 @UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class OtherFrevoEntityController extends ControllerBase {
   constructor(
     @Inject(IOtherFrevoEntityService)

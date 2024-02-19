@@ -29,10 +29,12 @@ import { ValidationPipeResponseRepresentation } from 'src/application/valueRepre
 import { CacheInterceptor } from '@nestjs/cache-manager/dist/interceptors/cache.interceptor';
 import { CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 
 @ApiTags('Events')
 @Controller('event')
 @UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class EventController extends ControllerBase {
   constructor(
     @Inject(IEventService)

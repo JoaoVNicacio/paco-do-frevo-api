@@ -4,7 +4,7 @@ import UserForLoginDTO from 'src/application/dtos/userDtos/user-for-login.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiOkResponse,
+  ApiCreatedResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import IAuthService from 'src/domain/services/iauth.service';
@@ -23,7 +23,7 @@ class AuthController extends ControllerBase {
   }
 
   @Post('login')
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: String,
   })
