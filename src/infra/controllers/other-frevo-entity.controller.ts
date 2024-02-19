@@ -36,6 +36,8 @@ import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schem
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AdminGuard from '../guards/admin.guard';
+import { ApiForbiddenResponseWithSchema } from '../swaggerSchemas/forbidden.schema';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
@@ -193,6 +195,7 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: null,
@@ -201,6 +204,7 @@ class OtherFrevoEntityController extends ControllerBase {
     description: 'The request has an invalid id format.',
     type: ValidationPipeResponseRepresentation,
   })
+  @ApiForbiddenResponseWithSchema()
   @ApiNotFoundResponseWithSchema()
   public async deleteOtherFrevoEntity(
     @Param() idParam: UUIDParam,
