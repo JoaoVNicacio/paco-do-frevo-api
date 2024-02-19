@@ -8,6 +8,7 @@ import {
   Body,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
@@ -26,9 +27,11 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')
+@UseGuards(AuthGuard)
 class SocialNetworkController extends ControllerBase {
   constructor(
     @Inject(ISocialNetworkService)

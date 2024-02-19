@@ -8,6 +8,7 @@ import {
   Body,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
@@ -26,9 +27,11 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
 
 @ApiTags('Contacts')
 @Controller('contacts')
+@UseGuards(AuthGuard)
 class ContactController extends ControllerBase {
   constructor(
     @Inject(IContactService)

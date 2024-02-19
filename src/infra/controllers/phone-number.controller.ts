@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
@@ -26,9 +27,11 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
 
 @ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
+@UseGuards(AuthGuard)
 class PhoneNumberController extends ControllerBase {
   constructor(
     @Inject(IPhoneNumberService)

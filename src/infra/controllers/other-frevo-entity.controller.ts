@@ -9,6 +9,7 @@ import {
   Query,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ControllerBase from './base.controller';
@@ -33,9 +34,11 @@ import { ValidationPipeResponseRepresentation } from 'src/application/valueRepre
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
+@UseGuards(AuthGuard)
 class OtherFrevoEntityController extends ControllerBase {
   constructor(
     @Inject(IOtherFrevoEntityService)

@@ -9,6 +9,7 @@ import {
   Query,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
@@ -33,9 +34,11 @@ import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema'
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
 
 @ApiTags('Association')
 @Controller('associations')
+@UseGuards(AuthGuard)
 class AssociationController extends ControllerBase {
   constructor(
     @Inject(IAssociationService)

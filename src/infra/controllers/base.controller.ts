@@ -88,6 +88,8 @@ class ControllerBase {
    */
   protected throwInternalError(error: Error, message: string): void {
     if (!(error instanceof HttpException)) {
+      console.error(error);
+
       throw new InternalServerErrorException(
         `Oops, ${message.trim()}. Por favor, relate ao suporte.`,
       );

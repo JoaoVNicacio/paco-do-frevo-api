@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
@@ -27,9 +28,11 @@ import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schem
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { CacheInterceptor } from '@nestjs/cache-manager/dist/interceptors/cache.interceptor';
 import { CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
 
 @ApiTags('Events')
 @Controller('event')
+@UseGuards(AuthGuard)
 class EventController extends ControllerBase {
   constructor(
     @Inject(IEventService)
