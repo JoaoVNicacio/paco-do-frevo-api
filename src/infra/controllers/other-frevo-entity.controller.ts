@@ -33,6 +33,7 @@ import { ValidationPipeResponseRepresentation } from 'src/application/valueRepre
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import TimeParser from 'src/application/utils/time.parser';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
@@ -73,7 +74,7 @@ class OtherFrevoEntityController extends ControllerBase {
 
   @Get()
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(20000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiOkResponse({
     description: 'The records have been successfully fetched.',
     schema: {
@@ -99,7 +100,7 @@ class OtherFrevoEntityController extends ControllerBase {
 
   @Get('/paged')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(20000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiPagedResultsResponse(OtherFrevoEntity)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
@@ -130,7 +131,7 @@ class OtherFrevoEntityController extends ControllerBase {
 
   @Get('id/:id')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(20000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: OtherFrevoEntity,
