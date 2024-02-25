@@ -38,6 +38,7 @@ import AuthGuard from '../guards/auth.guard';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 import AdminGuard from '../guards/admin.guard';
 import { ApiForbiddenResponseWithSchema } from '../swaggerSchemas/forbidden.schema';
+import TimeParser from 'src/application/utils/time.parser';
 
 @ApiTags('Association')
 @Controller('associations')
@@ -78,7 +79,7 @@ class AssociationController extends ControllerBase {
 
   @Get()
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(5000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiOkResponse({
     description: 'The records have been successfully fetched.',
     schema: {
@@ -101,7 +102,7 @@ class AssociationController extends ControllerBase {
 
   @Get('/paged')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(20000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiPagedResultsResponse(Association)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
@@ -129,7 +130,7 @@ class AssociationController extends ControllerBase {
 
   @Get('id/:id')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(30000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(30))
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Association,

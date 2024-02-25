@@ -29,6 +29,7 @@ import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schem
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import TimeParser from 'src/application/utils/time.parser';
 
 @ApiTags('Contacts')
 @Controller('contacts')
@@ -71,7 +72,7 @@ class ContactController extends ControllerBase {
 
   @Get('id/:id')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(20000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(30))
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Contact,

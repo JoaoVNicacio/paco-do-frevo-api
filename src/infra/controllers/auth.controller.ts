@@ -11,6 +11,8 @@ import IAuthService from 'src/domain/services/iauth.service';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import { CacheTTL } from '@nestjs/cache-manager';
+import TimeParser from 'src/application/utils/time.parser';
 
 @Controller('authorization')
 @ApiTags('Authorization')
@@ -23,8 +25,9 @@ class AuthController extends ControllerBase {
   }
 
   @Post('login')
+  @CacheTTL(TimeParser.fromMinutesToMilliseconds(9))
   @ApiCreatedResponse({
-    description: 'The record has been successfully created.',
+    description: 'The JWT token has been successfully created.',
     type: String,
   })
   @ApiBadRequestResponse({
