@@ -26,6 +26,7 @@ describe('DocumentNumberValidatorTemplate', () => {
 
 class DocumentNumberValidatorTemplateMock extends DocumentNumberValidatorTemplate {
   protected validateSpecificRules(): boolean {
+    // Adicione aqui a lógica específica para validar o número do documento
     return true;
   }
 }
