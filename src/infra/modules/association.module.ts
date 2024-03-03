@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import AssociationAddress from 'src/domain/entities/associationAggregate/address.entity';
@@ -17,6 +17,12 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social-netwo
 import IAssociationService from 'src/domain/services/iassociation.service';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import mapper from 'src/application/mappers/mapper';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -51,8 +57,20 @@ import mapper from 'src/application/mappers/mapper';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
+    },
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
     },
   ],
 })

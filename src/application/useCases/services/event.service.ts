@@ -7,7 +7,11 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import IEventService from 'src/domain/services/ievent.service';
 import { Mapper as IMapper } from '@automapper/core';
-import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
+import {
+  CacheManager,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 class EventService implements IEventService {
@@ -18,7 +22,7 @@ class EventService implements IEventService {
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     @Inject(CacheManager)

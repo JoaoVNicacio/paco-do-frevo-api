@@ -1,6 +1,6 @@
 import { UserModule } from './user.module';
 import { EventModule } from './event.module';
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import AssociationAddress from 'src/domain/entities/associationAggregate/address.entity';
@@ -78,6 +78,9 @@ dotenv.config();
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    // Loggers:
+    ConsoleLogger,
+  ],
 })
 export class AppModule {}

@@ -61,15 +61,11 @@ class OtherFrevoEntityController extends ControllerBase {
   public async createOtherFrevoEntity(
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
-    try {
-      return this.sendCustomValidationResponse<OtherFrevoEntity>(
-        await this._otherFrevoEntityService.createOtherFrevoEntity(
-          otherFrevoEntityDTO,
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
-    }
+    return this.sendCustomValidationResponse<OtherFrevoEntity>(
+      await this._otherFrevoEntityService.createOtherFrevoEntity(
+        otherFrevoEntityDTO,
+      ),
+    );
   }
 
   @Get()
@@ -86,16 +82,9 @@ class OtherFrevoEntityController extends ControllerBase {
     description: 'The request returned no records.',
   })
   public async getAllOtherFrevoEntities(): Promise<Array<OtherFrevoEntity>> {
-    try {
-      return this.sendCustomResponse(
-        await this._otherFrevoEntityService.getAllOtherFrevoEntities(),
-      );
-    } catch (error) {
-      this.throwInternalError(
-        error,
-        'houve um erro ao obter otherFrevoEntities',
-      );
-    }
+    return this.sendCustomResponse(
+      await this._otherFrevoEntityService.getAllOtherFrevoEntities(),
+    );
   }
 
   @Get('/paged')
@@ -114,19 +103,12 @@ class OtherFrevoEntityController extends ControllerBase {
   public async getPagedOtherFrevoEntities(
     @Query() pagingParams: PagingParams,
   ): Promise<PagedResults<OtherFrevoEntity>> {
-    try {
-      return this.sendCustomResponse(
-        await this._otherFrevoEntityService.getPagedOtherFrevoEntities(
-          Number(pagingParams.page),
-          Number(pagingParams.pageSize),
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(
-        error,
-        'houve um erro ao obter otherFrevoEntities',
-      );
-    }
+    return this.sendCustomResponse(
+      await this._otherFrevoEntityService.getPagedOtherFrevoEntities(
+        Number(pagingParams.page),
+        Number(pagingParams.pageSize),
+      ),
+    );
   }
 
   @Get('id/:id')
@@ -145,13 +127,9 @@ class OtherFrevoEntityController extends ControllerBase {
   public async getOtherFrevoEntityById(
     @Param() idParam: UUIDParam,
   ): Promise<OtherFrevoEntity> {
-    try {
-      return this.sendCustomResponse<OtherFrevoEntity>(
-        await this._otherFrevoEntityService.getOtherFrevoEntityById(idParam.id),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao obter otherFrevoEntity');
-    }
+    return this.sendCustomResponse<OtherFrevoEntity>(
+      await this._otherFrevoEntityService.getOtherFrevoEntityById(idParam.id),
+    );
   }
 
   @Put('id/:id')
@@ -176,16 +154,12 @@ class OtherFrevoEntityController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
-    try {
-      return this.sendCustomValidationResponse<OtherFrevoEntity>(
-        await this._otherFrevoEntityService.updateOtherFrevoEntity(
-          idParam.id,
-          otherFrevoEntityDTO,
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar otherFrevoEntity');
-    }
+    return this.sendCustomValidationResponse<OtherFrevoEntity>(
+      await this._otherFrevoEntityService.updateOtherFrevoEntity(
+        idParam.id,
+        otherFrevoEntityDTO,
+      ),
+    );
   }
 
   @Delete('id/:id')
@@ -201,14 +175,7 @@ class OtherFrevoEntityController extends ControllerBase {
   public async deleteOtherFrevoEntity(
     @Param() idParam: UUIDParam,
   ): Promise<void> {
-    try {
-      await this._otherFrevoEntityService.deleteOtherFrevoEntity(idParam.id);
-    } catch (error) {
-      this.throwInternalError(
-        error,
-        'houve um erro ao remover otherFrevoEntity',
-      );
-    }
+    await this._otherFrevoEntityService.deleteOtherFrevoEntity(idParam.id);
   }
 }
 

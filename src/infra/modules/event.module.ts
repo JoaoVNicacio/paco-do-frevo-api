@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
@@ -10,6 +10,12 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
 import IEventService from 'src/domain/services/ievent.service';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import mapper from 'src/application/mappers/mapper';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Event, Association])],
@@ -33,8 +39,20 @@ import mapper from 'src/application/mappers/mapper';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
+    },
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
     },
   ],
 })

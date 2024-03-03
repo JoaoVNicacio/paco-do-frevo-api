@@ -7,7 +7,11 @@ import CleanStringBuilder from 'src/application/utils/clean-string.builder';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IAssociationService from 'src/domain/services/iassociation.service';
-import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
+import {
+  CacheManager,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 class AssociationService implements IAssociationService {
@@ -15,7 +19,7 @@ class AssociationService implements IAssociationService {
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     @Inject(CacheManager)

@@ -8,6 +8,7 @@ import ValidationResponse from 'src/application/responseObjects/validation.respo
 import HashingPipe from 'src/application/pipes/hashing.pipe';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
 import { ValidationError } from 'class-validator';
+import { Mapper } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class UserService implements IUserService {
@@ -15,7 +16,7 @@ class UserService implements IUserService {
     @Inject(IUserRepository)
     private readonly _userRepository: IUserRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     private readonly _hashingPipe: HashingPipe,

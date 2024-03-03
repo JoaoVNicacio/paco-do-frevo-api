@@ -7,7 +7,11 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social-netwo
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import ISocialNetworkService from 'src/domain/services/isocial-network.service';
-import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
+import {
+  CacheManager,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 class SocialNetworkService implements ISocialNetworkService {
@@ -18,7 +22,7 @@ class SocialNetworkService implements ISocialNetworkService {
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     @Inject(CacheManager)

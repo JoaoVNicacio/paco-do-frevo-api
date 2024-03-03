@@ -1,6 +1,7 @@
 import {
   Inject,
   Injectable,
+  LoggerService as ILogger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import IJwtPayload from 'src/application/requestObjects/ijwt.payload';
 import IHashingHandler from 'src/application/handlers/ihashing.handler';
 import IAuthService from 'src/domain/services/iauth.service';
 import IUserService from 'src/domain/services/iuser.service';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class AuthService implements IAuthService {
@@ -21,6 +23,9 @@ class AuthService implements IAuthService {
     private readonly _hashingHandler: IHashingHandler,
 
     private readonly _jwtService: JwtService,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
   ) {}
 
   public async login(user: UserForLoginDTO): Promise<string> {
@@ -38,6 +43,10 @@ class AuthService implements IAuthService {
     );
 
     if (!passwordHashMatches) {
+      this._logger.warn(
+        `Login attempt with the login: ${user.email} with a wrong password.`,
+      );
+
       throw new UnauthorizedException(
         'As informações de login fornecidas estão incorretas',
       );

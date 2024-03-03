@@ -6,7 +6,11 @@ import ValidationResponse from 'src/application/responseObjects/validation.respo
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import IOtherFrevoEntityService from 'src/domain/services/iother-frevo-entity.service';
-import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
+import {
+  CacheManager,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 class OtherFrevoEntityService implements IOtherFrevoEntityService {
@@ -14,7 +18,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     @Inject(IOtherFrevoEntityRepository)
     private readonly _otherFrevoEntityRepository: IOtherFrevoEntityRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     @Inject(CacheManager)

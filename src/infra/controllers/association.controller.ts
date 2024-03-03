@@ -61,13 +61,9 @@ class AssociationController extends ControllerBase {
   public async createAssociation(
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    try {
-      return this.sendCustomValidationResponse<Association>(
-        await this._associationService.createAssociation(associationDTO),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar association');
-    }
+    return this.sendCustomValidationResponse<Association>(
+      await this._associationService.createAssociation(associationDTO),
+    );
   }
 
   @Get()
@@ -84,13 +80,9 @@ class AssociationController extends ControllerBase {
     description: 'The request returned no records.',
   })
   public async getAllAssociations(): Promise<Array<Association>> {
-    try {
-      return this.sendCustomResponse(
-        await this._associationService.getAllAssociations(),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao obter associations');
-    }
+    return this.sendCustomResponse(
+      await this._associationService.getAllAssociations(),
+    );
   }
 
   @Get('/paged')
@@ -109,16 +101,12 @@ class AssociationController extends ControllerBase {
   public async getPagedAssociations(
     @Query() pagingParams: PagingParams,
   ): Promise<PagedResults<Association>> {
-    try {
-      return this.sendCustomResponse(
-        await this._associationService.getPagedAssociations(
-          Number(pagingParams.page),
-          Number(pagingParams.pageSize),
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao obter associations');
-    }
+    return this.sendCustomResponse(
+      await this._associationService.getPagedAssociations(
+        Number(pagingParams.page),
+        Number(pagingParams.pageSize),
+      ),
+    );
   }
 
   @Get('id/:id')
@@ -137,13 +125,9 @@ class AssociationController extends ControllerBase {
   public async getAssociationById(
     @Param() idParam: UUIDParam,
   ): Promise<Association> {
-    try {
-      return this.sendCustomResponse<Association>(
-        await this._associationService.getAssociationById(idParam.id),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao obter association');
-    }
+    return this.sendCustomResponse<Association>(
+      await this._associationService.getAssociationById(idParam.id),
+    );
   }
 
   @Put('id/:id')
@@ -168,16 +152,12 @@ class AssociationController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    try {
-      return this.sendCustomValidationResponse<Association>(
-        await this._associationService.updateAssociation(
-          idParam.id,
-          associationDTO,
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao editar association');
-    }
+    return this.sendCustomValidationResponse<Association>(
+      await this._associationService.updateAssociation(
+        idParam.id,
+        associationDTO,
+      ),
+    );
   }
 
   @Delete('id/:id')
@@ -192,11 +172,7 @@ class AssociationController extends ControllerBase {
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async deleteAssociation(@Param() idParam: UUIDParam): Promise<void> {
-    try {
-      await this._associationService.deleteAssociation(idParam.id);
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao remover association');
-    }
+    await this._associationService.deleteAssociation(idParam.id);
   }
 }
 

@@ -41,11 +41,7 @@ class AuthController extends ControllerBase {
     type: UserForLoginDTO,
   })
   public async login(@Body() user: UserForLoginDTO): Promise<string> {
-    try {
-      return this.sendCustomResponse(await this._authService.login(user));
-    } catch (error) {
-      this.throwInternalError(error, 'Houve um erro ao entrar com o usuário');
-    }
+    return this.sendCustomResponse(await this._authService.login(user));
   }
 }
 

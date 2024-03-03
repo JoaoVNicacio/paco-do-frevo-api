@@ -7,7 +7,11 @@ import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.e
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
-import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
+import {
+  CacheManager,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
@@ -18,7 +22,7 @@ class PhoneNumberService implements IPhoneNumberService {
     @Inject(IContactRepository)
     private readonly _contactRepository: IContactRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     @Inject(CacheManager)

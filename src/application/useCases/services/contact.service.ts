@@ -7,7 +7,11 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IContactService from 'src/domain/services/icontact.service';
 import { Mapper as IMapper } from '@automapper/core';
-import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
+import {
+  CacheManager,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 class ContactService implements IContactService {
@@ -18,7 +22,7 @@ class ContactService implements IContactService {
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     @Inject(CacheManager)
