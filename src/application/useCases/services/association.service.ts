@@ -12,6 +12,8 @@ import {
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
 import { Cache } from 'cache-manager';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class AssociationService implements IAssociationService {
@@ -24,6 +26,9 @@ class AssociationService implements IAssociationService {
 
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
   ) {}
 
   public async createAssociation(
@@ -38,6 +43,10 @@ class AssociationService implements IAssociationService {
     const isValid = await association.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The Association ${associationDTO.name} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         association,
         await association.validateCreation(),
@@ -60,8 +69,16 @@ class AssociationService implements IAssociationService {
       await association.validateCreation(),
     );
 
+    this._logger.log(
+      `<💾> ➤ Created the Association with id: ${insertResponse.id} and related objects.`,
+    );
+
     if (response.isValid) {
       await this._cacheManager.del(`associations`);
+
+      this._logger.log(
+        `<🗑️> ➤ Deleted cache of get all Associations due to creation of ${insertResponse.id}.`,
+      );
     }
 
     return response;
@@ -107,6 +124,10 @@ class AssociationService implements IAssociationService {
     const isValid = await association.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The update for the Association ${id} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         association,
         await association.validateCreation(),
@@ -124,22 +145,37 @@ class AssociationService implements IAssociationService {
       association,
     );
 
+    this._logger.log(
+      `<🔁> ➤ Updated the Association with id: ${id} and related objects.`,
+    );
+
+    await Promise.all([
+      async () => this._cacheManager.del(`associations/id/${id}`),
+      async () => this._cacheManager.del(`associations`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted cache entries from the Association with id: ${id} due to update.`,
+    );
+
     const response = new ValidationResponse(
       updateResponse,
       await association.validateCreation(),
     );
 
-    await this._cacheManager.del(`associations/id/${id}`);
-    await this._cacheManager.del(`associations`);
-
     return response;
   }
 
   public async deleteAssociation(id: string): Promise<void> {
-    await this._associationRepository.deleteAssociation(id).then(async () => {
-      await this._cacheManager.del(`associations/id/${id}`);
-      await this._cacheManager.del(`associations`);
-    });
+    await Promise.all([
+      this._associationRepository.deleteAssociation(id),
+      async () => this._cacheManager.del(`associations/id/${id}`),
+      async () => this._cacheManager.del(`associations`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted Association with id: ${id} from the DB and cache entries.`,
+    );
   }
 }
 

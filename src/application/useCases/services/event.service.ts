@@ -12,6 +12,8 @@ import {
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
 import { Cache } from 'cache-manager';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class EventService implements IEventService {
@@ -27,6 +29,9 @@ class EventService implements IEventService {
 
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
   ) {}
 
   public async createEvent(
@@ -39,8 +44,12 @@ class EventService implements IEventService {
       await this._associationRepository.getById(associationId);
 
     if (!association) {
+      this._logger.log(
+        `<⛔️> ➤ The Event for the association: ${associationId} didn't pass validation.`,
+      );
+
       const error = new ValidationError();
-      error.constraints = { notFound: 'The association does not exists' };
+      error.constraints = { notFound: 'The association does not exist' };
       error.property = 'associationId';
       error.children = [];
 
@@ -52,10 +61,16 @@ class EventService implements IEventService {
     const isValid = await event.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The Event for the association: ${associationId} didn't pass validation.`,
+      );
+
       return new ValidationResponse(event, await event.validateCreation());
     }
 
     const insertResponse = await this._eventRepository.createEvent(event);
+
+    this._logger.log(`<💾> ➤ Created the Event with id: ${insertResponse.id}`);
 
     return new ValidationResponse(
       insertResponse,
@@ -74,12 +89,22 @@ class EventService implements IEventService {
     const event = this._mapper.map(eventDto, EventDTO, Event);
 
     if (!(await event.isValid())) {
+      this._logger.log(
+        `<⛔️> ➤ The update for the Event ${id} didn't pass validation.`,
+      );
+
       return new ValidationResponse(event, await event.validateCreation());
     }
 
     const updateResponse = await this._eventRepository.updateEvent(id, event);
 
+    this._logger.log(`<🔁> ➤ Updated the Event with id: ${id}.`);
+
     await this._cacheManager.del(`events/id/${id}`);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted event with id: ${id} from cache entries due to update.`,
+    );
 
     return new ValidationResponse(
       updateResponse,
@@ -88,9 +113,14 @@ class EventService implements IEventService {
   }
 
   public async deleteEvent(id: string): Promise<void> {
-    return await this._eventRepository
-      .deleteEvent(id)
-      .then(async () => await this._cacheManager.del(`events/id/${id}`));
+    await Promise.all([
+      this._eventRepository.deleteEvent(id),
+      async () => this._cacheManager.del(`events/id/${id}`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted event with id: ${id} from the DB and cache entries.`,
+    );
   }
 }
 

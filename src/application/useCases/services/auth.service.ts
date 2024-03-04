@@ -22,10 +22,10 @@ class AuthService implements IAuthService {
     @Inject(IHashingHandler)
     private readonly _hashingHandler: IHashingHandler,
 
-    private readonly _jwtService: JwtService,
-
     @Inject(Logger)
     private readonly _logger: ILogger,
+
+    private readonly _jwtService: JwtService,
   ) {}
 
   public async login(user: UserForLoginDTO): Promise<string> {
@@ -44,7 +44,7 @@ class AuthService implements IAuthService {
 
     if (!passwordHashMatches) {
       this._logger.warn(
-        `Login attempt with the login: ${user.email} with a wrong password.`,
+        `<🔐❌> ➤ Login attempt with the login: ${user.email} with a wrong password.`,
       );
 
       throw new UnauthorizedException(
@@ -58,7 +58,11 @@ class AuthService implements IAuthService {
       userRole: userFromDb.role,
     } satisfies IJwtPayload;
 
-    return await this._jwtService.signAsync(payload);
+    return await this._jwtService
+      .signAsync(payload)
+      .then(() =>
+        this._logger.log(`<🔐✔️> ➤ Authenticated user: ${userFromDb.email}.`),
+      );
   }
 }
 

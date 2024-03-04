@@ -12,6 +12,8 @@ import {
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
 import { Cache } from 'cache-manager';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class ContactService implements IContactService {
@@ -27,6 +29,9 @@ class ContactService implements IContactService {
 
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
   ) {}
 
   public async createContact(
@@ -39,6 +44,10 @@ class ContactService implements IContactService {
       await this._associationRepository.getById(associationId);
 
     if (!association) {
+      this._logger.log(
+        `<⛔️> ➤ The Contact: ${contactDTO.addressTo} didn't pass validation.`,
+      );
+
       const error = new ValidationError();
       error.constraints = { notFound: 'The association does not exists' };
       error.property = 'associationId';
@@ -52,10 +61,18 @@ class ContactService implements IContactService {
     const isValid = await contact.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The Contact: ${contactDTO.addressTo} didn't pass validation.`,
+      );
+
       return new ValidationResponse(contact, await contact.validateCreation());
     }
 
     const insertResponse = await this._contactRepository.createContact(contact);
+
+    this._logger.log(
+      `<💾> ➤ Created the contact with id: ${insertResponse.id} and related objects.`,
+    );
 
     return new ValidationResponse(
       insertResponse,
@@ -80,12 +97,20 @@ class ContactService implements IContactService {
     const isValid = await contact.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The update for the contact ${id} didn't pass validation.`,
+      );
+
       return new ValidationResponse(contact, await contact.validateCreation());
     }
 
     const updateResponse = await this._contactRepository.updateContact(
       id,
       contact,
+    );
+
+    this._logger.log(
+      `<🔁> ➤ Updated the Contact with id: ${id} and related objects.`,
     );
 
     return new ValidationResponse(
@@ -95,9 +120,14 @@ class ContactService implements IContactService {
   }
 
   public async deleteContact(id: string): Promise<void> {
-    return await this._contactRepository
-      .deleteContact(id)
-      .then(async () => await this._cacheManager.del(`contacts/id/${id}`));
+    await Promise.all([
+      this._contactRepository.deleteContact(id),
+      async () => this._cacheManager.del(`contacts/id/${id}`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted Contact with id: ${id} from the DB and cache entries.`,
+    );
   }
 }
 

@@ -11,6 +11,8 @@ import {
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
 import { Cache } from 'cache-manager';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class OtherFrevoEntityService implements IOtherFrevoEntityService {
@@ -23,6 +25,9 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
   ) {}
 
   public async createOtherFrevoEntity(
@@ -37,6 +42,10 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     const isValid = await otherFrevoEntity.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The Frevo entity ${otherFrevoEntity.name} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         otherFrevoEntity,
         await otherFrevoEntity.validateCreation(),
@@ -46,7 +55,14 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     const insertResponse =
       await this._otherFrevoEntityRepository.createResume(otherFrevoEntity);
 
+    this._logger.log(
+      `<💾> ➤ Created the Frevo entity with id: ${insertResponse.id} and related objects.`,
+    );
+
     await this._cacheManager.del(`other-frevo-entities`);
+    this._logger.log(
+      `<🗑️> ➤ Deleted cache of get all Frevo entities due to creation of ${insertResponse.id}.`,
+    );
 
     return new ValidationResponse(
       insertResponse,
@@ -108,8 +124,18 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
         otherFrevoEntity,
       );
 
-    await this._cacheManager.del(`other-frevo-entities/id/${id}`);
-    await this._cacheManager.del(`other-frevo-entities`);
+    this._logger.log(
+      `<🔁> ➤ Updated the Frevo entity with id: ${id} and related objects.`,
+    );
+
+    await Promise.all([
+      async () => this._cacheManager.del(`other-frevo-entities/id/${id}`),
+      async () => this._cacheManager.del(`other-frevo-entities`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted cache entries from the Frevo entity with id: ${id} due to update.`,
+    );
 
     return new ValidationResponse(
       updateResponse,
@@ -118,12 +144,15 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
   }
 
   public async deleteOtherFrevoEntity(id: string): Promise<void> {
-    return await this._otherFrevoEntityRepository
-      .deleteOtherFrevoEntity(id)
-      .then(async () => {
-        await this._cacheManager.del(`other-frevo-entities/id/${id}`);
-        await this._cacheManager.del(`other-frevo-entities`);
-      });
+    await Promise.all([
+      this._otherFrevoEntityRepository.deleteOtherFrevoEntity(id),
+      async () => this._cacheManager.del(`other-frevo-entities/id/${id}`),
+      async () => this._cacheManager.del(`other-frevo-entities`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted Frevo entity with id: ${id} from the DB and cache entries.`,
+    );
   }
 }
 

@@ -12,6 +12,8 @@ import {
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
 import { Cache } from 'cache-manager';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
@@ -27,6 +29,9 @@ class PhoneNumberService implements IPhoneNumberService {
 
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
   ) {}
 
   public async createPhoneNumber(
@@ -42,6 +47,10 @@ class PhoneNumberService implements IPhoneNumberService {
     const contact = await this._contactRepository.getById(contactId);
 
     if (!contact) {
+      this._logger.log(
+        `<⛔️> ➤ The phone number for the contact ${contactId} didn't pass validation.`,
+      );
+
       const error = new ValidationError();
       error.constraints = { notFound: 'The contact does not exists' };
       error.property = 'contactId';
@@ -55,6 +64,10 @@ class PhoneNumberService implements IPhoneNumberService {
     const isValid = await phoneNumber.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The phone number for the contact ${contactId} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         phoneNumber,
         await phoneNumber.validateCreation(),
@@ -63,6 +76,10 @@ class PhoneNumberService implements IPhoneNumberService {
 
     const insertResponse =
       await this._phoneNumberRepository.createPhoneNumber(phoneNumber);
+
+    this._logger.log(
+      `<💾> ➤ Created the phone number with id: ${insertResponse.id} and related objects.`,
+    );
 
     return new ValidationResponse(
       insertResponse,
@@ -87,6 +104,10 @@ class PhoneNumberService implements IPhoneNumberService {
     const isValid = await phoneNumber.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The update for the phone number ${id} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         phoneNumber,
         await phoneNumber.validateCreation(),
@@ -98,7 +119,13 @@ class PhoneNumberService implements IPhoneNumberService {
       phoneNumber,
     );
 
+    this._logger.log(`<🔁> ➤ Updated the phone number with id: ${id}.`);
+
     await this._cacheManager.del(`phone-numbers/id/${id}`);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted cache entries from the phone number with id: ${id} due to update.`,
+    );
 
     return new ValidationResponse(
       updateResponse,
@@ -107,9 +134,14 @@ class PhoneNumberService implements IPhoneNumberService {
   }
 
   public async deletePhoneNumber(id: string): Promise<void> {
-    return await this._phoneNumberRepository
-      .deletePhoneNumber(id)
-      .then(async () => await this._cacheManager.del(`phone-numbers/id/${id}`));
+    await Promise.all([
+      this._phoneNumberRepository.deletePhoneNumber(id),
+      async () => this._cacheManager.del(`phone-numbers/id/${id}`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted phone number with id: ${id} from the DB and cache entries.`,
+    );
   }
 }
 
