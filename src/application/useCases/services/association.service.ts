@@ -150,8 +150,8 @@ class AssociationService implements IAssociationService {
     );
 
     await Promise.all([
-      async () => this._cacheManager.del(`associations/id/${id}`),
-      async () => this._cacheManager.del(`associations`),
+      async () => await this._cacheManager.del(`associations/id/${id}`),
+      async () => await this._cacheManager.del(`associations`),
     ]);
 
     this._logger.log(
@@ -169,8 +169,8 @@ class AssociationService implements IAssociationService {
   public async deleteAssociation(id: string): Promise<void> {
     await Promise.all([
       this._associationRepository.deleteAssociation(id),
-      async () => this._cacheManager.del(`associations/id/${id}`),
-      async () => this._cacheManager.del(`associations`),
+      async () => await this._cacheManager.del(`associations/id/${id}`),
+      async () => await this._cacheManager.del(`associations`),
     ]);
 
     this._logger.log(

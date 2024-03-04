@@ -58,11 +58,10 @@ class AuthService implements IAuthService {
       userRole: userFromDb.role,
     } satisfies IJwtPayload;
 
-    return await this._jwtService
-      .signAsync(payload)
-      .then(() =>
-        this._logger.log(`<🔐✔️> ➤ Authenticated user: ${userFromDb.email}.`),
-      );
+    const token = await this._jwtService.signAsync(payload);
+    this._logger.log(`<🔐✔️> ➤ Authenticated user: ${userFromDb.email}.`);
+
+    return token;
   }
 }
 

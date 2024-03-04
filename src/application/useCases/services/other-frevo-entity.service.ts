@@ -129,8 +129,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     );
 
     await Promise.all([
-      async () => this._cacheManager.del(`other-frevo-entities/id/${id}`),
-      async () => this._cacheManager.del(`other-frevo-entities`),
+      async () => await this._cacheManager.del(`other-frevo-entities/id/${id}`),
+      async () => await this._cacheManager.del(`other-frevo-entities`),
     ]);
 
     this._logger.log(
@@ -146,8 +146,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
   public async deleteOtherFrevoEntity(id: string): Promise<void> {
     await Promise.all([
       this._otherFrevoEntityRepository.deleteOtherFrevoEntity(id),
-      async () => this._cacheManager.del(`other-frevo-entities/id/${id}`),
-      async () => this._cacheManager.del(`other-frevo-entities`),
+      async () => await this._cacheManager.del(`other-frevo-entities/id/${id}`),
+      async () => await this._cacheManager.del(`other-frevo-entities`),
     ]);
 
     this._logger.log(

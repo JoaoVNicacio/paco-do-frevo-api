@@ -136,7 +136,7 @@ class PhoneNumberService implements IPhoneNumberService {
   public async deletePhoneNumber(id: string): Promise<void> {
     await Promise.all([
       this._phoneNumberRepository.deletePhoneNumber(id),
-      async () => this._cacheManager.del(`phone-numbers/id/${id}`),
+      async () => await this._cacheManager.del(`phone-numbers/id/${id}`),
     ]);
 
     this._logger.log(

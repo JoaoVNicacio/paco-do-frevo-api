@@ -17,7 +17,7 @@ class HashingHandler implements IHashingHandler {
 
     const result = bcrypt.compareSync(plainText, hash);
 
-    this._logger.log(`<⌛️> ➤ Comparison done in: ${startTime - Date.now()}ms.`);
+    this._logger.log(`<⌛️> ➤ Comparison done in: ${Date.now() - startTime}ms.`);
 
     return result;
   }
@@ -31,7 +31,7 @@ class HashingHandler implements IHashingHandler {
 
     const hashedValue = bcrypt.hashSync(value, saltRounds);
 
-    this._logger.log(`<⌛️> ➤ hashing done in: ${startTime - Date.now()}ms.`);
+    this._logger.log(`<⌛️> ➤ hashing done in: ${Date.now() - startTime}ms.`);
 
     return hashedValue;
   }

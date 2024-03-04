@@ -138,7 +138,7 @@ class SocialNetworkService implements ISocialNetworkService {
   public async deleteSocialNetwork(id: string): Promise<void> {
     await Promise.all([
       this._socialNetworkRepository.deleteSocialNetwork(id),
-      async () => this._cacheManager.del(`social-networks/id/${id}`),
+      async () => await this._cacheManager.del(`social-networks/id/${id}`),
     ]);
 
     this._logger.log(

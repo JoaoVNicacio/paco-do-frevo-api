@@ -111,7 +111,7 @@ class AssociationController extends ControllerBase {
 
   @Get('id/:id')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(TimeParser.fromSecondsToMilliseconds(30))
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
     type: Association,

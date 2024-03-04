@@ -115,7 +115,7 @@ class EventService implements IEventService {
   public async deleteEvent(id: string): Promise<void> {
     await Promise.all([
       this._eventRepository.deleteEvent(id),
-      async () => this._cacheManager.del(`events/id/${id}`),
+      async () => await this._cacheManager.del(`events/id/${id}`),
     ]);
 
     this._logger.log(
