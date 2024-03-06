@@ -4,10 +4,16 @@ import OtherFrevoEntityController from '../controllers/other-frevo-entity.contro
 import { TypeOrmModule } from '@nestjs/typeorm';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import IOtherFrevoEntityService from 'src/domain/services/iother-frevo-entity.service';
 import mapper from 'src/application/mappers/mapper';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -29,8 +35,20 @@ import mapper from 'src/application/mappers/mapper';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
+    },
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
     },
   ],
 })

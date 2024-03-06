@@ -4,7 +4,6 @@ import {
   HttpException,
   HttpStatus,
   Inject,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
@@ -12,23 +11,30 @@ import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/valid
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
+import { Mapper } from 'src/application/symbols/dependency-injection.symbols';
 
 /** The `ControllerBase` is a base class for the project's NestJS controllers.
 it provides methods for sending custom validation and response messages, as
 well as handling errors. */
 @ApiInternalServerErrorResponse({
-  description: 'There was a internal server error on the operation',
+  description: 'There was an internal server error on the operation',
   schema: {
     type: 'object',
     properties: {
       message: { type: 'string' },
-      error: { type: 'string', nullable: true },
-      statusCode: { type: 'number' },
+      error: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          message: { type: 'string' },
+          stack: { type: 'string' },
+        },
+      },
     },
   },
 })
 class ControllerBase {
-  @Inject('IMapper')
+  @Inject(Mapper)
   protected readonly _mapper: IMapper;
 
   /**
@@ -76,24 +82,6 @@ class ControllerBase {
     }
 
     return response;
-  }
-
-  /**
-   * The function throws an InternalServerErrorException if the error is not an instance of
-   * HttpException, otherwise it throws the error itself.
-   * @param error - The `error` parameter is the error object that is being thrown. It is checked to see
-   * if it is an instance of the `HttpException` class.
-   * @param {string} message - The `message` parameter is a string that represents the error message to
-   * be displayed. It is used to provide additional information about the error that occurred.
-   */
-  protected throwInternalError(error: Error, message: string): void {
-    if (!(error instanceof HttpException)) {
-      throw new InternalServerErrorException(
-        `Oops, ${message.trim()}. Por favor, relate ao suporte.`,
-      );
-    }
-
-    throw error;
   }
 }
 

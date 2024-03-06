@@ -60,16 +60,12 @@ class SocialNetworkController extends ControllerBase {
     @Body() socialNetworkDTO: SocialNetworkDTO,
     @Param() idParam: UUIDParam,
   ): Promise<SocialNetwork> {
-    try {
-      return this.sendCustomValidationResponse<SocialNetwork>(
-        await this._socialNetworkService.createSocialNetwork(
-          socialNetworkDTO,
-          idParam.id,
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar network');
-    }
+    return this.sendCustomValidationResponse<SocialNetwork>(
+      await this._socialNetworkService.createSocialNetwork(
+        socialNetworkDTO,
+        idParam.id,
+      ),
+    );
   }
 
   @Get('id/:id')
@@ -86,13 +82,9 @@ class SocialNetworkController extends ControllerBase {
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getById(@Param() idParam: UUIDParam): Promise<SocialNetwork> {
-    try {
-      return this.sendCustomResponse(
-        await this._socialNetworkService.getSocialNetworkById(idParam.id),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar contact');
-    }
+    return this.sendCustomResponse(
+      await this._socialNetworkService.getSocialNetworkById(idParam.id),
+    );
   }
 
   @Put('id/:id')
@@ -117,16 +109,12 @@ class SocialNetworkController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() socialNetworkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
-    try {
-      return this.sendCustomValidationResponse<SocialNetwork>(
-        await this._socialNetworkService.updateSocialNetwork(
-          idParam.id,
-          socialNetworkDTO,
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao atualizar network');
-    }
+    return this.sendCustomValidationResponse<SocialNetwork>(
+      await this._socialNetworkService.updateSocialNetwork(
+        idParam.id,
+        socialNetworkDTO,
+      ),
+    );
   }
 
   @Delete('id/:id')
@@ -140,11 +128,7 @@ class SocialNetworkController extends ControllerBase {
   })
   @ApiNotFoundResponseWithSchema()
   public async deleteSocialNetwork(@Param() idParam: UUIDParam): Promise<void> {
-    try {
-      await this._socialNetworkService.deleteSocialNetwork(idParam.id);
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao remover network');
-    }
+    await this._socialNetworkService.deleteSocialNetwork(idParam.id);
   }
 }
 

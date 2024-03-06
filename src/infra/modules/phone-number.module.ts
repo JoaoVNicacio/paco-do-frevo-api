@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import PhoneNumberController from '../controllers/phone-number.controller';
@@ -10,6 +10,12 @@ import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import IPhoneNumberService from 'src/domain/services/iphone-number.service';
 import mapper from 'src/application/mappers/mapper';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhoneNumber, Contact])],
@@ -33,8 +39,20 @@ import mapper from 'src/application/mappers/mapper';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
+    },
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
     },
   ],
 })

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from 'src/domain/entities/userAggregate/user.entity';
 import UserRepository from '../repositories/user.repository';
@@ -10,6 +10,12 @@ import mapper from 'src/application/mappers/mapper';
 import IHashingHandler from 'src/application/handlers/ihashing.handler';
 import HashingHandler from '../handlers/hashing.handler';
 import HashingPipe from 'src/application/pipes/hashing.pipe';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -42,12 +48,24 @@ import HashingPipe from 'src/application/pipes/hashing.pipe';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
     },
 
     // Pipes:
     HashingPipe,
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
+    },
   ],
   exports: [
     // Repositories:

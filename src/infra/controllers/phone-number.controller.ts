@@ -59,16 +59,12 @@ class PhoneNumberController extends ControllerBase {
     @Body() phoneNumberDTO: PhoneNumberDTO,
     @Param() idParm: UUIDParam,
   ): Promise<PhoneNumber> {
-    try {
-      return this.sendCustomValidationResponse<PhoneNumber>(
-        await this._phoneNumberService.createPhoneNumber(
-          phoneNumberDTO,
-          idParm.id,
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar phone number');
-    }
+    return this.sendCustomValidationResponse<PhoneNumber>(
+      await this._phoneNumberService.createPhoneNumber(
+        phoneNumberDTO,
+        idParm.id,
+      ),
+    );
   }
 
   @Get('id/:id')
@@ -85,14 +81,7 @@ class PhoneNumberController extends ControllerBase {
   public async getAssociationById(
     @Param() idParam: UUIDParam,
   ): Promise<PhoneNumber> {
-    try {
-      return await this._phoneNumberService.getPhoneNumberById(idParam.id);
-    } catch (error) {
-      this.throwInternalError(
-        error,
-        'There was an error retriving the phone number',
-      );
-    }
+    return await this._phoneNumberService.getPhoneNumberById(idParam.id);
   }
 
   @Put('id/:id')
@@ -119,16 +108,12 @@ class PhoneNumberController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() phoneNumberDTO: PhoneNumberDTO,
   ): Promise<PhoneNumber> {
-    try {
-      return this.sendCustomValidationResponse<PhoneNumber>(
-        await this._phoneNumberService.updatePhoneNumber(
-          idParam.id,
-          phoneNumberDTO,
-        ),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao atualizar phone number');
-    }
+    return this.sendCustomValidationResponse<PhoneNumber>(
+      await this._phoneNumberService.updatePhoneNumber(
+        idParam.id,
+        phoneNumberDTO,
+      ),
+    );
   }
 
   @Delete('id/:id')
@@ -142,11 +127,7 @@ class PhoneNumberController extends ControllerBase {
   })
   @ApiNotFoundResponseWithSchema()
   public async deletePhoneNumber(@Param() idParam: UUIDParam): Promise<void> {
-    try {
-      await this._phoneNumberService.deletePhoneNumber(idParam.id);
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao remover phone number');
-    }
+    await this._phoneNumberService.deletePhoneNumber(idParam.id);
   }
 }
 
