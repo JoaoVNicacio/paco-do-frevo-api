@@ -62,13 +62,9 @@ class EventController extends ControllerBase {
     @Body() eventDTO: EventDTO,
     @Param() associationId: UUIDParam,
   ): Promise<Event> {
-    try {
-      return this.sendCustomValidationResponse<Event>(
-        await this._eventService.createEvent(eventDTO, associationId.id),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar event');
-    }
+    return this.sendCustomValidationResponse<Event>(
+      await this._eventService.createEvent(eventDTO, associationId.id),
+    );
   }
 
   @Get('id/:id')
@@ -81,13 +77,9 @@ class EventController extends ControllerBase {
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getAssociationById(@Param() idParam: UUIDParam): Promise<Event> {
-    try {
-      return this.sendCustomResponse(
-        await this._eventService.findById(idParam.id),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'There was an error retriving the event');
-    }
+    return this.sendCustomResponse(
+      await this._eventService.findById(idParam.id),
+    );
   }
 
   @Put('id/:id')
@@ -108,13 +100,9 @@ class EventController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() eventDTO: EventDTO,
   ): Promise<Event> {
-    try {
-      return this.sendCustomValidationResponse<Event>(
-        await this._eventService.updateEvent(idParam.id, eventDTO),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao atualizar contact');
-    }
+    return this.sendCustomValidationResponse<Event>(
+      await this._eventService.updateEvent(idParam.id, eventDTO),
+    );
   }
 
   @Delete('id/:id')
@@ -128,11 +116,7 @@ class EventController extends ControllerBase {
   })
   @ApiNotFoundResponseWithSchema()
   public async deleteEvent(@Param() id: string): Promise<void> {
-    try {
-      await this._eventService.deleteEvent(id);
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao remover event');
-    }
+    await this._eventService.deleteEvent(id);
   }
 }
 

@@ -61,13 +61,9 @@ class ContactController extends ControllerBase {
     @Body() contactDTO: ContactDTO,
     @Param() idParam: UUIDParam,
   ): Promise<Contact> {
-    try {
-      return this.sendCustomValidationResponse<Contact>(
-        await this.contactService.createContact(contactDTO, idParam.id),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar contact');
-    }
+    return this.sendCustomValidationResponse<Contact>(
+      await this.contactService.createContact(contactDTO, idParam.id),
+    );
   }
 
   @Get('id/:id')
@@ -80,13 +76,9 @@ class ContactController extends ControllerBase {
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getContactById(@Param() idParam: UUIDParam): Promise<Contact> {
-    try {
-      return this.sendCustomResponse(
-        await this.contactService.getContactById(idParam.id),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao criar contact');
-    }
+    return this.sendCustomResponse(
+      await this.contactService.getContactById(idParam.id),
+    );
   }
 
   @Put('id/:id')
@@ -108,13 +100,9 @@ class ContactController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() contactDTO: ContactDTO,
   ): Promise<Contact> {
-    try {
-      return this.sendCustomValidationResponse<Contact>(
-        await this.contactService.updateContact(idParam.id, contactDTO),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao atualizar contact');
-    }
+    return this.sendCustomValidationResponse<Contact>(
+      await this.contactService.updateContact(idParam.id, contactDTO),
+    );
   }
 
   @Delete('id/:id')
@@ -129,11 +117,7 @@ class ContactController extends ControllerBase {
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async deleteContact(@Param() id: string): Promise<void> {
-    try {
-      await this.contactService.deleteContact(id);
-    } catch (error) {
-      this.throwInternalError(error, 'houve um erro ao remover contact');
-    }
+    await this.contactService.deleteContact(id);
   }
 }
 

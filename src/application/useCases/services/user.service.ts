@@ -8,6 +8,9 @@ import ValidationResponse from 'src/application/responseObjects/validation.respo
 import HashingPipe from 'src/application/pipes/hashing.pipe';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
 import { ValidationError } from 'class-validator';
+import { Mapper } from 'src/application/symbols/dependency-injection.symbols';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class UserService implements IUserService {
@@ -15,8 +18,11 @@ class UserService implements IUserService {
     @Inject(IUserRepository)
     private readonly _userRepository: IUserRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
 
     private readonly _hashingPipe: HashingPipe,
   ) {}
@@ -31,6 +37,10 @@ class UserService implements IUserService {
     const validationResult = await newUser.validateCreation();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The creation of the user: ${userDto.email} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         this._mapper.map(newUser, User, UserDTO),
         validationResult,
@@ -38,6 +48,10 @@ class UserService implements IUserService {
     }
 
     if (await this._userRepository.findByEmail(userDto.email)) {
+      this._logger.log(
+        `<⛔️> ➤ Denied creation of the user: ${userDto.email}, the user already exists.`,
+      );
+
       const error = new ValidationError();
       error.constraints = { alreadyUsed: 'The given email is already used.' };
       error.property = 'email';
@@ -54,6 +68,8 @@ class UserService implements IUserService {
     newUser.hashedPassword = this._hashingPipe.transform(userDto.password);
 
     const insertResponse = await this._userRepository.createUser(newUser);
+
+    this._logger.log(`<💾> ➤ Created the User with id: ${insertResponse.id}.`);
 
     return new ValidationResponse(
       this._mapper.map(insertResponse, User, UserDTO),

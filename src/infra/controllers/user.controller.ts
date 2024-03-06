@@ -35,13 +35,9 @@ class UserController extends ControllerBase {
     type: UserForCreationDTO,
   })
   public async createUser(@Body() user: UserForCreationDTO): Promise<UserDTO> {
-    try {
-      return this.sendCustomValidationResponse(
-        await this._userService.createUser(user),
-      );
-    } catch (error) {
-      this.throwInternalError(error, 'Houve um erro criando o usuário');
-    }
+    return this.sendCustomValidationResponse(
+      await this._userService.createUser(user),
+    );
   }
 }
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity'; // Certifique-se de importar a entidade Contact corretamente
 import ContactService from 'src/application/useCases/services/contact.service'; // Certifique-se de importar o serviço correto
@@ -12,6 +12,12 @@ import IAssociationRepository from 'src/domain/repositories/iassociation.reposit
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IContactService from 'src/domain/services/icontact.service';
 import mapper from 'src/application/mappers/mapper';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -38,8 +44,20 @@ import mapper from 'src/application/mappers/mapper';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
+    },
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
     },
   ],
 })

@@ -7,7 +7,13 @@ import SocialNetwork from 'src/domain/entities/associationAggregate/social-netwo
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import ISocialNetworkService from 'src/domain/services/isocial-network.service';
-import { CACHE_MANAGER as CacheManager, Cache } from '@nestjs/cache-manager';
+import {
+  CacheManager,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { Cache } from 'cache-manager';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class SocialNetworkService implements ISocialNetworkService {
@@ -18,11 +24,14 @@ class SocialNetworkService implements ISocialNetworkService {
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
 
-    @Inject('IMapper')
+    @Inject(Mapper)
     private readonly _mapper: IMapper,
 
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
+
+    @Inject(Logger)
+    private readonly _logger: ILogger,
   ) {}
 
   public async createSocialNetwork(
@@ -39,6 +48,10 @@ class SocialNetworkService implements ISocialNetworkService {
       await this._associationRepository.getById(associationId);
 
     if (!association) {
+      this._logger.log(
+        `<⛔️> ➤ The new social network for ${associationId} didn't pass validation.`,
+      );
+
       const error = new ValidationError();
       error.constraints = { notFound: 'The association does not exists' };
       error.property = 'associationId';
@@ -52,6 +65,10 @@ class SocialNetworkService implements ISocialNetworkService {
     const isValid = await socialNetwork.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The new social network for ${associationId} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         socialNetwork,
         await socialNetwork.validateCreation(),
@@ -60,6 +77,10 @@ class SocialNetworkService implements ISocialNetworkService {
 
     const insertResponse =
       await this._socialNetworkRepository.createSocialNetwork(socialNetwork);
+
+    this._logger.log(
+      `<💾> ➤ Created the Social network with id: ${insertResponse.id}.`,
+    );
 
     return new ValidationResponse(
       insertResponse,
@@ -84,6 +105,10 @@ class SocialNetworkService implements ISocialNetworkService {
     const isValid = await socialNetwork.isValid();
 
     if (!isValid) {
+      this._logger.log(
+        `<⛔️> ➤ The update for the Social network ${id} didn't pass validation.`,
+      );
+
       return new ValidationResponse(
         socialNetwork,
         await socialNetwork.validateCreation(),
@@ -96,7 +121,13 @@ class SocialNetworkService implements ISocialNetworkService {
         socialNetwork,
       );
 
+    this._logger.log(`<🔁> ➤ Updated the Social network with id: ${id}.`);
+
     await this._cacheManager.del(`social-networks/id/${id}`);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted cache entries from the Social network with id: ${id} due to update.`,
+    );
 
     return new ValidationResponse(
       updateResponse,
@@ -105,11 +136,14 @@ class SocialNetworkService implements ISocialNetworkService {
   }
 
   public async deleteSocialNetwork(id: string): Promise<void> {
-    return await this._socialNetworkRepository
-      .deleteSocialNetwork(id)
-      .then(
-        async () => await this._cacheManager.del(`social-networks/id/${id}`),
-      );
+    await Promise.all([
+      this._socialNetworkRepository.deleteSocialNetwork(id),
+      async () => await this._cacheManager.del(`social-networks/id/${id}`),
+    ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted Social network with id: ${id} from the DB and cache entries.`,
+    );
   }
 }
 
