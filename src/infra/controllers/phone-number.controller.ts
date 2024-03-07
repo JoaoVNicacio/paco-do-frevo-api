@@ -29,6 +29,8 @@ import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schem
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AssociationAdminGuard from '../guards/association-admin.guard';
+import TimeParser from 'src/application/utils/time.parser';
 
 @ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
@@ -43,6 +45,7 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Post('contact/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: PhoneNumber,
@@ -90,8 +93,9 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(20000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: PhoneNumber,
@@ -122,6 +126,7 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: Object,

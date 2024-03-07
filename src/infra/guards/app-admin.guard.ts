@@ -10,7 +10,7 @@ import IJwtPayload from 'src/application/requestObjects/ijwt.payload';
 import EUserRoles from 'src/domain/entities/userAggregate/enums/euser-roles';
 
 @Injectable()
-class AdminGuard extends RoleGuardBase implements CanActivate {
+class AppAdminGuard extends RoleGuardBase implements CanActivate {
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<IRequestWithUser>();
     const token = this.getTokenFromHeader(request);
@@ -31,4 +31,4 @@ class AdminGuard extends RoleGuardBase implements CanActivate {
   }
 }
 
-export default AdminGuard;
+export default AppAdminGuard;

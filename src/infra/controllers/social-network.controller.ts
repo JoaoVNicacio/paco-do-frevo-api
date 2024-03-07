@@ -30,6 +30,7 @@ import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 import TimeParser from 'src/application/utils/time.parser';
+import AssociationAdminGuard from '../guards/association-admin.guard';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')
@@ -44,6 +45,7 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Post('association/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: SocialNetwork,
@@ -93,6 +95,7 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: SocialNetwork,
@@ -123,6 +126,7 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: Object,

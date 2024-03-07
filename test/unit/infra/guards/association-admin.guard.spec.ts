@@ -4,16 +4,16 @@ import { JwtService } from '@nestjs/jwt';
 import IJwtPayload from 'src/application/requestObjects/ijwt.payload';
 import EUserRoles from 'src/domain/entities/userAggregate/enums/euser-roles';
 import IRequestWithUser from 'src/infra/requests/iwith-user.request';
-import AppAdminGuard from 'src/infra/guards/app-admin.guard';
+import AssociationAdminGuard from 'src/infra/guards/association-admin.guard';
 
-describe('AppAdminGuard', () => {
-  let guard: AppAdminGuard;
+describe('AssociationAdminGuard', () => {
+  let guard: AssociationAdminGuard;
   let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AppAdminGuard,
+        AssociationAdminGuard,
         {
           provide: JwtService,
           useValue: {
@@ -23,7 +23,7 @@ describe('AppAdminGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<AppAdminGuard>(AppAdminGuard);
+    guard = module.get<AssociationAdminGuard>(AssociationAdminGuard);
     jwtService = module.get<JwtService>(JwtService);
   });
 
@@ -65,7 +65,7 @@ describe('AppAdminGuard', () => {
       expect(getJwtPayloadSpy).toHaveBeenCalled();
     });
 
-    it('should throw ForbiddenException if user is not an admin', async () => {
+    it('should throw ForbiddenException if user is not an app or association admin', async () => {
       // Arrange:
       const mockPayload: IJwtPayload = {
         userRole: EUserRoles.DataVisualizer,
@@ -88,7 +88,7 @@ describe('AppAdminGuard', () => {
   describe('matchesRoleRules', () => {
     it('should throw ForbiddenException if user role is not ApplicationAdmin', () => {
       // Arrange:
-      const guard = new AppAdminGuard(jwtService);
+      const guard = new AssociationAdminGuard(jwtService);
       const mockPayload: IJwtPayload = {
         userRole: EUserRoles.DataVisualizer,
         sub: '',
@@ -102,9 +102,36 @@ describe('AppAdminGuard', () => {
     });
 
     it('should not throw error if user role is ApplicationAdmin', () => {
-      const guard = new AppAdminGuard(jwtService);
+      const guard = new AssociationAdminGuard(jwtService);
       const mockPayload: IJwtPayload = {
         userRole: EUserRoles.ApplicationAdmin,
+        sub: '',
+        userName: '',
+      };
+
+      // Assertions:
+      expect(() => guard['matchesRoleRules'](mockPayload)).not.toThrow();
+    });
+
+    it('should throw ForbiddenException if user role is not AssociationAdmin', () => {
+      // Arrange:
+      const guard = new AssociationAdminGuard(jwtService);
+      const mockPayload: IJwtPayload = {
+        userRole: EUserRoles.DataVisualizer,
+        sub: '',
+        userName: '',
+      };
+
+      // Assertions:
+      expect(() => guard['matchesRoleRules'](mockPayload)).toThrow(
+        ForbiddenException,
+      );
+    });
+
+    it('should not throw error if user role is AssociationAdmin', () => {
+      const guard = new AssociationAdminGuard(jwtService);
+      const mockPayload: IJwtPayload = {
+        userRole: EUserRoles.AssociationAdmin,
         sub: '',
         userName: '',
       };

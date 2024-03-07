@@ -36,9 +36,10 @@ import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schem
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
-import AdminGuard from '../guards/admin.guard';
+import AppAdminGuard from '../guards/app-admin.guard';
 import { ApiForbiddenResponseWithSchema } from '../swaggerSchemas/forbidden.schema';
 import TimeParser from 'src/application/utils/time.parser';
+import AssociationAdminGuard from '../guards/association-admin.guard';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
@@ -53,6 +54,7 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Post()
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: OtherFrevoEntity,
@@ -140,6 +142,7 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: OtherFrevoEntity,
@@ -170,7 +173,7 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Delete('id/:id')
-  @UseGuards(AdminGuard)
+  @UseGuards(AppAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: null,
