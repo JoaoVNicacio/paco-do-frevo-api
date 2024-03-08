@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import IHashingHandler from 'src/application/handlers/ihashing.handler';
+import IHashingHandler from 'src/application/contracts/handlers/ihashing.handler';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 

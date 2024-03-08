@@ -27,13 +27,13 @@ import {
 } from '@nestjs/swagger';
 import PagingParams from '../../application/requestObjects/paging.params';
 import UUIDParam from '../../application/requestObjects/uuid.param';
-import IAssociationService from 'src/domain/services/iassociation.service';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import TimeParser from 'src/application/utils/time.parser';
+import IAssociationService from 'src/application/contracts/services/iassociation.service';
 
 @ApiTags('Association')
 @Controller('associations')
@@ -80,9 +80,7 @@ class AssociationController extends ControllerBase {
     description: 'The request returned no records.',
   })
   public async getAllAssociations(): Promise<Array<Association>> {
-    return this.sendCustomResponse(
-      await this._associationService.getAllAssociations(),
-    );
+    return this.sendCustomResponse(await this._associationService.getAll());
   }
 
   @Get('/paged')
@@ -126,7 +124,7 @@ class AssociationController extends ControllerBase {
     @Param() idParam: UUIDParam,
   ): Promise<Association> {
     return this.sendCustomResponse<Association>(
-      await this._associationService.getAssociationById(idParam.id),
+      await this._associationService.getById(idParam.id),
     );
   }
 

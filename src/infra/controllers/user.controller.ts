@@ -6,10 +6,10 @@ import {
   ApiCreatedResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import IUserService from 'src/domain/services/iuser.service';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import IUserService from 'src/application/contracts/services/iuser.service';
 
 @ApiTags('Users')
 @Controller('users')

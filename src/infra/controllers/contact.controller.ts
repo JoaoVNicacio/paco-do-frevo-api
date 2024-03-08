@@ -21,12 +21,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import UUIDParam from '../../application/requestObjects/uuid.param';
-import IContactService from 'src/domain/services/icontact.service';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import TimeParser from 'src/application/utils/time.parser';
+import IContactService from 'src/application/contracts/services/icontact.service';
 
 @ApiTags('Contacts')
 @Controller('contacts')

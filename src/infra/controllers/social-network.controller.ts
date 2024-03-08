@@ -20,13 +20,13 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import ISocialNetworkService from 'src/domain/services/isocial-network.service';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import TimeParser from 'src/application/utils/time.parser';
+import ISocialNetworkService from 'src/application/contracts/services/isocial-network.service';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')

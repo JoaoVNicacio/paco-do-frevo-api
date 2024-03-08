@@ -3,19 +3,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
 import SocialNetworkController from '../controllers/social-network.controller';
 import SocialNetworkRepository from '../repositories/social-network.repository';
-import SocialNetworkService from 'src/application/useCases/services/social-network.service';
+import SocialNetworkService from 'src/application/services/social-network.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import AssociationRepository from '../repositories/association.repository';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
-import ISocialNetworkService from 'src/domain/services/isocial-network.service';
-import mapper from 'src/application/mappers/mapper';
 import {
   CacheManager,
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
 import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import ISocialNetworkService from 'src/application/contracts/services/isocial-network.service';
+import mapper from 'src/application/mapping/mapper';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SocialNetwork, Association])],
