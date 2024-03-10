@@ -29,11 +29,11 @@ import PagingParams from '../../application/requestObjects/paging.params';
 import UUIDParam from '../../application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
-import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import TimeParser from 'src/application/utils/time.parser';
+import TimeParser from 'src/shared/utils/time.parser';
 import IAssociationService from 'src/application/contracts/services/iassociation.service';
+import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
 
 @ApiTags('Association')
 @Controller('associations')

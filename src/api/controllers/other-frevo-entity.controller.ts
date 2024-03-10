@@ -28,12 +28,12 @@ import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/othe
 import UUIDParam from 'src/application/requestObjects/uuid.param';
 import PagingParams from 'src/application/requestObjects/paging.params';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
-import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import TimeParser from 'src/application/utils/time.parser';
+import TimeParser from 'src/shared/utils/time.parser';
 import IOtherFrevoEntityService from 'src/application/contracts/services/iother-frevo-entity.service';
+import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')

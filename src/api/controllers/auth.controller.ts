@@ -7,10 +7,10 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 import IAuthService from 'src/application/contracts/services/iauth.service';
+import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
 
 @Controller('authorization')
 @ApiTags('Authorization')
