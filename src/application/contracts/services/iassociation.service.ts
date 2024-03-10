@@ -7,7 +7,7 @@ import IGetByIdAsyncUseCase from 'src/application/useCases/generics/iget-by-id-a
 import IGetPagedAsyncUseCase from 'src/application/useCases/generics/iget-paged-async.use-case';
 import ICreateEntryAsyncUseCase from 'src/application/useCases/generics/icreate-entry.use-case';
 import IUpdateEntryAsyncUseCase from 'src/application/useCases/generics/iupdate-entry.use-case';
-import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/delete-entry.use-case';
+import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/idelete-entry.use-case';
 
 interface IAssociationService
   extends IGetAllAsyncUseCase<Association>,
