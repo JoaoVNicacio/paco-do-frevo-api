@@ -5,8 +5,8 @@ import * as dotenv from 'dotenv';
 import { AppModule } from './infra/modules/app.module';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import injectProfiles from './application/profiles/profilesInjector/profiles.injector';
 import GeneralExceptionsFilter from './infra/exceptionsFilters/general-exception.filter';
+import injectProfiles from './application/mapping/profiles/profilesInjector/profiles.injector';
 
 dotenv.config();
 

@@ -1,5 +1,5 @@
 import { Inject, Injectable, PipeTransform } from '@nestjs/common';
-import IHashingHandler from 'src/application/handlers/ihashing.handler';
+import IHashingHandler from 'src/application/contracts/handlers/ihashing.handler';
 
 /**
  * The HashingPipe class is a NestJS pipe that uses a
