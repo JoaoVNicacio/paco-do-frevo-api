@@ -23,14 +23,14 @@ import {
 } from '@nestjs/swagger';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
-import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import AuthGuard from '../guards/auth.guard';
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
-import TimeParser from 'src/application/utils/time.parser';
 import AssociationAdminGuard from '../guards/association-admin.guard';
+import TimeParser from 'src/shared/utils/time.parser';
 import ISocialNetworkService from 'src/application/contracts/services/isocial-network.service';
+import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')

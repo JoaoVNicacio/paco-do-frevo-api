@@ -1,4 +1,4 @@
-import TimeParser from 'src/application/utils/time.parser';
+import TimeParser from 'src/shared/utils/time.parser';
 
 describe('TimeParser', () => {
   describe('fromSecondsToMilliseconds', () => {
