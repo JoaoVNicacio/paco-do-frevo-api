@@ -15,7 +15,7 @@ class CleanStringBuilder {
    * @returns An instance of the CleanStringBuilder class.
    */
   public static fromString(stringForEdition: string): CleanStringBuilder {
-    return new CleanStringBuilder(stringForEdition);
+    return new CleanStringBuilder(stringForEdition ?? '');
   }
 
   /**
@@ -56,7 +56,7 @@ class CleanStringBuilder {
   }
 
   /**
-   * The build method returns the clean string.
+   * The build method returns the cleaned string.
    * @returns The method is returning a string value.
    */
   public build(): string {
