@@ -60,10 +60,7 @@ class PhoneNumberController extends ControllerBase {
     @Param() idParm: UUIDParam,
   ): Promise<PhoneNumber> {
     return this.sendCustomValidationResponse<PhoneNumber>(
-      await this._phoneNumberService.createEntry(
-        phoneNumberDTO,
-        idParm.id,
-      ),
+      await this._phoneNumberService.createEntry(phoneNumberDTO, idParm.id),
     );
   }
 

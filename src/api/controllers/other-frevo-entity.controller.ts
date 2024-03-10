@@ -62,9 +62,7 @@ class OtherFrevoEntityController extends ControllerBase {
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
     return this.sendCustomValidationResponse<OtherFrevoEntity>(
-      await this._otherFrevoEntityService.createEntry(
-        otherFrevoEntityDTO,
-      ),
+      await this._otherFrevoEntityService.createEntry(otherFrevoEntityDTO),
     );
   }
 
