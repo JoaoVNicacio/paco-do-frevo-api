@@ -1,7 +1,6 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
-import PhoneNumberController from '../controllers/phone-number.controller';
 import PhoneNumberService from 'src/application/services/phone-number.service';
 import PhoneNumberRepository from '../repositories/phone-number.repository';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity';
@@ -16,6 +15,7 @@ import {
 import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 import IPhoneNumberService from 'src/application/contracts/services/iphone-number.service';
 import mapper from 'src/application/mapping/mapper';
+import PhoneNumberController from 'src/api/controllers/phone-number.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhoneNumber, Contact])],

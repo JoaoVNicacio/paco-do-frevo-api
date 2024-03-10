@@ -77,7 +77,7 @@ class UserService implements IUserService {
     );
   }
 
-  public async findById(id: string): Promise<User> {
+  public async getById(id: string): Promise<User> {
     return await this._userRepository.findById(id);
   }
 

@@ -1,7 +1,6 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
-import SocialNetworkController from '../controllers/social-network.controller';
 import SocialNetworkRepository from '../repositories/social-network.repository';
 import SocialNetworkService from 'src/application/services/social-network.service';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
@@ -16,6 +15,7 @@ import {
 import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 import ISocialNetworkService from 'src/application/contracts/services/isocial-network.service';
 import mapper from 'src/application/mapping/mapper';
+import SocialNetworkController from 'src/api/controllers/social-network.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SocialNetwork, Association])],

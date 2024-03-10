@@ -58,7 +58,7 @@ class EventController extends ControllerBase {
     @Param() associationId: UUIDParam,
   ): Promise<Event> {
     return this.sendCustomValidationResponse<Event>(
-      await this._eventService.createEvent(eventDTO, associationId.id),
+      await this._eventService.createEntry(eventDTO, associationId.id),
     );
   }
 
@@ -73,7 +73,7 @@ class EventController extends ControllerBase {
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getAssociationById(@Param() idParam: UUIDParam): Promise<Event> {
     return this.sendCustomResponse(
-      await this._eventService.findById(idParam.id),
+      await this._eventService.getById(idParam.id),
     );
   }
 
@@ -96,7 +96,7 @@ class EventController extends ControllerBase {
     @Body() eventDTO: EventDTO,
   ): Promise<Event> {
     return this.sendCustomValidationResponse<Event>(
-      await this._eventService.updateEvent(idParam.id, eventDTO),
+      await this._eventService.updateEntryById(idParam.id, eventDTO),
     );
   }
 
@@ -111,7 +111,7 @@ class EventController extends ControllerBase {
   })
   @ApiNotFoundResponseWithSchema()
   public async deleteEvent(@Param() id: string): Promise<void> {
-    await this._eventService.deleteEvent(id);
+    await this._eventService.deleteEntryById(id);
   }
 }
 

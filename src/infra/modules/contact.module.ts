@@ -2,7 +2,6 @@ import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity'; // Certifique-se de importar a entidade Contact corretamente
 import ContactService from 'src/application/services/contact.service'; // Certifique-se de importar o serviço correto
-import ContactController from '../controllers/contact.controller'; // Certifique-se de importar o controlador correto
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ContactRepository from '../repositories/contact.repository';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
@@ -18,6 +17,7 @@ import {
 import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 import IContactService from 'src/application/contracts/services/icontact.service';
 import mapper from 'src/application/mapping/mapper';
+import ContactController from 'src/api/controllers/contact.controller';
 
 @Module({
   imports: [

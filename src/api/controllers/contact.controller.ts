@@ -57,7 +57,7 @@ class ContactController extends ControllerBase {
     @Param() idParam: UUIDParam,
   ): Promise<Contact> {
     return this.sendCustomValidationResponse<Contact>(
-      await this.contactService.createContact(contactDTO, idParam.id),
+      await this.contactService.createEntry(contactDTO, idParam.id),
     );
   }
 
@@ -72,7 +72,7 @@ class ContactController extends ControllerBase {
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getContactById(@Param() idParam: UUIDParam): Promise<Contact> {
     return this.sendCustomResponse(
-      await this.contactService.getContactById(idParam.id),
+      await this.contactService.getById(idParam.id),
     );
   }
 
@@ -96,7 +96,7 @@ class ContactController extends ControllerBase {
     @Body() contactDTO: ContactDTO,
   ): Promise<Contact> {
     return this.sendCustomValidationResponse<Contact>(
-      await this.contactService.updateContact(idParam.id, contactDTO),
+      await this.contactService.updateEntryById(idParam.id, contactDTO),
     );
   }
 
@@ -112,7 +112,7 @@ class ContactController extends ControllerBase {
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async deleteContact(@Param() id: string): Promise<void> {
-    await this.contactService.deleteContact(id);
+    await this.contactService.deleteEntryById(id);
   }
 }
 

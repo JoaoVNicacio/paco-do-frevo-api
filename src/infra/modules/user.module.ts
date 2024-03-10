@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from 'src/domain/entities/userAggregate/user.entity';
 import UserRepository from '../repositories/user.repository';
 import UserService from 'src/application/services/user.service';
-import UserController from '../controllers/user.controller';
 import IUserRepository from 'src/domain/repositories/iuser.repository';
 import IHashingHandler from 'src/application/contracts/handlers/ihashing.handler';
 import HashingHandler from '../handlers/hashing.handler';
@@ -16,6 +15,7 @@ import {
 import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 import IUserService from 'src/application/contracts/services/iuser.service';
 import mapper from 'src/application/mapping/mapper';
+import UserController from 'src/api/controllers/user.controller';
 
 @Module({
   imports: [

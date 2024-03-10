@@ -30,7 +30,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     private readonly _logger: ILogger,
   ) {}
 
-  public async createOtherFrevoEntity(
+  public async createEntry(
     otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<ValidationResponse<OtherFrevoEntity>> {
     const otherFrevoEntity = this._mapper.map(
@@ -74,7 +74,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     return await this._otherFrevoEntityRepository.getAll();
   }
 
-  public async getPagedOtherFrevoEntities(
+  public async getPaged(
     page: number,
     pageSize: number,
   ): Promise<PagedResults<OtherFrevoEntity>> {
@@ -95,11 +95,11 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     );
   }
 
-  public async getOtherFrevoEntityById(id: string): Promise<OtherFrevoEntity> {
+  public async getById(id: string): Promise<OtherFrevoEntity> {
     return await this._otherFrevoEntityRepository.getById(id);
   }
 
-  public async updateOtherFrevoEntity(
+  public async updateEntryById(
     id: string,
     otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<ValidationResponse<OtherFrevoEntity>> {
@@ -143,7 +143,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     );
   }
 
-  public async deleteOtherFrevoEntity(id: string): Promise<void> {
+  public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._otherFrevoEntityRepository.deleteOtherFrevoEntity(id),
       async () => await this._cacheManager.del(`other-frevo-entities/id/${id}`),

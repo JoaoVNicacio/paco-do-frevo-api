@@ -34,7 +34,7 @@ class ContactService implements IContactService {
     private readonly _logger: ILogger,
   ) {}
 
-  public async createContact(
+  public async createEntry(
     contactDTO: ContactDTO,
     associationId: string,
   ): Promise<ValidationResponse<Contact>> {
@@ -84,11 +84,11 @@ class ContactService implements IContactService {
     return await this._contactRepository.getAll();
   }
 
-  public async getContactById(id: string): Promise<Contact> {
+  public async getById(id: string): Promise<Contact> {
     return this._contactRepository.getById(id);
   }
 
-  public async updateContact(
+  public async updateEntryById(
     id: string,
     contactDTO: ContactDTO,
   ): Promise<ValidationResponse<Contact>> {
@@ -119,7 +119,7 @@ class ContactService implements IContactService {
     );
   }
 
-  public async deleteContact(id: string): Promise<void> {
+  public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._contactRepository.deleteContact(id),
       async () => await this._cacheManager.del(`contacts/id/${id}`),

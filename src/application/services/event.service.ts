@@ -34,7 +34,7 @@ class EventService implements IEventService {
     private readonly _logger: ILogger,
   ) {}
 
-  public async createEvent(
+  public async createEntry(
     eventDto: EventDTO,
     associationId: string,
   ): Promise<ValidationResponse<Event>> {
@@ -78,11 +78,11 @@ class EventService implements IEventService {
     );
   }
 
-  public async findById(id: string): Promise<Event> {
+  public async getById(id: string): Promise<Event> {
     return this._eventRepository.findById(id);
   }
 
-  public async updateEvent(
+  public async updateEntryById(
     id: string,
     eventDto: EventDTO,
   ): Promise<ValidationResponse<Event>> {
@@ -112,7 +112,7 @@ class EventService implements IEventService {
     );
   }
 
-  public async deleteEvent(id: string): Promise<void> {
+  public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._eventRepository.deleteEvent(id),
       async () => await this._cacheManager.del(`events/id/${id}`),

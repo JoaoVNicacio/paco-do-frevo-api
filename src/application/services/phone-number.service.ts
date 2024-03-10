@@ -34,7 +34,7 @@ class PhoneNumberService implements IPhoneNumberService {
     private readonly _logger: ILogger,
   ) {}
 
-  public async createPhoneNumber(
+  public async createEntry(
     phoneNumberDTO: PhoneNumberDTO,
     contactId: string,
   ): Promise<ValidationResponse<PhoneNumber>> {
@@ -87,11 +87,11 @@ class PhoneNumberService implements IPhoneNumberService {
     );
   }
 
-  public async getPhoneNumberById(id: string): Promise<PhoneNumber> {
+  public async getById(id: string): Promise<PhoneNumber> {
     return this._phoneNumberRepository.getById(id);
   }
 
-  public async updatePhoneNumber(
+  public async updateEntryById(
     id: string,
     phoneNumberDTO: PhoneNumberDTO,
   ): Promise<ValidationResponse<PhoneNumber>> {
@@ -133,7 +133,7 @@ class PhoneNumberService implements IPhoneNumberService {
     );
   }
 
-  public async deletePhoneNumber(id: string): Promise<void> {
+  public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._phoneNumberRepository.deletePhoneNumber(id),
       async () => await this._cacheManager.del(`phone-numbers/id/${id}`),

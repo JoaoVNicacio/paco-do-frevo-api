@@ -31,7 +31,7 @@ class AssociationService implements IAssociationService {
     private readonly _logger: ILogger,
   ) {}
 
-  public async createAssociation(
+  public async createEntry(
     associationDTO: AssociationDTO,
   ): Promise<ValidationResponse<Association>> {
     const association = this._mapper.map(
@@ -88,7 +88,7 @@ class AssociationService implements IAssociationService {
     return await this._associationRepository.getAll();
   }
 
-  public async getPagedAssociations(
+  public async getPaged(
     page: number,
     pageSize: number,
   ): Promise<PagedResults<Association>> {
@@ -112,7 +112,7 @@ class AssociationService implements IAssociationService {
     return await this._associationRepository.getById(id);
   }
 
-  public async updateAssociation(
+  public async updateEntryById(
     id: string,
     associationDTO: AssociationDTO,
   ): Promise<ValidationResponse<Association>> {
@@ -166,7 +166,7 @@ class AssociationService implements IAssociationService {
     return response;
   }
 
-  public async deleteAssociation(id: string): Promise<void> {
+  public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._associationRepository.deleteAssociation(id),
       async () => await this._cacheManager.del(`associations/id/${id}`),

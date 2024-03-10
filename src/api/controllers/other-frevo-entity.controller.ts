@@ -10,9 +10,7 @@ import {
   Inject,
   UseInterceptors,
 } from '@nestjs/common';
-import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ControllerBase from './base.controller';
 import {
   ApiBadRequestResponse,
@@ -25,22 +23,24 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import PagingParams from '../../application/requestObjects/paging.params';
-import UUIDParam from '../../application/requestObjects/uuid.param';
+import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
+import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import UUIDParam from 'src/application/requestObjects/uuid.param';
+import PagingParams from 'src/application/requestObjects/paging.params';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
-import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
+import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import TimeParser from 'src/application/utils/time.parser';
-import IAssociationService from 'src/application/contracts/services/iassociation.service';
+import IOtherFrevoEntityService from 'src/application/contracts/services/iother-frevo-entity.service';
 
-@ApiTags('Association')
-@Controller('associations')
-class AssociationController extends ControllerBase {
+@ApiTags('OtherFrevoEntity')
+@Controller('other-frevo-entities')
+class OtherFrevoEntityController extends ControllerBase {
   constructor(
-    @Inject(IAssociationService)
-    private readonly _associationService: IAssociationService,
+    @Inject(IOtherFrevoEntityService)
+    private readonly _otherFrevoEntityService: IOtherFrevoEntityService,
   ) {
     super();
   }
@@ -48,7 +48,7 @@ class AssociationController extends ControllerBase {
   @Post()
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
-    type: Association,
+    type: OtherFrevoEntity,
   })
   @ApiBadRequestResponse({
     description: 'The request has an error on the sent object.',
@@ -56,13 +56,15 @@ class AssociationController extends ControllerBase {
   })
   @ApiBody({
     description: 'The record data.',
-    type: AssociationDTO,
+    type: OtherFrevoEntityDTO,
   })
-  public async createAssociation(
-    @Body() associationDTO: AssociationDTO,
-  ): Promise<Association> {
-    return this.sendCustomValidationResponse<Association>(
-      await this._associationService.createAssociation(associationDTO),
+  public async createOtherFrevoEntity(
+    @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
+  ): Promise<OtherFrevoEntity> {
+    return this.sendCustomValidationResponse<OtherFrevoEntity>(
+      await this._otherFrevoEntityService.createEntry(
+        otherFrevoEntityDTO,
+      ),
     );
   }
 
@@ -73,20 +75,22 @@ class AssociationController extends ControllerBase {
     description: 'The records have been successfully fetched.',
     schema: {
       type: 'array',
-      items: { $ref: getSchemaPath(Association) },
+      items: { $ref: getSchemaPath(OtherFrevoEntity) },
     },
   })
   @ApiNoContentResponse({
     description: 'The request returned no records.',
   })
-  public async getAllAssociations(): Promise<Array<Association>> {
-    return this.sendCustomResponse(await this._associationService.getAll());
+  public async getAllOtherFrevoEntities(): Promise<Array<OtherFrevoEntity>> {
+    return this.sendCustomResponse(
+      await this._otherFrevoEntityService.getAll(),
+    );
   }
 
   @Get('/paged')
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
-  @ApiPagedResultsResponse(Association)
+  @ApiPagedResultsResponse(OtherFrevoEntity)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
   })
@@ -96,11 +100,11 @@ class AssociationController extends ControllerBase {
   })
   @ApiQuery({ name: 'page', description: 'The page index of the request' })
   @ApiQuery({ name: 'pageSize', description: 'The page size of the request' })
-  public async getPagedAssociations(
+  public async getPagedOtherFrevoEntities(
     @Query() pagingParams: PagingParams,
-  ): Promise<PagedResults<Association>> {
+  ): Promise<PagedResults<OtherFrevoEntity>> {
     return this.sendCustomResponse(
-      await this._associationService.getPagedAssociations(
+      await this._otherFrevoEntityService.getPaged(
         Number(pagingParams.page),
         Number(pagingParams.pageSize),
       ),
@@ -112,26 +116,26 @@ class AssociationController extends ControllerBase {
   @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
-    type: Association,
+    type: OtherFrevoEntity,
   })
+  @ApiNotFoundResponseWithSchema()
   @ApiBadRequestResponse({
     description: 'The request has an invalid id format.',
     type: ValidationPipeResponseRepresentation,
   })
-  @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
-  public async getAssociationById(
+  public async getOtherFrevoEntityById(
     @Param() idParam: UUIDParam,
-  ): Promise<Association> {
-    return this.sendCustomResponse<Association>(
-      await this._associationService.getById(idParam.id),
+  ): Promise<OtherFrevoEntity> {
+    return this.sendCustomResponse<OtherFrevoEntity>(
+      await this._otherFrevoEntityService.getById(idParam.id),
     );
   }
 
   @Put('id/:id')
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
-    type: Association,
+    type: OtherFrevoEntity,
   })
   @ApiBadRequestResponse({
     description: 'The request has an error on the sent object.',
@@ -144,16 +148,16 @@ class AssociationController extends ControllerBase {
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
     description: 'The record data.',
-    type: AssociationDTO,
+    type: OtherFrevoEntityDTO,
   })
-  public async updateAssociation(
+  public async updateOtherFrevoEntity(
     @Param() idParam: UUIDParam,
-    @Body() associationDTO: AssociationDTO,
-  ): Promise<Association> {
-    return this.sendCustomValidationResponse<Association>(
-      await this._associationService.updateAssociation(
+    @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
+  ): Promise<OtherFrevoEntity> {
+    return this.sendCustomValidationResponse<OtherFrevoEntity>(
+      await this._otherFrevoEntityService.updateEntryById(
         idParam.id,
-        associationDTO,
+        otherFrevoEntityDTO,
       ),
     );
   }
@@ -168,10 +172,11 @@ class AssociationController extends ControllerBase {
     type: ValidationPipeResponseRepresentation,
   })
   @ApiNotFoundResponseWithSchema()
-  @ApiParam({ name: 'id', description: 'The record id.' })
-  public async deleteAssociation(@Param() idParam: UUIDParam): Promise<void> {
-    await this._associationService.deleteAssociation(idParam.id);
+  public async deleteOtherFrevoEntity(
+    @Param() idParam: UUIDParam,
+  ): Promise<void> {
+    await this._otherFrevoEntityService.deleteEntryById(idParam.id);
   }
 }
 
-export default AssociationController;
+export default OtherFrevoEntityController;

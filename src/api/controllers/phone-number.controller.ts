@@ -1,16 +1,16 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Inject,
+  Param,
   Post,
   Put,
-  Delete,
-  Param,
-  Body,
-  Inject,
   UseInterceptors,
 } from '@nestjs/common';
-import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
+import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
 import ControllerBase from './base.controller';
 import {
   ApiBadRequestResponse,
@@ -25,23 +25,22 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ValidationPipeResponseRepresentation } from 'src/application/valueRepresentations/values.representations';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import TimeParser from 'src/application/utils/time.parser';
-import ISocialNetworkService from 'src/application/contracts/services/isocial-network.service';
+import IPhoneNumberService from 'src/application/contracts/services/iphone-number.service';
 
-@ApiTags('SocialNetworks')
-@Controller('social-networks')
-class SocialNetworkController extends ControllerBase {
+@ApiTags('PhoneNumbers')
+@Controller('phoneNumbers')
+class PhoneNumberController extends ControllerBase {
   constructor(
-    @Inject(ISocialNetworkService)
-    private readonly _socialNetworkService: ISocialNetworkService,
+    @Inject(IPhoneNumberService)
+    private readonly _phoneNumberService: IPhoneNumberService,
   ) {
     super();
   }
 
-  @Post('association/:id')
+  @Post('contact/:id')
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
-    type: SocialNetwork,
+    type: PhoneNumber,
   })
   @ApiBadRequestResponse({
     description: 'The request has an error on the sent object.',
@@ -54,43 +53,43 @@ class SocialNetworkController extends ControllerBase {
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
     description: 'The record data.',
-    type: SocialNetworkDTO,
+    type: PhoneNumberDTO,
   })
-  public async createSocialNetwork(
-    @Body() socialNetworkDTO: SocialNetworkDTO,
-    @Param() idParam: UUIDParam,
-  ): Promise<SocialNetwork> {
-    return this.sendCustomValidationResponse<SocialNetwork>(
-      await this._socialNetworkService.createSocialNetwork(
-        socialNetworkDTO,
-        idParam.id,
+  public async createPhoneNumber(
+    @Body() phoneNumberDTO: PhoneNumberDTO,
+    @Param() idParm: UUIDParam,
+  ): Promise<PhoneNumber> {
+    return this.sendCustomValidationResponse<PhoneNumber>(
+      await this._phoneNumberService.createEntry(
+        phoneNumberDTO,
+        idParm.id,
       ),
     );
   }
 
   @Get('id/:id')
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(TimeParser.fromMinutesToMilliseconds(1))
   @ApiOkResponse({
     description: 'The record has been successfully fetched.',
-    type: SocialNetwork,
+    type: PhoneNumber,
   })
-  @ApiNotFoundResponseWithSchema()
   @ApiBadRequestResponse({
     description: 'The request has an invalid id format.',
     type: ValidationPipeResponseRepresentation,
   })
+  @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
-  public async getById(@Param() idParam: UUIDParam): Promise<SocialNetwork> {
-    return this.sendCustomResponse(
-      await this._socialNetworkService.getSocialNetworkById(idParam.id),
-    );
+  public async getAssociationById(
+    @Param() idParam: UUIDParam,
+  ): Promise<PhoneNumber> {
+    return await this._phoneNumberService.getById(idParam.id);
   }
 
   @Put('id/:id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(20000)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
-    type: SocialNetwork,
+    type: PhoneNumber,
   })
   @ApiBadRequestResponse({
     description: 'The request has an error on the sent object.',
@@ -103,16 +102,16 @@ class SocialNetworkController extends ControllerBase {
   @ApiParam({ name: 'id', description: 'The record id.' })
   @ApiBody({
     description: 'The record data.',
-    type: SocialNetworkDTO,
+    type: PhoneNumberDTO,
   })
-  public async updateSocialNetwork(
+  public async updtadeAssociation(
     @Param() idParam: UUIDParam,
-    @Body() socialNetworkDTO: SocialNetworkDTO,
-  ): Promise<SocialNetwork> {
-    return this.sendCustomValidationResponse<SocialNetwork>(
-      await this._socialNetworkService.updateSocialNetwork(
+    @Body() phoneNumberDTO: PhoneNumberDTO,
+  ): Promise<PhoneNumber> {
+    return this.sendCustomValidationResponse<PhoneNumber>(
+      await this._phoneNumberService.updateEntryById(
         idParam.id,
-        socialNetworkDTO,
+        phoneNumberDTO,
       ),
     );
   }
@@ -127,9 +126,9 @@ class SocialNetworkController extends ControllerBase {
     type: ValidationPipeResponseRepresentation,
   })
   @ApiNotFoundResponseWithSchema()
-  public async deleteSocialNetwork(@Param() idParam: UUIDParam): Promise<void> {
-    await this._socialNetworkService.deleteSocialNetwork(idParam.id);
+  public async deletePhoneNumber(@Param() idParam: UUIDParam): Promise<void> {
+    await this._phoneNumberService.deleteEntryById(idParam.id);
   }
 }
 
-export default SocialNetworkController;
+export default PhoneNumberController;

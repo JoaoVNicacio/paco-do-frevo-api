@@ -34,7 +34,7 @@ class SocialNetworkService implements ISocialNetworkService {
     private readonly _logger: ILogger,
   ) {}
 
-  public async createSocialNetwork(
+  public async createEntry(
     socialNetworkDTO: SocialNetworkDTO,
     associationId: string,
   ): Promise<ValidationResponse<SocialNetwork>> {
@@ -88,11 +88,11 @@ class SocialNetworkService implements ISocialNetworkService {
     );
   }
 
-  public async getSocialNetworkById(id: string): Promise<SocialNetwork> {
+  public async getById(id: string): Promise<SocialNetwork> {
     return this._socialNetworkRepository.getById(id);
   }
 
-  public async updateSocialNetwork(
+  public async updateEntryById(
     id: string,
     socialNetworkDTO: SocialNetworkDTO,
   ): Promise<ValidationResponse<SocialNetwork>> {
@@ -135,7 +135,7 @@ class SocialNetworkService implements ISocialNetworkService {
     );
   }
 
-  public async deleteSocialNetwork(id: string): Promise<void> {
+  public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._socialNetworkRepository.deleteSocialNetwork(id),
       async () => await this._cacheManager.del(`social-networks/id/${id}`),

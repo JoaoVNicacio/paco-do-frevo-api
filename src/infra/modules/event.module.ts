@@ -2,7 +2,6 @@ import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
-import EventController from '../controllers/event.controller';
 import EventService from 'src/application/services/event.service';
 import EventRepository from '../repositories/event.repository';
 import AssociationRepository from '../repositories/association.repository';
@@ -16,6 +15,7 @@ import {
 import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 import IEventService from 'src/application/contracts/services/ievent.service';
 import mapper from 'src/application/mapping/mapper';
+import EventController from 'src/api/controllers/event.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Event, Association])],

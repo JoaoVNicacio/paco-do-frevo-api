@@ -7,7 +7,6 @@ import HashingHandler from '../handlers/hashing.handler';
 import AuthService from 'src/application/services/auth.service';
 import { UserModule } from './user.module';
 import { JwtModule } from '@nestjs/jwt';
-import AuthController from '../controllers/auth.controller';
 import * as dotenv from 'dotenv';
 import {
   CacheManager,
@@ -17,6 +16,7 @@ import {
 import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
 import IAuthService from 'src/application/contracts/services/iauth.service';
 import mapper from 'src/application/mapping/mapper';
+import AuthController from 'src/api/controllers/auth.controller';
 
 dotenv.config();
 
