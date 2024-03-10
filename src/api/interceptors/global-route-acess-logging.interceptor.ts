@@ -31,20 +31,24 @@ class GlobalRouteAccessLoggingInterceptor implements NestInterceptor {
     const { statusCode } = response;
     const route = `${method} ${path}`;
 
-    'user' in request
-      ? this._logger.log(
-          `<📩🌐> ➤ Received request to: ${route} by the user with id: ${request.user.sub}`,
-        )
-      : this._logger.log(
-          `<📩🌐> ➤ Received request to:  ${route} was accessed by a non authenticated user.`,
-        );
+    this._logger.log(
+      `<📩🌐> ➤ Received request to: ${route} by ${
+        'user' in request
+          ? `the user with id: ${request.user.sub}`
+          : 'a non authenticated user.'
+      }`,
+    );
 
     const preControllerInstant = Date.now();
 
     return next.handle().pipe(
       tap(() => {
         this._logger.log(
-          `<📨⏳> ➤ Response: status ${statusCode} in ${
+          `<📨⏳> ➤ Request to ${route} by ${
+            'user' in request
+              ? `the user with id: ${request.user.sub}`
+              : 'a non authenticated user.'
+          } returned the response: status ${statusCode} in ${
             Date.now() - preControllerInstant
           }ms`,
         );
