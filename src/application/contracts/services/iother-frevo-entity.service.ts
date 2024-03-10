@@ -4,7 +4,7 @@ import PagedResults from 'src/application/responseObjects/paged.results';
 import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IGetAllAsyncUseCase from 'src/application/useCases/generics/iget-all-async.use-case';
 import IGetByIdAsyncUseCase from 'src/application/useCases/generics/iget-by-id-async.use-case';
-import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/delete-entry.use-case';
+import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/idelete-entry.use-case';
 import ICreateEntryAsyncUseCase from 'src/application/useCases/generics/icreate-entry.use-case';
 import IGetPagedAsyncUseCase from 'src/application/useCases/generics/iget-paged-async.use-case';
 import IUpdateEntryAsyncUseCase from 'src/application/useCases/generics/iupdate-entry.use-case';
