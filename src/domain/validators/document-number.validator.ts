@@ -1,3 +1,5 @@
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+
 /** The abstract class called `DocumentNumberValidatorTemplate`
 provides a template for validating document numbers based on specific rules. */
 abstract class DocumentNumberValidatorTemplate {
@@ -11,7 +13,11 @@ abstract class DocumentNumberValidatorTemplate {
    * value.
    */
   public validate(number: string): boolean {
-    number = number.replace('.', '').replace('-', '').replace('/', '');
+    number = CleanStringBuilder.fromString(number)
+      .withoutDashes()
+      .withoutDots()
+      .withoutSlashes()
+      .build();
 
     if (this.hasAllSameDigits(number)) {
       return false;

@@ -1,9 +1,8 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import AssociationAddress from 'src/domain/entities/associationAggregate/address.entity';
-import AssociationService from 'src/application/useCases/services/association.service';
-import AssociationController from '../controllers/association.controller';
+import AssociationService from 'src/application/services/association.service';
 import AssociationRepository from '../repositories/association.repository';
 import Event from 'src/domain/entities/associationAggregate/event.entity';
 import Member from 'src/domain/entities/associationAggregate/member.entity';
@@ -14,9 +13,16 @@ import { PhoneNumberModule } from './phone-number.module';
 import { ContactModule } from './contact.module';
 import { SocialNetworkModule } from './social-network.module';
 import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
-import IAssociationService from 'src/domain/services/iassociation.service';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
-import mapper from 'src/application/mappers/mapper';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import IAssociationService from 'src/application/contracts/services/iassociation.service';
+import mapper from 'src/application/mapping/mapper';
+import AssociationController from 'src/api/controllers/association.controller';
 
 @Module({
   imports: [
@@ -51,8 +57,20 @@ import mapper from 'src/application/mappers/mapper';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
+    },
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
     },
   ],
 })

@@ -1,8 +1,7 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Contact from 'src/domain/entities/associationAggregate/contact.entity'; // Certifique-se de importar a entidade Contact corretamente
-import ContactService from 'src/application/useCases/services/contact.service'; // Certifique-se de importar o serviço correto
-import ContactController from '../controllers/contact.controller'; // Certifique-se de importar o controlador correto
+import ContactService from 'src/application/services/contact.service'; // Certifique-se de importar o serviço correto
 import Association from 'src/domain/entities/associationAggregate/association.entity';
 import ContactRepository from '../repositories/contact.repository';
 import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
@@ -10,8 +9,15 @@ import { PhoneNumberModule } from './phone-number.module';
 import AssociationRepository from '../repositories/association.repository';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
-import IContactService from 'src/domain/services/icontact.service';
-import mapper from 'src/application/mappers/mapper';
+import {
+  CacheManager,
+  Logger,
+  Mapper,
+} from 'src/application/symbols/dependency-injection.symbols';
+import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import IContactService from 'src/application/contracts/services/icontact.service';
+import mapper from 'src/application/mapping/mapper';
+import ContactController from 'src/api/controllers/contact.controller';
 
 @Module({
   imports: [
@@ -38,8 +44,20 @@ import mapper from 'src/application/mappers/mapper';
 
     // Mappers:
     {
-      provide: 'IMapper',
+      provide: Mapper,
       useValue: mapper,
+    },
+
+    // CacheManager:
+    {
+      provide: CacheManager,
+      useValue: cacheManger,
+    },
+
+    // Loggers:
+    {
+      provide: Logger,
+      useClass: ConsoleLogger,
     },
   ],
 })

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   KeyValueRepresentation,
   ValidationErrorRepresentation,
-} from 'src/application/valueRepresentations/values.representations';
+} from 'src/shared/valueRepresentations/values.representations';
 
 class ValidationErrorDTO {
   @AutoMap()
