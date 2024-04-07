@@ -105,7 +105,7 @@ export function ValidCnpjNumber(validationOptions?: ValidationOptions) {
               return false;
             }
 
-            return new CnpjNumberValidator().validate(entity.getCnpj);
+            return new CnpjNumberValidator().validate(entity.associationCnpj);
           }
 
           return true;

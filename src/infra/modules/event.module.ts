@@ -12,7 +12,7 @@ import {
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
-import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IEventService from 'src/application/contracts/services/ievent.service';
 import mapper from 'src/application/mapping/mapper';
 import EventController from 'src/api/controllers/event.controller';
@@ -46,7 +46,7 @@ import EventController from 'src/api/controllers/event.controller';
     // CacheManager:
     {
       provide: CacheManager,
-      useValue: cacheManger,
+      useExisting: cacheManager,
     },
 
     // Loggers:
