@@ -19,7 +19,7 @@ import {
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
-import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IAssociationService from 'src/application/contracts/services/iassociation.service';
 import mapper from 'src/application/mapping/mapper';
 import AssociationController from 'src/api/controllers/association.controller';
@@ -64,7 +64,7 @@ import AssociationController from 'src/api/controllers/association.controller';
     // CacheManager:
     {
       provide: CacheManager,
-      useValue: cacheManger,
+      useExisting: cacheManager,
     },
 
     // Loggers:

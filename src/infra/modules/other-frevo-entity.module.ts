@@ -10,7 +10,7 @@ import {
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
-import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IOtherFrevoEntityService from 'src/application/contracts/services/iother-frevo-entity.service';
 import mapper from 'src/application/mapping/mapper';
 import OtherFrevoEntityController from 'src/api/controllers/other-frevo-entity.controller';
@@ -42,7 +42,7 @@ import OtherFrevoEntityController from 'src/api/controllers/other-frevo-entity.c
     // CacheManager:
     {
       provide: CacheManager,
-      useValue: cacheManger,
+      useExisting: cacheManager,
     },
 
     // Loggers:

@@ -135,6 +135,7 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [AssociationAddress] })
+  @IsOptional()
   public address: AssociationAddress;
 
   @OneToMany(() => SocialNetwork, (social) => social.association, {
@@ -144,6 +145,7 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [SocialNetwork] })
+  @IsOptional()
   public socialNetworks: Array<SocialNetwork>;
 
   @OneToMany(() => Event, (event) => event.association, {
@@ -153,6 +155,7 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Event] })
+  @IsOptional()
   public events: Array<Event>;
 
   @OneToMany(() => Member, (member) => member.association, {
@@ -162,6 +165,7 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Member] })
+  @IsOptional()
   public members: Array<Member>;
 
   @OneToMany(() => Contact, (contact) => contact.association, {
@@ -171,13 +175,14 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Contact] })
+  @IsOptional()
   public contacts: Array<Contact>;
 
-  public get getCnpj(): string {
+  public get associationCnpj(): string {
     return this.cnpj;
   }
 
-  public set setCnpj(value: string) {
+  public set associationCnpj(value: string) {
     this.cnpj = value;
   }
 
