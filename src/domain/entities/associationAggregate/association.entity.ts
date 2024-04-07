@@ -173,11 +173,11 @@ class Association {
   @ApiProperty({ type: [Contact] })
   public contacts: Array<Contact>;
 
-  public get getCnpj(): string {
+  public get associationCnpj(): string {
     return this.cnpj;
   }
 
-  public set setCnpj(value: string) {
+  public set associationCnpj(value: string) {
     this.cnpj = value;
   }
 
