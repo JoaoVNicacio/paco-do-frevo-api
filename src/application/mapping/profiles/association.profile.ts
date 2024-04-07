@@ -40,23 +40,23 @@ function generateAssociationProfile(mapper: Mapper) {
     Association,
     forMember(
       (dest) => dest.colors,
-      mapFrom((src) => src.colors),
+      mapFrom((src) => src.colors ?? []),
     ),
     forMember(
       (dest) => dest.socialNetworks,
-      mapFrom((src) => src.socialNetworks),
+      mapFrom((src) => src.socialNetworks ?? []),
     ),
     forMember(
       (dest) => dest.events,
-      mapFrom((src) => src.events),
+      mapFrom((src) => src.events ?? []),
     ),
     forMember(
       (dest) => dest.members,
-      mapFrom((src) => src.members),
+      mapFrom((src) => src.members ?? []),
     ),
     forMember(
       (dest) => dest.contacts,
-      mapFrom((src) => src.contacts),
+      mapFrom((src) => src.contacts ?? []),
     ),
   );
 }

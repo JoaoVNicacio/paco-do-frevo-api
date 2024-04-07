@@ -12,7 +12,7 @@ import {
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
-import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import ISocialNetworkService from 'src/application/contracts/services/isocial-network.service';
 import mapper from 'src/application/mapping/mapper';
 import SocialNetworkController from 'src/api/controllers/social-network.controller';
@@ -46,7 +46,7 @@ import SocialNetworkController from 'src/api/controllers/social-network.controll
     // CacheManager:
     {
       provide: CacheManager,
-      useValue: cacheManger,
+      useExisting: cacheManager,
     },
 
     // Loggers:

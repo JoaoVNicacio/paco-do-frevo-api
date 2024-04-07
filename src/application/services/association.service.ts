@@ -14,6 +14,7 @@ import { Cache } from 'cache-manager';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IAssociationService from '../contracts/services/iassociation.service';
+import NormalizeZipCodePipe from '../pipes/normalize-zipcode.pipe';
 
 @Injectable()
 class AssociationService implements IAssociationService {
@@ -29,6 +30,8 @@ class AssociationService implements IAssociationService {
 
     @Inject(Logger)
     private readonly _logger: ILogger,
+
+    private readonly _normalizeZipCodePipe: NormalizeZipCodePipe,
   ) {}
 
   public async createEntry(
@@ -38,6 +41,10 @@ class AssociationService implements IAssociationService {
       associationDTO,
       AssociationDTO,
       Association,
+    );
+
+    association.address.zipCode = this._normalizeZipCodePipe.transform(
+      association.address,
     );
 
     const isValid = await association.isValid();
@@ -53,8 +60,10 @@ class AssociationService implements IAssociationService {
       );
     }
 
-    if (association.getCnpj) {
-      association.setCnpj = CleanStringBuilder.fromString(association.getCnpj)
+    if (association.associationCnpj) {
+      association.associationCnpj = CleanStringBuilder.fromString(
+        association.associationCnpj,
+      )
         .withoutDashes()
         .withoutDots()
         .withoutSlashes()
@@ -121,6 +130,11 @@ class AssociationService implements IAssociationService {
       AssociationDTO,
       Association,
     );
+
+    association.address.zipCode = this._normalizeZipCodePipe.transform(
+      association.address,
+    );
+
     const isValid = await association.isValid();
 
     if (!isValid) {
@@ -134,7 +148,9 @@ class AssociationService implements IAssociationService {
       );
     }
 
-    association.setCnpj = CleanStringBuilder.fromString(association.getCnpj)
+    association.associationCnpj = CleanStringBuilder.fromString(
+      association.associationCnpj,
+    )
       .withoutDashes()
       .withoutDots()
       .withoutSlashes()
@@ -150,8 +166,8 @@ class AssociationService implements IAssociationService {
     );
 
     await Promise.all([
-      async () => await this._cacheManager.del(`associations/id/${id}`),
-      async () => await this._cacheManager.del(`associations`),
+      this._cacheManager.del(`associations/id/${id}`),
+      this._cacheManager.del(`associations`),
     ]);
 
     this._logger.log(
@@ -169,8 +185,8 @@ class AssociationService implements IAssociationService {
   public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._associationRepository.deleteAssociation(id),
-      async () => await this._cacheManager.del(`associations/id/${id}`),
-      async () => await this._cacheManager.del(`associations`),
+      this._cacheManager.del(`associations/id/${id}`),
+      this._cacheManager.del(`associations`),
     ]);
 
     this._logger.log(

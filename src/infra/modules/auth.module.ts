@@ -13,7 +13,7 @@ import {
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
-import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IAuthService from 'src/application/contracts/services/iauth.service';
 import mapper from 'src/application/mapping/mapper';
 import AuthController from 'src/api/controllers/auth.controller';
@@ -62,7 +62,7 @@ dotenv.config();
     // CacheManager:
     {
       provide: CacheManager,
-      useValue: cacheManger,
+      useExisting: cacheManager,
     },
 
     // Pipes:

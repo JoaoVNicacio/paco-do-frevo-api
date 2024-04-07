@@ -122,7 +122,7 @@ class ContactService implements IContactService {
   public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._contactRepository.deleteContact(id),
-      async () => await this._cacheManager.del(`contacts/id/${id}`),
+      this._cacheManager.del(`contacts/id/${id}`),
     ]);
 
     this._logger.log(
