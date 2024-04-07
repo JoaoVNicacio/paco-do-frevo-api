@@ -13,6 +13,7 @@ import { Cache } from 'cache-manager';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IOtherFrevoEntityService from '../contracts/services/iother-frevo-entity.service';
+import NormalizeZipCodePipe from '../pipes/normalize-zipcode.pipe';
 
 @Injectable()
 class OtherFrevoEntityService implements IOtherFrevoEntityService {
@@ -28,6 +29,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     @Inject(Logger)
     private readonly _logger: ILogger,
+
+    private readonly _normalizeZipCodePipe: NormalizeZipCodePipe,
   ) {}
 
   public async createEntry(
@@ -37,6 +40,10 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       otherFrevoEntityDTO,
       OtherFrevoEntityDTO,
       OtherFrevoEntity,
+    );
+
+    otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
+      otherFrevoEntity.address,
     );
 
     const isValid = await otherFrevoEntity.isValid();
@@ -107,6 +114,10 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       otherFrevoEntityDTO,
       OtherFrevoEntityDTO,
       OtherFrevoEntity,
+    );
+
+    otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
+      otherFrevoEntity.address,
     );
 
     const isValid = await otherFrevoEntity.isValid();

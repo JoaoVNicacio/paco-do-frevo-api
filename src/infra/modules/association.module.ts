@@ -23,6 +23,7 @@ import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IAssociationService from 'src/application/contracts/services/iassociation.service';
 import mapper from 'src/application/mapping/mapper';
 import AssociationController from 'src/api/controllers/association.controller';
+import NormalizeZipCodePipe from 'src/application/pipes/normalize-zipcode.pipe';
 
 @Module({
   imports: [
@@ -72,6 +73,9 @@ import AssociationController from 'src/api/controllers/association.controller';
       provide: Logger,
       useClass: ConsoleLogger,
     },
+
+    // Pipes:
+    NormalizeZipCodePipe,
   ],
 })
 export class AssociationModule {}
