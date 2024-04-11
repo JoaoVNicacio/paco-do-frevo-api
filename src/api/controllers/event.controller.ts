@@ -9,7 +9,7 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import Event from 'src/domain/entities/associationAggregate/event.entity';
+import Event from 'src/domain/aggregates/associationAggregate/event.entity';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
 import ControllerBase from './base.controller';
 import {

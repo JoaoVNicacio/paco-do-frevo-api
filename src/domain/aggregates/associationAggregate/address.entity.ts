@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToOne,
 } from 'typeorm';
+import Association from './association.entity';
 import {
   IsNotEmpty,
   IsOptional,
@@ -18,16 +19,14 @@ import {
   IsIn,
   Equals,
 } from 'class-validator';
-import IAddress from '../entityInterfaces/iaddress.entity-base';
-import AddressConstants from '../associationAggregate/constants/address.constants';
-import OtherFrevoEntity from './other-frevo-entity.entity';
+import IAddress from '../../entityInterfaces/iaddress.entity-base';
+import AddressConstants from './constants/address.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity({ name: 'OtherFrevoEntityAddresses' })
-class OtherFrevoEntityAddress implements IAddress {
+@Entity({ name: 'AssociationAddresses' })
+class AssociationAddress implements IAddress {
   @PrimaryGeneratedColumn('uuid')
-  @AutoMap()
   @ApiProperty()
   public id: string;
 
@@ -54,7 +53,7 @@ class OtherFrevoEntityAddress implements IAddress {
   @IsOptional()
   @AutoMap()
   @ApiProperty()
-  public complement: string | null;
+  public complement: string;
 
   @Column('text')
   @IsNotEmpty({ message: 'District is required' })
@@ -90,14 +89,17 @@ class OtherFrevoEntityAddress implements IAddress {
   @ApiProperty()
   public zipCode: string;
 
-  @OneToOne(() => OtherFrevoEntity, (address) => address.address)
-  public otherFrevoEntity: OtherFrevoEntity;
+  @OneToOne(() => Association, (address) => address.address, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
+  public association: Association;
 
   @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
   public createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
+  @AutoMap()
   @ApiProperty()
   public updatedAt: Date;
 
@@ -132,4 +134,4 @@ class OtherFrevoEntityAddress implements IAddress {
   }
 }
 
-export default OtherFrevoEntityAddress;
+export default AssociationAddress;

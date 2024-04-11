@@ -4,7 +4,7 @@ import AssociationDTO from 'src/application/dtos/associationDtos/association.dto
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import {
   CacheManager,

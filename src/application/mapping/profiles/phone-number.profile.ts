@@ -1,6 +1,6 @@
 import { Mapper, createMap } from '@automapper/core';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 
 /**
  * The function `generatePhoneNumberProfile` creates mappings between `PhoneNumber` and

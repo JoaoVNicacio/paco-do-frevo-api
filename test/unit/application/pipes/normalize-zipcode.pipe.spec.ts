@@ -1,6 +1,6 @@
 import AddressDTO from 'src/application/dtos/addressDTOs/address.dto';
 import NormalizeZipCodePipe from 'src/application/pipes/normalize-zipcode.pipe';
-import IAddress from 'src/domain/entities/entityInterfaces/iaddress.entity-base';
+import IAddress from 'src/domain/entityInterfaces/iaddress.entity-base';
 
 describe('NormalizeZipCodePipe', () => {
   let pipe: NormalizeZipCodePipe;

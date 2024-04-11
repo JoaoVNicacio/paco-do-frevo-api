@@ -24,7 +24,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
-import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
 import PagingParams from 'src/application/requestObjects/paging.params';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';

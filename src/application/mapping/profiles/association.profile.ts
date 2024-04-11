@@ -1,6 +1,6 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 
 /**
  * The function `generateAssociationProfile` creates mappings between `Association` and

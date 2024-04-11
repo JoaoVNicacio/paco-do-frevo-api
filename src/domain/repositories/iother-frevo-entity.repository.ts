@@ -1,4 +1,4 @@
-import OtherFrevoEntity from '../entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntity from '../aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 
 interface IOtherFrevoEntityRepository {
   createResume(otherFrevoEntity: OtherFrevoEntity): Promise<OtherFrevoEntity>;

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import ControllerBase from './base.controller';
 import {
   ApiBadRequestResponse,

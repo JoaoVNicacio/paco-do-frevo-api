@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
-import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import { Repository as DBAccessor } from 'typeorm';
 

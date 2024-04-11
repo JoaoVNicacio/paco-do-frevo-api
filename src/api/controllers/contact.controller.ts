@@ -10,7 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
-import Contact from 'src/domain/entities/associationAggregate/contact.entity';
+import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 import ControllerBase from './base.controller';
 import {
   ApiBadRequestResponse,

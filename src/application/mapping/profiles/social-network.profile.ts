@@ -1,6 +1,6 @@
 import { Mapper, createMap } from '@automapper/core';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 
 /**
  * The function `generateSocialNetworkProfile` creates mappings between `SocialNetwork`

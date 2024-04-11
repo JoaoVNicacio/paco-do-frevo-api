@@ -1,6 +1,6 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from 'src/domain/entities/userAggregate/user.entity';
+import { UserSchema } from 'src/domain/aggregates/userAggregate/user.entity';
 import UserRepository from '../repositories/user.repository';
 import UserService from 'src/application/services/user.service';
 import IUserRepository from 'src/domain/repositories/iuser.repository';

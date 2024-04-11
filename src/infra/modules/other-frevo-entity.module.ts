@@ -1,8 +1,8 @@
 import OtherFrevoEntityService from 'src/application/services/other-frevo-entity.service';
 import OtherFrevoEntityRepository from '../repositories/other-frevo-entity.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
-import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
+import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntityAddress from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 import { ConsoleLogger, Module } from '@nestjs/common';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import {

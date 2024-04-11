@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   OneToOne,
 } from 'typeorm';
-import Association from './association.entity';
 import {
   IsNotEmpty,
   IsOptional,
@@ -19,14 +18,16 @@ import {
   IsIn,
   Equals,
 } from 'class-validator';
-import IAddress from '../entityInterfaces/iaddress.entity-base';
-import AddressConstants from './constants/address.constants';
+import IAddress from '../../entityInterfaces/iaddress.entity-base';
+import AddressConstants from '../associationAggregate/constants/address.constants';
+import OtherFrevoEntity from './other-frevo-entity.entity';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity({ name: 'AssociationAddresses' })
-class AssociationAddress implements IAddress {
+@Entity({ name: 'OtherFrevoEntityAddresses' })
+class OtherFrevoEntityAddress implements IAddress {
   @PrimaryGeneratedColumn('uuid')
+  @AutoMap()
   @ApiProperty()
   public id: string;
 
@@ -53,7 +54,7 @@ class AssociationAddress implements IAddress {
   @IsOptional()
   @AutoMap()
   @ApiProperty()
-  public complement: string;
+  public complement: string | null;
 
   @Column('text')
   @IsNotEmpty({ message: 'District is required' })
@@ -89,17 +90,14 @@ class AssociationAddress implements IAddress {
   @ApiProperty()
   public zipCode: string;
 
-  @OneToOne(() => Association, (address) => address.address, {
-    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
-  })
-  public association: Association;
+  @OneToOne(() => OtherFrevoEntity, (address) => address.address)
+  public otherFrevoEntity: OtherFrevoEntity;
 
   @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
   public createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  @AutoMap()
   @ApiProperty()
   public updatedAt: Date;
 
@@ -134,4 +132,4 @@ class AssociationAddress implements IAddress {
   }
 }
 
-export default AssociationAddress;
+export default OtherFrevoEntityAddress;

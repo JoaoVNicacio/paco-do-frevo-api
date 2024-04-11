@@ -1,5 +1,5 @@
 import { Mapper, createMap } from '@automapper/core';
-import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 
 /**
  * The function `generateOtherFrevoEntityProfile` creates mappings between `OtherFrevoEntity`

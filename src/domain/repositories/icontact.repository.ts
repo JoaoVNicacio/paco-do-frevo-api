@@ -1,4 +1,4 @@
-import Contact from 'src/domain/entities/associationAggregate/contact.entity';
+import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 
 interface IContactRepository {
   getPagedContacts(page: number, pageSize: number): unknown;
