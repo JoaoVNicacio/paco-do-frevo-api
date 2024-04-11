@@ -136,7 +136,7 @@ class Association {
   @AutoMap()
   @ApiProperty({ type: [AssociationAddress] })
   @IsOptional()
-  public address: AssociationAddress;
+  public address: AssociationAddress | null | undefined;
 
   @OneToMany(() => SocialNetwork, (social) => social.association, {
     cascade: true,

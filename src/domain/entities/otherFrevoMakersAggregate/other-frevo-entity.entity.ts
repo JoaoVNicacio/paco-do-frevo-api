@@ -78,7 +78,7 @@ class OtherFrevoEntity {
   @ValidateNested()
   @AutoMap()
   @ApiProperty()
-  public address: OtherFrevoEntityAddress;
+  public address: OtherFrevoEntityAddress | null | undefined;
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;

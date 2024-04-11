@@ -53,23 +53,23 @@ class AssociationDTO {
 
   @AutoMap()
   @ApiProperty()
-  public address: AddressDTO;
+  public address: AddressDTO | null | undefined;
 
   @AutoMap()
   @ApiProperty({ type: [SocialNetworkDTO] })
-  public socialNetworks: Array<SocialNetworkDTO>;
+  public socialNetworks: Array<SocialNetworkDTO> | null | undefined;
 
   @AutoMap()
   @ApiProperty({ type: [EventDTO] })
-  public events: Array<EventDTO>;
+  public events: Array<EventDTO> | null | undefined;
 
   @AutoMap()
   @ApiProperty({ type: [MemberDTO] })
-  public members: Array<MemberDTO>;
+  public members: Array<MemberDTO> | null | undefined;
 
   @AutoMap()
   @ApiProperty({ type: [ContactDTO] })
-  public contacts: Array<ContactDTO>;
+  public contacts: Array<ContactDTO> | null | undefined;
 }
 
 export default AssociationDTO;

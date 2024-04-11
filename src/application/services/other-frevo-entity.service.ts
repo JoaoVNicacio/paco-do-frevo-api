@@ -42,9 +42,11 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       OtherFrevoEntity,
     );
 
-    otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
-      otherFrevoEntity.address,
-    );
+    if (otherFrevoEntity.address) {
+      otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
+        otherFrevoEntity.address,
+      );
+    }
 
     const isValid = await otherFrevoEntity.isValid();
 
