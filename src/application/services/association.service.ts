@@ -43,9 +43,11 @@ class AssociationService implements IAssociationService {
       Association,
     );
 
-    association.address.zipCode = this._normalizeZipCodePipe.transform(
-      association.address,
-    );
+    if (association.address) {
+      association.address.zipCode = this._normalizeZipCodePipe.transform(
+        association.address,
+      );
+    }
 
     const isValid = await association.isValid();
 

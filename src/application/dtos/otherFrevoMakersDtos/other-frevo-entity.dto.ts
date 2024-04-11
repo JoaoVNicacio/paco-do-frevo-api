@@ -9,7 +9,7 @@ class OtherFrevoEntityDTO {
 
   @AutoMap()
   @ApiProperty()
-  public address: AddressDTO;
+  public address: AddressDTO | null | undefined;
 
   @AutoMap()
   @ApiProperty()
