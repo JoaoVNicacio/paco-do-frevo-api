@@ -23,9 +23,13 @@ import AddressConstants from '../associationAggregate/constants/address.constant
 import OtherFrevoEntity from './other-frevo-entity.entity';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 @Entity({ name: 'OtherFrevoEntityAddresses' })
-class OtherFrevoEntityAddress implements IAddress {
+class OtherFrevoEntityAddress
+  extends UserStampedEntity<string>
+  implements IAddress
+{
   @PrimaryGeneratedColumn('uuid')
   @AutoMap()
   @ApiProperty()

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { v4 as uuid } from 'uuid';
+import { v4 as generateUUIDv4 } from 'uuid';
 import EUserRoles from './enums/euser-roles';
 import { AutoMap } from '@automapper/classes';
 import {
@@ -9,6 +9,7 @@ import {
   ValidationError,
   validate,
 } from 'class-validator';
+import IEntity from 'src/core/entities/ientity.base';
 
 @Schema({
   toJSON: {
@@ -21,13 +22,11 @@ import {
   },
   timestamps: true,
 })
-class User {
+class User implements IEntity<string> {
   @Prop({
     type: String,
     unique: true,
-    default: function genUUID() {
-      return uuid();
-    },
+    default: () => generateUUIDv4(),
   })
   public id: string;
 
@@ -57,6 +56,18 @@ class User {
 
   @Prop({ required: true })
   public passwordHash: string;
+
+  @Prop({
+    required: false,
+    default: () => Date.now(),
+  })
+  public createdAt: Date;
+
+  @Prop({
+    required: false,
+    default: () => Date.now(),
+  })
+  public updatedAt: Date;
 
   /**
    * This setter sets the password hash value for the object.

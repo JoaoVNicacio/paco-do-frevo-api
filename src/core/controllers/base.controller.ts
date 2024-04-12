@@ -38,13 +38,13 @@ class ControllerBase {
   protected readonly _mapper: IMapper;
 
   /**
-   * The function sends a custom validation response and throws a BadRequestException if the validation
+   * This method sends a custom validation response and throws a BadRequestException if the validation
    * response is not valid.
    * @param validationResponse - The `validationResponse` parameter is an object of type
    * `ValidationResponse<T>`. It contains information about the validation result and the output value.
    * @returns the `output` property of the `validationResponse` object.
    */
-  protected sendCustomValidationResponse<T>(
+  protected customHttpValidationResponse<T>(
     validationResponse: ValidationResponse<T>,
   ): T {
     if (!validationResponse.isValid) {
@@ -64,12 +64,12 @@ class ControllerBase {
   }
 
   /**
-   * The function sends a custom response and throws exceptions if the response is empty or not found.
+   * This method sends a custom response and throws exceptions if the response is empty or not found.
    * @param {T} response - The `response` parameter is a generic type `T` which represents the response
    * object that will be sent back. It can be any type of object.
    * @returns The `sendCustomResponse` method returns the `response` parameter that is passed to it.
    */
-  protected sendCustomResponse<T>(response: T): T {
+  protected customHttpResponse<T>(response: T): T {
     if (!response) {
       throw new NotFoundException('O item requisitado não foi encontrado.');
     }

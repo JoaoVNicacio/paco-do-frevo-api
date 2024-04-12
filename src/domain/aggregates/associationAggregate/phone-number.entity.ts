@@ -18,9 +18,10 @@ import {
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 @Entity({ name: 'PhoneNumbers' })
-class PhoneNumber {
+class PhoneNumber extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;

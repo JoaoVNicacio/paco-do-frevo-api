@@ -23,9 +23,10 @@ import IAddress from '../../entityInterfaces/iaddress.entity-base';
 import AddressConstants from './constants/address.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 @Entity({ name: 'AssociationAddresses' })
-class AssociationAddress implements IAddress {
+class AssociationAddress extends UserStampedEntity<string> implements IAddress {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;

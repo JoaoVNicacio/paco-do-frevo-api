@@ -18,10 +18,11 @@ import {
 import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 /** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'OtherFrevoEntities' })
-class OtherFrevoEntity {
+class OtherFrevoEntity extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
