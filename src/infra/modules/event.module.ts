@@ -1,7 +1,7 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
-import Event from 'src/domain/entities/associationAggregate/event.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
+import Event from 'src/domain/aggregates/associationAggregate/event.entity';
 import EventService from 'src/application/services/event.service';
 import EventRepository from '../repositories/event.repository';
 import AssociationRepository from '../repositories/association.repository';

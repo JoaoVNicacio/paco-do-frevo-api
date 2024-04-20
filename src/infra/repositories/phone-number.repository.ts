@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import { Repository as DBAccessor } from 'typeorm';
 

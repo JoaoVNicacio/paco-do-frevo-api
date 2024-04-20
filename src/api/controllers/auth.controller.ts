@@ -1,5 +1,5 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
-import ControllerBase from './base.controller';
+import ControllerBase from '../../core/controllers/base.controller';
 import UserForLoginDTO from 'src/application/dtos/userDtos/user-for-login.dto';
 import {
   ApiBadRequestResponse,
@@ -38,7 +38,7 @@ class AuthController extends ControllerBase {
     type: UserForLoginDTO,
   })
   public async login(@Body() user: UserForLoginDTO): Promise<string> {
-    return this.sendCustomResponse(await this._authService.login(user));
+    return this.customHttpResponse(await this._authService.login(user));
   }
 }
 

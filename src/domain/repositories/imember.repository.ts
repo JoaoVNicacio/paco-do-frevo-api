@@ -1,4 +1,4 @@
-import Member from '../entities/associationAggregate/member.entity';
+import Member from '../aggregates/associationAggregate/member.entity';
 
 interface IMemberRepository {
   createMember(member: Member): Promise<Member>;

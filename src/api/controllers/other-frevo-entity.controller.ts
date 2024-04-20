@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import ControllerBase from './base.controller';
+import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -24,7 +24,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
-import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import UUIDParam from 'src/application/requestObjects/uuid.param';
 import PagingParams from 'src/application/requestObjects/paging.params';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
@@ -61,7 +61,7 @@ class OtherFrevoEntityController extends ControllerBase {
   public async createOtherFrevoEntity(
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
-    return this.sendCustomValidationResponse<OtherFrevoEntity>(
+    return this.customHttpValidationResponse<OtherFrevoEntity>(
       await this._otherFrevoEntityService.createEntry(otherFrevoEntityDTO),
     );
   }
@@ -80,7 +80,7 @@ class OtherFrevoEntityController extends ControllerBase {
     description: 'The request returned no records.',
   })
   public async getAllOtherFrevoEntities(): Promise<Array<OtherFrevoEntity>> {
-    return this.sendCustomResponse(
+    return this.customHttpResponse(
       await this._otherFrevoEntityService.getAll(),
     );
   }
@@ -101,7 +101,7 @@ class OtherFrevoEntityController extends ControllerBase {
   public async getPagedOtherFrevoEntities(
     @Query() pagingParams: PagingParams,
   ): Promise<PagedResults<OtherFrevoEntity>> {
-    return this.sendCustomResponse(
+    return this.customHttpResponse(
       await this._otherFrevoEntityService.getPaged(
         Number(pagingParams.page),
         Number(pagingParams.pageSize),
@@ -125,7 +125,7 @@ class OtherFrevoEntityController extends ControllerBase {
   public async getOtherFrevoEntityById(
     @Param() idParam: UUIDParam,
   ): Promise<OtherFrevoEntity> {
-    return this.sendCustomResponse<OtherFrevoEntity>(
+    return this.customHttpResponse<OtherFrevoEntity>(
       await this._otherFrevoEntityService.getById(idParam.id),
     );
   }
@@ -152,7 +152,7 @@ class OtherFrevoEntityController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
-    return this.sendCustomValidationResponse<OtherFrevoEntity>(
+    return this.customHttpValidationResponse<OtherFrevoEntity>(
       await this._otherFrevoEntityService.updateEntryById(
         idParam.id,
         otherFrevoEntityDTO,

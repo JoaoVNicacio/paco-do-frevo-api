@@ -1,10 +1,10 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import Contact from 'src/domain/entities/associationAggregate/contact.entity'; // Certifique-se de importar a entidade Contact corretamente
+import Contact from 'src/domain/aggregates/associationAggregate/contact.entity'; // Certifique-se de importar a entidade Contact corretamente
 import ContactService from 'src/application/services/contact.service'; // Certifique-se de importar o serviço correto
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import ContactRepository from '../repositories/contact.repository';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 import { PhoneNumberModule } from './phone-number.module';
 import AssociationRepository from '../repositories/association.repository';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';

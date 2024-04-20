@@ -2,50 +2,66 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import {
   IsNotEmpty,
   IsInt,
-  Min,
-  ValidationError,
+  IsBoolean,
   validate,
+  ValidationError,
+  IsIn,
 } from 'class-validator';
 import Association from './association.entity';
-import { Type } from 'class-transformer';
+import MemberConstants from './constants/member.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
-@Entity('Events')
-class Event {
+@Entity({ name: 'Members' })
+class Member extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Event type is required' })
+  @IsNotEmpty({ message: 'Name is required' })
   @AutoMap()
   @ApiProperty()
-  public eventType: string;
+  public name: string;
 
-  @Column({ type: 'timestamp' })
-  @Type(() => Date)
+  @Column('text')
+  @IsNotEmpty({ message: 'Surname is required' })
   @AutoMap()
   @ApiProperty()
-  public dateOfAccomplishment: Date;
+  public surname: string;
+
+  @Column('text')
+  @IsNotEmpty({ message: 'Role is required' })
+  @IsIn(MemberConstants.memberTypes)
+  @AutoMap()
+  @ApiProperty()
+  public role: string;
 
   @Column({ type: 'int' })
-  @IsInt({ message: 'Participants amount must be an integer' })
-  @Min(0)
+  @IsInt({ message: 'Actuation time must be an integer' })
   @AutoMap()
   @ApiProperty()
-  public participantsAmount: number;
+  public actuationTimeInMonths: number;
 
-  @ManyToOne(() => Association, (association) => association.events, {
-    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  @Column('boolean')
+  @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
+  @AutoMap()
+  @ApiProperty()
+  public isFrevoTheMainRevenueIncome: boolean;
+
+  @ManyToOne(() => Association, (association) => association.members, {
+    onDelete: 'CASCADE',
   })
+  @JoinColumn()
   public association: Association;
 
   @Column('uuid')
@@ -79,4 +95,4 @@ class Event {
   }
 }
 
-export default Event;
+export default Member;

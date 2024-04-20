@@ -1,7 +1,7 @@
 import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
 import { Repository as DBAccessor } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 
 @Injectable()

@@ -3,7 +3,7 @@ import { Repository as DBAccessor } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 
 @Injectable()
 class SocialNetworkRepository implements ISocialNetworkRepository {

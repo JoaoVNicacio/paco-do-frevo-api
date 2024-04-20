@@ -1,4 +1,4 @@
-import User from '../entities/userAggregate/user.entity';
+import User from '../aggregates/userAggregate/user.entity';
 
 interface IUserRepository {
   createUser(user: User): Promise<User>;

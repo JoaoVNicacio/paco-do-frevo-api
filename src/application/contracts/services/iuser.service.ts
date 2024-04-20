@@ -1,7 +1,7 @@
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
-import User from 'src/domain/entities/userAggregate/user.entity';
+import User from 'src/domain/aggregates/userAggregate/user.entity';
 import IGetByIdAsyncUseCase from 'src/application/useCases/generics/iget-by-id-async.use-case';
 
 interface IUserService extends IGetByIdAsyncUseCase<User, string> {

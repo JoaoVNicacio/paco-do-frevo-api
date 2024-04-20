@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
-import Event from 'src/domain/entities/associationAggregate/event.entity';
+import Event from 'src/domain/aggregates/associationAggregate/event.entity';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import { Repository as DBAccessor } from 'typeorm';
 

@@ -1,4 +1,4 @@
-import Event from '../entities/associationAggregate/event.entity';
+import Event from '../aggregates/associationAggregate/event.entity';
 
 interface IEventRepository {
   createEvent(event: Event): Promise<Event>;

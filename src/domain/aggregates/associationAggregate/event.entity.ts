@@ -2,51 +2,56 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import Contact from './contact.entity';
 import {
   IsNotEmpty,
-  IsNumberString,
-  Length,
-  Matches,
+  IsInt,
+  Min,
   ValidationError,
   validate,
 } from 'class-validator';
+import Association from './association.entity';
+import { Type } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
-@Entity({ name: 'PhoneNumbers' })
-class PhoneNumber {
+@Entity('Events')
+class Event extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Country code is required' })
-  @Length(2, 2, { message: 'Country code must contain exactly 2 numbers' })
-  @IsNumberString()
+  @IsNotEmpty({ message: 'Event type is required' })
   @AutoMap()
   @ApiProperty()
-  public countryCode: string;
+  public eventType: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'Area code is required' })
-  @Length(2, 2, { message: 'Area code must contain exactly 2 numbers' })
-  @IsNumberString()
+  @Column({ type: 'timestamp' })
+  @Type(() => Date)
   @AutoMap()
   @ApiProperty()
-  public areaCode: string;
+  public dateOfAccomplishment: Date;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'Phone number is required' })
-  @Matches(/^[2-5]\d{7}$|^[7-9]\d{8}$/)
+  @Column({ type: 'int' })
+  @IsInt({ message: 'Participants amount must be an integer' })
+  @Min(0)
   @AutoMap()
   @ApiProperty()
-  public number: string;
+  public participantsAmount: number;
+
+  @ManyToOne(() => Association, (association) => association.events, {
+    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+  })
+  public association: Association;
+
+  @Column('uuid')
+  @ApiProperty()
+  public associationId: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
@@ -64,20 +69,6 @@ class PhoneNumber {
   @ApiProperty()
   public updatedBy: string;
 
-  @ManyToOne(() => Contact, (contact) => contact.phoneNumbers, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  public contact: Contact;
-
-  public setCreationStamps(userId: string): void {
-    this.createdBy = userId;
-  }
-
-  public setUpdateStamps(userId: string): void {
-    this.updatedBy = userId;
-  }
-
   public async isValid(): Promise<boolean> {
     const errors = await this.validateCreation();
 
@@ -89,4 +80,4 @@ class PhoneNumber {
   }
 }
 
-export default PhoneNumber;
+export default Event;

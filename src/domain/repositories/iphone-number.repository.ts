@@ -1,4 +1,4 @@
-import PhoneNumber from '../entities/associationAggregate/phone-number.entity';
+import PhoneNumber from '../aggregates/associationAggregate/phone-number.entity';
 
 interface IPhoneNumberRepository {
   createPhoneNumber(phoneNumber: PhoneNumber): Promise<PhoneNumber>;
