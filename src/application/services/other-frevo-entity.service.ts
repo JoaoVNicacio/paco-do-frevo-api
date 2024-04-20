@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
-import OtherFrevoEntity from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity.entity';
+import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import {
   CacheManager,
@@ -42,9 +42,11 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       OtherFrevoEntity,
     );
 
-    otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
-      otherFrevoEntity.address,
-    );
+    if (otherFrevoEntity.address) {
+      otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
+        otherFrevoEntity.address,
+      );
+    }
 
     const isValid = await otherFrevoEntity.isValid();
 

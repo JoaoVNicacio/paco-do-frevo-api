@@ -18,9 +18,10 @@ import {
 import SocialNetworkConstants from './constants/social-network.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 @Entity({ name: 'SocialNetworks' })
-class SocialNetwork {
+class SocialNetwork extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
@@ -58,16 +59,16 @@ class SocialNetwork {
   public updatedAt: Date;
 
   @ManyToOne(() => Association, (association) => association.socialNetworks, {
-    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   public association: Association;
 
-  public set setCreationStamps(userId: string) {
+  public setCreationStamps(userId: string) {
     this.createdBy = userId;
   }
 
-  public set setUpdateStamps(userId: string) {
+  public setUpdateStamps(userId: string) {
     this.updatedBy = userId;
   }
 

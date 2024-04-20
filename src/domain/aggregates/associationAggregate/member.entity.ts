@@ -5,53 +5,68 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import {
-  IsInt,
   IsNotEmpty,
-  IsString,
-  ValidateNested,
-  ValidationError,
+  IsInt,
+  IsBoolean,
   validate,
+  ValidationError,
+  IsIn,
 } from 'class-validator';
-import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
+import Association from './association.entity';
+import MemberConstants from './constants/member.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
-/** This class represents an Carnival Association with its various properties, relationships and behaviour. */
-@Entity({ name: 'OtherFrevoEntities' })
-class OtherFrevoEntity {
+@Entity({ name: 'Members' })
+class Member extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
 
-  @IsNotEmpty()
-  @IsString()
   @Column('text')
+  @IsNotEmpty({ message: 'Name is required' })
   @AutoMap()
   @ApiProperty()
   public name: string;
 
-  @IsNotEmpty()
-  @IsString()
   @Column('text')
+  @IsNotEmpty({ message: 'Surname is required' })
   @AutoMap()
   @ApiProperty()
-  public type: string;
+  public surname: string;
 
-  @IsNotEmpty()
-  @IsString()
   @Column('text')
+  @IsNotEmpty({ message: 'Role is required' })
+  @IsIn(MemberConstants.memberTypes)
   @AutoMap()
   @ApiProperty()
-  public entityHistoryNotes: string;
+  public role: string;
 
-  @IsInt()
-  @Column('int')
+  @Column({ type: 'int' })
+  @IsInt({ message: 'Actuation time must be an integer' })
   @AutoMap()
   @ApiProperty()
   public actuationTimeInMonths: number;
+
+  @Column('boolean')
+  @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
+  @AutoMap()
+  @ApiProperty()
+  public isFrevoTheMainRevenueIncome: boolean;
+
+  @ManyToOne(() => Association, (association) => association.members, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  public association: Association;
+
+  @Column('uuid')
+  @ApiProperty()
+  public associationId: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
@@ -69,25 +84,6 @@ class OtherFrevoEntity {
   @ApiProperty()
   public updatedBy: string;
 
-  @OneToOne(
-    () => OtherFrevoEntityAddress,
-    (address) => address.otherFrevoEntity,
-    { cascade: true, onDelete: 'CASCADE' },
-  )
-  @JoinColumn()
-  @ValidateNested()
-  @AutoMap()
-  @ApiProperty()
-  public address: OtherFrevoEntityAddress;
-
-  public setCreationStamps(userId: string): void {
-    this.createdBy = userId;
-  }
-
-  public setUpdateStamps(userId: string): void {
-    this.updatedBy = userId;
-  }
-
   public async isValid(): Promise<boolean> {
     const errors = await this.validateCreation();
 
@@ -99,4 +95,4 @@ class OtherFrevoEntity {
   }
 }
 
-export default OtherFrevoEntity;
+export default Member;

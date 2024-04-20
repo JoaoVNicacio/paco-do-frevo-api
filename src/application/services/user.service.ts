@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import User from 'src/domain/entities/userAggregate/user.entity';
+import User from 'src/domain/aggregates/userAggregate/user.entity';
 import IUserRepository from 'src/domain/repositories/iuser.repository';
 import { Mapper as IMapper } from '@automapper/core';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';

@@ -1,4 +1,4 @@
-import Association from '../entities/associationAggregate/association.entity';
+import Association from '../aggregates/associationAggregate/association.entity';
 
 interface IAssociationRepository {
   createAssociation(association: Association): Promise<Association>;

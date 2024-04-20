@@ -1,7 +1,7 @@
 import { Mapper, createMap } from '@automapper/core';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
-import User from 'src/domain/entities/userAggregate/user.entity';
+import User from 'src/domain/aggregates/userAggregate/user.entity';
 
 /**
  * The function `generateUserProfile` creates mappings between `User`

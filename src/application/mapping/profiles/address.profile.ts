@@ -1,7 +1,7 @@
 import { Mapper, createMap } from '@automapper/core';
 import AddressDTO from 'src/application/dtos/addressDTOs/address.dto';
-import AssociationAddress from 'src/domain/entities/associationAggregate/address.entity';
-import OtherFrevoEntityAddress from 'src/domain/entities/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
+import AssociationAddress from 'src/domain/aggregates/associationAggregate/address.entity';
+import OtherFrevoEntityAddress from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 
 /**
  * The function `generateAddressProfile` creates mappings between `Address`

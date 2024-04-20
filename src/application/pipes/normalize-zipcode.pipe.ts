@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import IAddress from 'src/domain/entities/entityInterfaces/iaddress.entity-base';
+import IAddress from 'src/domain/entityInterfaces/iaddress.entity-base';
 import AddressDTO from '../dtos/addressDTOs/address.dto';
 import { getStringWithSubstringAtIndex } from 'src/shared/utils/get-string-with-substring-at-index.util';
 

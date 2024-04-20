@@ -1,9 +1,9 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 import SocialNetworkRepository from '../repositories/social-network.repository';
 import SocialNetworkService from 'src/application/services/social-network.service';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import AssociationRepository from '../repositories/association.repository';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';

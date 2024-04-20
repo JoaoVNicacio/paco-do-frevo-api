@@ -1,56 +1,58 @@
 import {
+  Entity,
+  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
-import PhoneNumber from './phone-number.entity';
-import Association from './association.entity';
 import {
-  IsEmail,
+  IsInt,
   IsNotEmpty,
-  IsOptional,
+  IsString,
   ValidateNested,
   ValidationError,
   validate,
 } from 'class-validator';
+import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
-@Entity({ name: 'Contacts' })
-class Contact {
+/** This class represents an Carnival Association with its various properties, relationships and behaviour. */
+@Entity({ name: 'OtherFrevoEntities' })
+class OtherFrevoEntity extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
 
+  @IsNotEmpty()
+  @IsString()
   @Column('text')
-  @IsNotEmpty({ message: 'The person to be addressed is required' })
   @AutoMap()
   @ApiProperty()
-  public addressTo: string;
+  public name: string;
 
+  @IsNotEmpty()
+  @IsString()
   @Column('text')
-  @IsEmail({}, { message: 'Invalid email format' })
   @AutoMap()
   @ApiProperty()
-  public email: string;
+  public type: string;
 
-  @OneToMany(
-    () => PhoneNumber,
-    (phoneNumber: PhoneNumber) => phoneNumber.contact,
-    {
-      cascade: true,
-      onDelete: 'CASCADE',
-    },
-  )
-  @ValidateNested({ each: true })
+  @IsNotEmpty()
+  @IsString()
+  @Column('text')
   @AutoMap()
-  @ApiProperty({ type: [PhoneNumber] })
-  public phoneNumbers: Array<PhoneNumber>;
+  @ApiProperty()
+  public entityHistoryNotes: string;
+
+  @IsInt()
+  @Column('int')
+  @AutoMap()
+  @ApiProperty()
+  public actuationTimeInMonths: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
@@ -61,20 +63,23 @@ class Contact {
   public updatedAt: Date;
 
   @Column('uuid', { nullable: true })
-  @IsOptional()
   @ApiProperty()
   public createdBy: string;
 
   @Column('uuid', { nullable: true })
-  @IsOptional()
   @ApiProperty()
   public updatedBy: string;
 
-  @OneToOne(() => Association, (association) => association.address, {
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(
+    () => OtherFrevoEntityAddress,
+    (address) => address.otherFrevoEntity,
+    { cascade: true, onDelete: 'CASCADE' },
+  )
   @JoinColumn()
-  public association: Association;
+  @ValidateNested()
+  @AutoMap()
+  @ApiProperty()
+  public address: OtherFrevoEntityAddress | null | undefined;
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;
@@ -95,4 +100,4 @@ class Contact {
   }
 }
 
-export default Contact;
+export default OtherFrevoEntity;

@@ -1,5 +1,5 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
-import ControllerBase from './base.controller';
+import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -35,7 +35,7 @@ class UserController extends ControllerBase {
     type: UserForCreationDTO,
   })
   public async createUser(@Body() user: UserForCreationDTO): Promise<UserDTO> {
-    return this.sendCustomValidationResponse(
+    return this.customHttpValidationResponse(
       await this._userService.createUser(user),
     );
   }

@@ -12,6 +12,7 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import { Mapper } from 'src/application/symbols/dependency-injection.symbols';
+import NoContentException from 'src/shared/exceptions/no-content.exception';
 
 /** The `ControllerBase` is a base class for the project's NestJS controllers.
 it provides methods for sending custom validation and response messages, as
@@ -38,13 +39,13 @@ class ControllerBase {
   protected readonly _mapper: IMapper;
 
   /**
-   * The function sends a custom validation response and throws a BadRequestException if the validation
+   * This method sends a custom validation response and throws a BadRequestException if the validation
    * response is not valid.
    * @param validationResponse - The `validationResponse` parameter is an object of type
    * `ValidationResponse<T>`. It contains information about the validation result and the output value.
    * @returns the `output` property of the `validationResponse` object.
    */
-  protected sendCustomValidationResponse<T>(
+  protected customHttpValidationResponse<T>(
     validationResponse: ValidationResponse<T>,
   ): T {
     if (!validationResponse.isValid) {
@@ -64,12 +65,18 @@ class ControllerBase {
   }
 
   /**
-   * The function sends a custom response and throws exceptions if the response is empty or not found.
+   * This method sends a custom response and throws exceptions if the response is empty or not found
+   * an no status code was given.
    * @param {T} response - The `response` parameter is a generic type `T` which represents the response
    * object that will be sent back. It can be any type of object.
+   * @param {T} responseStatus - The `responseStatus` parameter is a optional enum of HTTP statuses.
    * @returns The `sendCustomResponse` method returns the `response` parameter that is passed to it.
    */
-  protected sendCustomResponse<T>(response: T): T {
+  protected customHttpResponse<T>(response: T, responseStatus?: HttpStatus): T {
+    if (responseStatus) {
+      throw new HttpException(response, responseStatus);
+    }
+
     if (!response) {
       throw new NotFoundException('O item requisitado não foi encontrado.');
     }
@@ -78,7 +85,7 @@ class ControllerBase {
       (response instanceof Array && response.length === 0) ||
       (response instanceof PagedResults && response.result.length === 0)
     ) {
-      throw new HttpException(null, HttpStatus.NO_CONTENT);
+      throw new NoContentException();
     }
 
     return response;

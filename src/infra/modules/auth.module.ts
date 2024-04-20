@@ -1,7 +1,7 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import HashingPipe from 'src/application/pipes/hashing.pipe';
-import { UserSchema } from 'src/domain/entities/userAggregate/user.entity';
+import { UserSchema } from 'src/domain/aggregates/userAggregate/user.entity';
 import IHashingHandler from 'src/application/contracts/handlers/ihashing.handler';
 import HashingHandler from '../handlers/hashing.handler';
 import AuthService from 'src/application/services/auth.service';

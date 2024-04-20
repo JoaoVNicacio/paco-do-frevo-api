@@ -4,7 +4,7 @@ import AssociationDTO from 'src/application/dtos/associationDtos/association.dto
 import PagedResults from 'src/application/responseObjects/paged.results';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import {
   CacheManager,
@@ -43,9 +43,11 @@ class AssociationService implements IAssociationService {
       Association,
     );
 
-    association.address.zipCode = this._normalizeZipCodePipe.transform(
-      association.address,
-    );
+    if (association.address) {
+      association.address.zipCode = this._normalizeZipCodePipe.transform(
+        association.address,
+      );
+    }
 
     const isValid = await association.isValid();
 

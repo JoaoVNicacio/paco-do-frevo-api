@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/application/responseObjects/paged.results';
-import Association from 'src/domain/entities/associationAggregate/association.entity';
-import ControllerBase from './base.controller';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
+import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -61,7 +61,7 @@ class AssociationController extends ControllerBase {
   public async createAssociation(
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    return this.sendCustomValidationResponse<Association>(
+    return this.customHttpValidationResponse<Association>(
       await this._associationService.createEntry(associationDTO),
     );
   }
@@ -80,7 +80,7 @@ class AssociationController extends ControllerBase {
     description: 'The request returned no records.',
   })
   public async getAllAssociations(): Promise<Array<Association>> {
-    return this.sendCustomResponse(await this._associationService.getAll());
+    return this.customHttpResponse(await this._associationService.getAll());
   }
 
   @Get('/paged')
@@ -99,7 +99,7 @@ class AssociationController extends ControllerBase {
   public async getPagedAssociations(
     @Query() pagingParams: PagingParams,
   ): Promise<PagedResults<Association>> {
-    return this.sendCustomResponse(
+    return this.customHttpResponse(
       await this._associationService.getPaged(
         Number(pagingParams.page),
         Number(pagingParams.pageSize),
@@ -123,7 +123,7 @@ class AssociationController extends ControllerBase {
   public async getAssociationById(
     @Param() idParam: UUIDParam,
   ): Promise<Association> {
-    return this.sendCustomResponse<Association>(
+    return this.customHttpResponse<Association>(
       await this._associationService.getById(idParam.id),
     );
   }
@@ -150,7 +150,7 @@ class AssociationController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    return this.sendCustomValidationResponse<Association>(
+    return this.customHttpValidationResponse<Association>(
       await this._associationService.updateEntryById(
         idParam.id,
         associationDTO,

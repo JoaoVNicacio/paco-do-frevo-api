@@ -4,68 +4,50 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import Contact from './contact.entity';
 import {
   IsNotEmpty,
-  IsInt,
-  IsBoolean,
-  validate,
+  IsNumberString,
+  Length,
+  Matches,
   ValidationError,
-  IsIn,
+  validate,
 } from 'class-validator';
-import Association from './association.entity';
-import MemberConstants from './constants/member.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
-@Entity({ name: 'Members' })
-class Member {
+@Entity({ name: 'PhoneNumbers' })
+class PhoneNumber extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Name is required' })
+  @IsNotEmpty({ message: 'Country code is required' })
+  @Length(2, 2, { message: 'Country code must contain exactly 2 numbers' })
+  @IsNumberString()
   @AutoMap()
   @ApiProperty()
-  public name: string;
+  public countryCode: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Surname is required' })
+  @IsNotEmpty({ message: 'Area code is required' })
+  @Length(2, 2, { message: 'Area code must contain exactly 2 numbers' })
+  @IsNumberString()
   @AutoMap()
   @ApiProperty()
-  public surname: string;
+  public areaCode: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Role is required' })
-  @IsIn(MemberConstants.memberTypes)
+  @IsNotEmpty({ message: 'Phone number is required' })
+  @Matches(/^[2-5]\d{7}$|^[7-9]\d{8}$/)
   @AutoMap()
   @ApiProperty()
-  public role: string;
-
-  @Column({ type: 'int' })
-  @IsInt({ message: 'Actuation time must be an integer' })
-  @AutoMap()
-  @ApiProperty()
-  public actuationTimeInMonths: number;
-
-  @Column('boolean')
-  @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
-  @AutoMap()
-  @ApiProperty()
-  public isFrevoTheMainRevenueIncome: boolean;
-
-  @ManyToOne(() => Association, (association) => association.members, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  public association: Association;
-
-  @Column('uuid')
-  @ApiProperty()
-  public associationId: string;
+  public number: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
@@ -83,6 +65,20 @@ class Member {
   @ApiProperty()
   public updatedBy: string;
 
+  @ManyToOne(() => Contact, (contact) => contact.phoneNumbers, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  public contact: Contact;
+
+  public setCreationStamps(userId: string): void {
+    this.createdBy = userId;
+  }
+
+  public setUpdateStamps(userId: string): void {
+    this.updatedBy = userId;
+  }
+
   public async isValid(): Promise<boolean> {
     const errors = await this.validateCreation();
 
@@ -94,4 +90,4 @@ class Member {
   }
 }
 
-export default Member;
+export default PhoneNumber;
