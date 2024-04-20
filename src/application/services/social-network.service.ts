@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import {
@@ -138,7 +138,7 @@ class SocialNetworkService implements ISocialNetworkService {
   public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._socialNetworkRepository.deleteSocialNetwork(id),
-      async () => await this._cacheManager.del(`social-networks/id/${id}`),
+      this._cacheManager.del(`social-networks/id/${id}`),
     ]);
 
     this._logger.log(

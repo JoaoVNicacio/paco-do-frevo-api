@@ -11,8 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
-import ControllerBase from './base.controller';
+import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
+import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -67,7 +67,7 @@ class SocialNetworkController extends ControllerBase {
     @Body() socialNetworkDTO: SocialNetworkDTO,
     @Param() idParam: UUIDParam,
   ): Promise<SocialNetwork> {
-    return this.sendCustomValidationResponse<SocialNetwork>(
+    return this.customHttpValidationResponse<SocialNetwork>(
       await this._socialNetworkService.createEntry(
         socialNetworkDTO,
         idParam.id,
@@ -89,7 +89,7 @@ class SocialNetworkController extends ControllerBase {
   })
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getById(@Param() idParam: UUIDParam): Promise<SocialNetwork> {
-    return this.sendCustomResponse(
+    return this.customHttpResponse(
       await this._socialNetworkService.getById(idParam.id),
     );
   }
@@ -117,7 +117,7 @@ class SocialNetworkController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() socialNetworkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
-    return this.sendCustomValidationResponse<SocialNetwork>(
+    return this.customHttpValidationResponse<SocialNetwork>(
       await this._socialNetworkService.updateEntryById(
         idParam.id,
         socialNetworkDTO,

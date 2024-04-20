@@ -10,9 +10,9 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import Event from 'src/domain/entities/associationAggregate/event.entity';
+import Event from 'src/domain/aggregates/associationAggregate/event.entity';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
-import ControllerBase from './base.controller';
+import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -64,7 +64,7 @@ class EventController extends ControllerBase {
     @Body() eventDTO: EventDTO,
     @Param() associationId: UUIDParam,
   ): Promise<Event> {
-    return this.sendCustomValidationResponse<Event>(
+    return this.customHttpValidationResponse<Event>(
       await this._eventService.createEntry(eventDTO, associationId.id),
     );
   }
@@ -79,7 +79,7 @@ class EventController extends ControllerBase {
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getAssociationById(@Param() idParam: UUIDParam): Promise<Event> {
-    return this.sendCustomResponse(
+    return this.customHttpResponse(
       await this._eventService.getById(idParam.id),
     );
   }
@@ -103,7 +103,7 @@ class EventController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() eventDTO: EventDTO,
   ): Promise<Event> {
-    return this.sendCustomValidationResponse<Event>(
+    return this.customHttpValidationResponse<Event>(
       await this._eventService.updateEntryById(idParam.id, eventDTO),
     );
   }

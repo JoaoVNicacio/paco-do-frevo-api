@@ -17,9 +17,10 @@ import Association from './association.entity';
 import { Type } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 @Entity('Events')
-class Event {
+class Event extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;

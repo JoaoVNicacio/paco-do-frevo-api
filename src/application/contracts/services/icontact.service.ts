@@ -4,7 +4,7 @@ import ICreateEntryForRootAsyncUseCase from 'src/application/useCases/generics/i
 import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/idelete-entry.use-case';
 import IGetByIdAsyncUseCase from 'src/application/useCases/generics/iget-by-id-async.use-case';
 import IUpdateEntryAsyncUseCase from 'src/application/useCases/generics/iupdate-entry.use-case';
-import Contact from 'src/domain/entities/associationAggregate/contact.entity';
+import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 
 interface IContactService
   extends IGetByIdAsyncUseCase<Contact, string>,

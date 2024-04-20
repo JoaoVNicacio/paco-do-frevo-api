@@ -1,6 +1,6 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from 'src/domain/entities/userAggregate/user.entity';
+import { UserSchema } from 'src/domain/aggregates/userAggregate/user.entity';
 import UserRepository from '../repositories/user.repository';
 import UserService from 'src/application/services/user.service';
 import IUserRepository from 'src/domain/repositories/iuser.repository';
@@ -12,7 +12,7 @@ import {
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
-import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IUserService from 'src/application/contracts/services/iuser.service';
 import mapper from 'src/application/mapping/mapper';
 import UserController from 'src/api/controllers/user.controller';
@@ -55,7 +55,7 @@ import UserController from 'src/api/controllers/user.controller';
     // CacheManager:
     {
       provide: CacheManager,
-      useValue: cacheManger,
+      useExisting: cacheManager,
     },
 
     // Pipes:

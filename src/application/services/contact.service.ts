@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
-import Contact from 'src/domain/entities/associationAggregate/contact.entity';
+import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import { Mapper as IMapper } from '@automapper/core';
@@ -122,7 +122,7 @@ class ContactService implements IContactService {
   public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._contactRepository.deleteContact(id),
-      async () => await this._cacheManager.del(`contacts/id/${id}`),
+      this._cacheManager.del(`contacts/id/${id}`),
     ]);
 
     this._logger.log(

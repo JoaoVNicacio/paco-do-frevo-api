@@ -1,9 +1,9 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import PhoneNumber from 'src/domain/entities/associationAggregate/phone-number.entity';
+import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 import PhoneNumberService from 'src/application/services/phone-number.service';
 import PhoneNumberRepository from '../repositories/phone-number.repository';
-import Contact from 'src/domain/entities/associationAggregate/contact.entity';
+import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 import ContactRepository from '../repositories/contact.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
@@ -12,7 +12,7 @@ import {
   Logger,
   Mapper,
 } from 'src/application/symbols/dependency-injection.symbols';
-import { CACHE_MANAGER as cacheManger } from '@nestjs/cache-manager';
+import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IPhoneNumberService from 'src/application/contracts/services/iphone-number.service';
 import mapper from 'src/application/mapping/mapper';
 import PhoneNumberController from 'src/api/controllers/phone-number.controller';
@@ -46,7 +46,7 @@ import PhoneNumberController from 'src/api/controllers/phone-number.controller';
     // CacheManager:
     {
       provide: CacheManager,
-      useValue: cacheManger,
+      useExisting: cacheManager,
     },
 
     // Loggers:

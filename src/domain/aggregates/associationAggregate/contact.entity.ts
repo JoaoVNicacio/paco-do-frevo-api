@@ -1,52 +1,57 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import Contact from './contact.entity';
+import PhoneNumber from './phone-number.entity';
+import Association from './association.entity';
 import {
+  IsEmail,
   IsNotEmpty,
-  IsNumberString,
-  Length,
-  Matches,
+  IsOptional,
+  ValidateNested,
   ValidationError,
   validate,
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
-@Entity({ name: 'PhoneNumbers' })
-class PhoneNumber {
+@Entity({ name: 'Contacts' })
+class Contact extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Country code is required' })
-  @Length(2, 2, { message: 'Country code must contain exactly 2 numbers' })
-  @IsNumberString()
+  @IsNotEmpty({ message: 'The person to be addressed is required' })
   @AutoMap()
   @ApiProperty()
-  public countryCode: string;
+  public addressTo: string;
 
   @Column('text')
-  @IsNotEmpty({ message: 'Area code is required' })
-  @Length(2, 2, { message: 'Area code must contain exactly 2 numbers' })
-  @IsNumberString()
+  @IsEmail({}, { message: 'Invalid email format' })
   @AutoMap()
   @ApiProperty()
-  public areaCode: string;
+  public email: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'Phone number is required' })
-  @Matches(/^[2-5]\d{7}$|^[7-9]\d{8}$/)
+  @OneToMany(
+    () => PhoneNumber,
+    (phoneNumber: PhoneNumber) => phoneNumber.contact,
+    {
+      cascade: true,
+      onDelete: 'CASCADE',
+    },
+  )
+  @ValidateNested({ each: true })
   @AutoMap()
-  @ApiProperty()
-  public number: string;
+  @ApiProperty({ type: [PhoneNumber] })
+  public phoneNumbers: Array<PhoneNumber>;
 
   @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
@@ -57,18 +62,20 @@ class PhoneNumber {
   public updatedAt: Date;
 
   @Column('uuid', { nullable: true })
+  @IsOptional()
   @ApiProperty()
   public createdBy: string;
 
   @Column('uuid', { nullable: true })
+  @IsOptional()
   @ApiProperty()
   public updatedBy: string;
 
-  @ManyToOne(() => Contact, (contact) => contact.phoneNumbers, {
+  @OneToOne(() => Association, (association) => association.address, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  public contact: Contact;
+  public association: Association;
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;
@@ -89,4 +96,4 @@ class PhoneNumber {
   }
 }
 
-export default PhoneNumber;
+export default Contact;

@@ -30,10 +30,11 @@ import { ValidCnpjNumber } from 'src/domain/validators/cnpj-number.validator';
 import AssociationConstants from './constants/association.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 /** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'Associations' })
-class Association {
+class Association extends UserStampedEntity<string> {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   public id: string;
@@ -135,7 +136,8 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [AssociationAddress] })
-  public address: AssociationAddress;
+  @IsOptional()
+  public address: AssociationAddress | null | undefined;
 
   @OneToMany(() => SocialNetwork, (social) => social.association, {
     cascade: true,
@@ -144,6 +146,7 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [SocialNetwork] })
+  @IsOptional()
   public socialNetworks: Array<SocialNetwork>;
 
   @OneToMany(() => Event, (event) => event.association, {
@@ -153,6 +156,7 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Event] })
+  @IsOptional()
   public events: Array<Event>;
 
   @OneToMany(() => Member, (member) => member.association, {
@@ -162,6 +166,7 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Member] })
+  @IsOptional()
   public members: Array<Member>;
 
   @OneToMany(() => Contact, (contact) => contact.association, {
@@ -171,13 +176,14 @@ class Association {
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Contact] })
+  @IsOptional()
   public contacts: Array<Contact>;
 
-  public get getCnpj(): string {
+  public get associationCnpj(): string {
     return this.cnpj;
   }
 
-  public set setCnpj(value: string) {
+  public set associationCnpj(value: string) {
     this.cnpj = value;
   }
 

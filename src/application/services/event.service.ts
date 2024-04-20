@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
 import ValidationResponse from 'src/application/responseObjects/validation.response';
-import Event from 'src/domain/entities/associationAggregate/event.entity';
+import Event from 'src/domain/aggregates/associationAggregate/event.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import { Mapper as IMapper } from '@automapper/core';
@@ -115,7 +115,7 @@ class EventService implements IEventService {
   public async deleteEntryById(id: string): Promise<void> {
     await Promise.all([
       this._eventRepository.deleteEvent(id),
-      async () => await this._cacheManager.del(`events/id/${id}`),
+      this._cacheManager.del(`events/id/${id}`),
     ]);
 
     this._logger.log(

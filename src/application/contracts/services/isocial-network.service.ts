@@ -4,7 +4,7 @@ import ICreateEntryForRootAsyncUseCase from 'src/application/useCases/generics/i
 import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/idelete-entry.use-case';
 import IGetByIdAsyncUseCase from 'src/application/useCases/generics/iget-by-id-async.use-case';
 import IUpdateEntryAsyncUseCase from 'src/application/useCases/generics/iupdate-entry.use-case';
-import SocialNetwork from 'src/domain/entities/associationAggregate/social-network.entity';
+import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 
 interface ISocialNetworkService
   extends IGetByIdAsyncUseCase<SocialNetwork, string>,

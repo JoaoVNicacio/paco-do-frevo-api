@@ -11,8 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
-import Contact from 'src/domain/entities/associationAggregate/contact.entity';
-import ControllerBase from './base.controller';
+import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
+import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -63,7 +63,7 @@ class ContactController extends ControllerBase {
     @Body() contactDTO: ContactDTO,
     @Param() idParam: UUIDParam,
   ): Promise<Contact> {
-    return this.sendCustomValidationResponse<Contact>(
+    return this.customHttpValidationResponse<Contact>(
       await this.contactService.createEntry(contactDTO, idParam.id),
     );
   }
@@ -78,7 +78,7 @@ class ContactController extends ControllerBase {
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async getContactById(@Param() idParam: UUIDParam): Promise<Contact> {
-    return this.sendCustomResponse(
+    return this.customHttpResponse(
       await this.contactService.getById(idParam.id),
     );
   }
@@ -103,7 +103,7 @@ class ContactController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() contactDTO: ContactDTO,
   ): Promise<Contact> {
-    return this.sendCustomValidationResponse<Contact>(
+    return this.customHttpValidationResponse<Contact>(
       await this.contactService.updateEntryById(idParam.id, contactDTO),
     );
   }
