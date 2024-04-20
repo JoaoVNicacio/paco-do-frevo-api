@@ -27,7 +27,7 @@ class UserService implements IUserService {
     private readonly _hashingPipe: HashingPipe,
   ) {}
 
-  public async createUser(
+  public async createEntry(
     userDto: UserForCreationDTO,
   ): Promise<ValidationResponse<UserDTO>> {
     const newUser = this._mapper.map(userDto, UserForCreationDTO, User);

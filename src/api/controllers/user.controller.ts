@@ -36,7 +36,7 @@ class UserController extends ControllerBase {
   })
   public async createUser(@Body() user: UserForCreationDTO): Promise<UserDTO> {
     return this.customHttpValidationResponse(
-      await this._userService.createUser(user),
+      await this._userService.createEntry(user),
     );
   }
 }
