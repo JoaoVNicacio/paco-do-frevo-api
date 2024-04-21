@@ -61,14 +61,14 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       );
     }
 
-    const insertResponse =
-      await this._otherFrevoEntityRepository.createResume(otherFrevoEntity);
+    const [insertResponse] = await Promise.all([
+      this._otherFrevoEntityRepository.createResume(otherFrevoEntity),
+      this._cacheManager.del(`other-frevo-entities`),
+    ]);
 
     this._logger.log(
       `<💾> ➤ Created the Frevo entity with id: ${insertResponse.id} and related objects.`,
     );
-
-    await this._cacheManager.del(`other-frevo-entities`);
     this._logger.log(
       `<🗑️> ➤ Deleted cache of get all Frevo entities due to creation of ${insertResponse.id}.`,
     );
@@ -93,11 +93,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
         pageSize,
       );
 
-    const hasNextPage = results.total > page * pageSize;
-
     return new PagedResults(
       results.otherFrevoEntities,
-      hasNextPage,
       page,
       pageSize,
       results.total,
@@ -131,20 +128,18 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       );
     }
 
-    const updateResponse =
-      await this._otherFrevoEntityRepository.updateOtherFrevoEntity(
+    const [updateResponse] = await Promise.all([
+      this._otherFrevoEntityRepository.updateOtherFrevoEntity(
         id,
         otherFrevoEntity,
-      );
+      ),
+      this._cacheManager.del(`other-frevo-entities/id/${id}`),
+      this._cacheManager.del(`other-frevo-entities`),
+    ]);
 
     this._logger.log(
       `<🔁> ➤ Updated the Frevo entity with id: ${id} and related objects.`,
     );
-
-    await Promise.all([
-      this._cacheManager.del(`other-frevo-entities/id/${id}`),
-      this._cacheManager.del(`other-frevo-entities`),
-    ]);
 
     this._logger.log(
       `<🗑️> ➤ Deleted cache entries from the Frevo entity with id: ${id} due to update.`,

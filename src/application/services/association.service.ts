@@ -15,6 +15,9 @@ import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IAssociationService from '../contracts/services/iassociation.service';
 import NormalizeZipCodePipe from '../pipes/normalize-zipcode.pipe';
+import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
+import SimplifiedAssociationDTO from '../dtos/associationDtos/simplified-association.dto';
+import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
 
 @Injectable()
 class AssociationService implements IAssociationService {
@@ -72,47 +75,60 @@ class AssociationService implements IAssociationService {
         .build();
     }
 
-    const insertResponse =
-      await this._associationRepository.createAssociation(association);
+    const [insertResponse] = await Promise.all([
+      this._associationRepository.createAssociation(association),
+      this._cacheManager.del(`associations`),
+    ]);
+
+    this._logger.log(
+      `<💾> ➤ Created the Association with id: ${insertResponse.id} and related objects.`,
+    );
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted cache of get all Associations due to creation of ${insertResponse.id}.`,
+    );
 
     const response = new ValidationResponse(
       insertResponse,
       await association.validateCreation(),
     );
 
-    this._logger.log(
-      `<💾> ➤ Created the Association with id: ${insertResponse.id} and related objects.`,
-    );
-
     if (response.isValid) {
-      await this._cacheManager.del(`associations`);
-
-      this._logger.log(
-        `<🗑️> ➤ Deleted cache of get all Associations due to creation of ${insertResponse.id}.`,
-      );
     }
 
     return response;
   }
 
-  public async getAll(): Promise<Array<Association>> {
-    return await this._associationRepository.getAll();
+  public async getAll(
+    filterParams?: AssociationFilteringParam,
+    orderingParam?: EOrderingParam,
+  ): Promise<Array<SimplifiedAssociationDTO>> {
+    return this._mapper.mapArray(
+      await this._associationRepository.getAll(filterParams, orderingParam),
+      Association,
+      SimplifiedAssociationDTO,
+    );
   }
 
   public async getPaged(
     page: number,
     pageSize: number,
-  ): Promise<PagedResults<Association>> {
+    filterParams?: AssociationFilteringParam,
+    orderingParam?: EOrderingParam,
+  ): Promise<PagedResults<SimplifiedAssociationDTO>> {
     const results = await this._associationRepository.getPagedAssociations(
       page,
       pageSize,
+      filterParams,
+      orderingParam,
     );
 
-    const hasNextPage = results.total > page * pageSize;
-
     return new PagedResults(
-      results.associations,
-      hasNextPage,
+      this._mapper.mapArray(
+        results.associations,
+        Association,
+        SimplifiedAssociationDTO,
+      ),
       page,
       pageSize,
       results.total,
@@ -150,27 +166,23 @@ class AssociationService implements IAssociationService {
       );
     }
 
-    association.associationCnpj = CleanStringBuilder.fromString(
-      association.associationCnpj,
-    )
-      .withoutDashes()
-      .withoutDots()
-      .withoutSlashes()
-      .build();
+    association.associationCnpj = association.associationCnpj
+      ? CleanStringBuilder.fromString(association.associationCnpj)
+          .withoutDashes()
+          .withoutDots()
+          .withoutSlashes()
+          .build()
+      : null;
 
-    const updateResponse = await this._associationRepository.updateAssociation(
-      id,
-      association,
-    );
+    const [updateResponse] = await Promise.all([
+      this._associationRepository.updateAssociation(id, association),
+      this._cacheManager.del(`associations/id/${id}`),
+      this._cacheManager.del(`associations`),
+    ]);
 
     this._logger.log(
       `<🔁> ➤ Updated the Association with id: ${id} and related objects.`,
     );
-
-    await Promise.all([
-      this._cacheManager.del(`associations/id/${id}`),
-      this._cacheManager.del(`associations`),
-    ]);
 
     this._logger.log(
       `<🗑️> ➤ Deleted cache entries from the Association with id: ${id} due to update.`,

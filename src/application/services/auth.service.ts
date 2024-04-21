@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import UserForLoginDTO from 'src/application/dtos/userDtos/user-for-login.dto';
-import IJwtPayload from 'src/application/requestObjects/ijwt.payload';
+import IJwtPayload from 'src/shared/requestObjects/ijwt.payload';
 import IHashingHandler from 'src/application/contracts/handlers/ihashing.handler';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IAuthService from '../contracts/services/iauth.service';

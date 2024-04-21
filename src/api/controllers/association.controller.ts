@@ -25,8 +25,8 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import PagingParams from '../../application/requestObjects/paging.params';
-import UUIDParam from '../../application/requestObjects/uuid.param';
+import PagingParams from '../../shared/requestObjects/params/paging.params';
+import UUIDParam from '../../shared/requestObjects/params/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
@@ -34,6 +34,24 @@ import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import TimeParser from 'src/shared/utils/time.parser';
 import IAssociationService from 'src/application/contracts/services/iassociation.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
+import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
+import {
+  SearchParamQuery,
+  AssociationTypeQuery,
+  DistrictQuery,
+  CityQuery,
+  StateQuery,
+  MinMemberAmmountQuery,
+  MaxMemberAmmountQuery,
+} from '../decorators/association.filtering-param.decorators';
+import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
+import SimplifiedAssociationDTO from 'src/application/dtos/associationDtos/simplified-association.dto';
+import {
+  PageIndexQuery,
+  PageSizeQuery,
+} from '../decorators/paging-params.decorators';
+import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
+import AssociationFilteringParamPipe from 'src/application/pipes/association.filtering-param.pipe';
 
 @ApiTags('Association')
 @Controller('associations')
@@ -73,20 +91,35 @@ class AssociationController extends ControllerBase {
     description: 'The records have been successfully fetched.',
     schema: {
       type: 'array',
-      items: { $ref: getSchemaPath(Association) },
+      items: { $ref: getSchemaPath(SimplifiedAssociationDTO) },
     },
   })
   @ApiNoContentResponse({
     description: 'The request returned no records.',
   })
-  public async getAllAssociations(): Promise<Array<Association>> {
-    return this.customHttpResponse(await this._associationService.getAll());
+  @SearchParamQuery()
+  @AssociationTypeQuery()
+  @DistrictQuery()
+  @CityQuery()
+  @StateQuery()
+  @MinMemberAmmountQuery()
+  @MaxMemberAmmountQuery()
+  @ApiQuery({ name: 'ordering', enum: EOrderingParam, required: false })
+  public async getAllAssociations(
+    @Query(AssociationFilteringParamPipe)
+    filterParams?: AssociationFilteringParam,
+    @Query('ordering')
+    ordering?: EOrderingParam,
+  ): Promise<Array<SimplifiedAssociationDTO>> {
+    return this.customHttpResponse(
+      await this._associationService.getAll(filterParams, ordering),
+    );
   }
 
   @Get('/paged')
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
-  @ApiPagedResultsResponse(Association)
+  @ApiPagedResultsResponse(SimplifiedAssociationDTO)
   @ApiNoContentResponse({
     description: 'The request returned no records.',
   })
@@ -94,15 +127,30 @@ class AssociationController extends ControllerBase {
     description: 'The request has an error on the sent object.',
     type: ValidationPipeResponseRepresentation,
   })
-  @ApiQuery({ name: 'page', description: 'The page index of the request' })
-  @ApiQuery({ name: 'pageSize', description: 'The page size of the request' })
+  @PageIndexQuery()
+  @PageSizeQuery()
+  @SearchParamQuery()
+  @AssociationTypeQuery()
+  @DistrictQuery()
+  @CityQuery()
+  @StateQuery()
+  @MinMemberAmmountQuery()
+  @MaxMemberAmmountQuery()
+  @ApiQuery({ name: 'ordering', enum: EOrderingParam, required: false })
   public async getPagedAssociations(
-    @Query() pagingParams: PagingParams,
-  ): Promise<PagedResults<Association>> {
+    @Query(PagingParamsPipe)
+    pagingParams: PagingParams,
+    @Query(AssociationFilteringParamPipe)
+    filterParams?: AssociationFilteringParam,
+    @Query('ordering')
+    ordering?: EOrderingParam,
+  ): Promise<PagedResults<SimplifiedAssociationDTO>> {
     return this.customHttpResponse(
       await this._associationService.getPaged(
-        Number(pagingParams.page),
-        Number(pagingParams.pageSize),
+        pagingParams.page,
+        pagingParams.pageSize,
+        filterParams,
+        ordering,
       ),
     );
   }
