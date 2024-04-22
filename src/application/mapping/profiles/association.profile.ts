@@ -1,5 +1,6 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
+import SimplifiedAssociationDTO from 'src/application/dtos/associationDtos/simplified-association.dto';
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 
 /**
@@ -57,6 +58,24 @@ function generateAssociationProfile(mapper: Mapper) {
     forMember(
       (dest) => dest.contacts,
       mapFrom((src) => src.contacts ?? []),
+    ),
+  );
+
+  createMap(
+    mapper,
+    Association,
+    SimplifiedAssociationDTO,
+    forMember(
+      (dest) => dest.colors,
+      mapFrom((src) => src.colors),
+    ),
+    forMember(
+      (dest) => dest.address,
+      mapFrom((src) => src.address),
+    ),
+    forMember(
+      (dest) => dest.id,
+      mapFrom((src) => src.id),
     ),
   );
 }

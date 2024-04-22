@@ -24,6 +24,8 @@ import IAssociationService from 'src/application/contracts/services/iassociation
 import mapper from 'src/application/mapping/mapper';
 import AssociationController from 'src/api/controllers/association.controller';
 import NormalizeZipCodePipe from 'src/application/pipes/normalize-zipcode.pipe';
+import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
+import AssociationFilteringParamPipe from 'src/application/pipes/association.filtering-param.pipe';
 
 @Module({
   imports: [
@@ -76,6 +78,8 @@ import NormalizeZipCodePipe from 'src/application/pipes/normalize-zipcode.pipe';
 
     // Pipes:
     NormalizeZipCodePipe,
+    PagingParamsPipe,
+    AssociationFilteringParamPipe,
   ],
 })
 export class AssociationModule {}

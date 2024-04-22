@@ -29,7 +29,7 @@ import { Type } from 'class-transformer';
 import { ValidCnpjNumber } from 'src/domain/validators/cnpj-number.validator';
 import AssociationConstants from './constants/association.constants';
 import { AutoMap } from '@automapper/classes';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 
 /** This class represents an Carnival Association with its various properties, relationships and behaviour. */
@@ -93,11 +93,11 @@ class Association extends UserStampedEntity<string> {
 
   @IsOptional()
   @IsString()
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: null })
   @ValidCnpjNumber({ message: 'The given CNPJ is invalid' })
   @AutoMap()
-  @ApiProperty()
-  private cnpj: string | null;
+  @ApiPropertyOptional()
+  private cnpj: string | null | undefined;
 
   @IsBoolean()
   @Column('boolean')
@@ -135,7 +135,7 @@ class Association extends UserStampedEntity<string> {
   @JoinColumn()
   @ValidateNested()
   @AutoMap()
-  @ApiProperty({ type: [AssociationAddress] })
+  @ApiPropertyOptional({ type: AssociationAddress })
   @IsOptional()
   public address: AssociationAddress | null | undefined;
 

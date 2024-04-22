@@ -23,13 +23,12 @@ class PagedResults<T> {
 
   constructor(
     result: Array<T>,
-    hasNextPage: boolean,
     pageIndex: number,
     pageSize: number,
     totalCount: number,
   ) {
     this.result = result;
-    this.hasNextPage = hasNextPage;
+    this.hasNextPage = totalCount > pageIndex * pageSize;
     this.pageIndex = pageIndex;
     this.pageSize = pageSize;
     this.totalCount = totalCount;

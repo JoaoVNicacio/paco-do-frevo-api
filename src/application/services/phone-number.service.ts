@@ -114,14 +114,12 @@ class PhoneNumberService implements IPhoneNumberService {
       );
     }
 
-    const updateResponse = await this._phoneNumberRepository.updatePhoneNumber(
-      id,
-      phoneNumber,
-    );
+    const [updateResponse] = await Promise.all([
+      this._phoneNumberRepository.updatePhoneNumber(id, phoneNumber),
+      this._cacheManager.del(`phone-numbers/id/${id}`),
+    ]);
 
     this._logger.log(`<🔁> ➤ Updated the phone number with id: ${id}.`);
-
-    await this._cacheManager.del(`phone-numbers/id/${id}`);
 
     this._logger.log(
       `<🗑️> ➤ Deleted cache entries from the phone number with id: ${id} due to update.`,

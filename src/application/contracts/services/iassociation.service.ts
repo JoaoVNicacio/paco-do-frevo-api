@@ -8,19 +8,33 @@ import IGetPagedAsyncUseCase from 'src/application/useCases/generics/iget-paged-
 import ICreateEntryAsyncUseCase from 'src/application/useCases/generics/icreate-entry.use-case';
 import IUpdateEntryAsyncUseCase from 'src/application/useCases/generics/iupdate-entry.use-case';
 import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/idelete-entry.use-case';
+import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
+import SimplifiedAssociationDTO from 'src/application/dtos/associationDtos/simplified-association.dto';
+import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
 
 interface IAssociationService
-  extends IGetAllAsyncUseCase<Association>,
+  extends IGetAllAsyncUseCase<
+      SimplifiedAssociationDTO,
+      AssociationFilteringParam
+    >,
     IGetByIdAsyncUseCase<Association, string>,
-    IGetPagedAsyncUseCase<Association>,
+    IGetPagedAsyncUseCase<SimplifiedAssociationDTO, AssociationFilteringParam>,
     ICreateEntryAsyncUseCase<Association, AssociationDTO>,
     IUpdateEntryAsyncUseCase<Association, AssociationDTO, string>,
     IDeleteEntryAsyncUseCase<string> {
   createEntry(
     associationDTO: AssociationDTO,
   ): Promise<ValidationResponse<Association>>;
-  getAll(): Promise<Array<Association>>;
-  getPaged(page: number, pageSize: number): Promise<PagedResults<Association>>;
+  getAll(
+    filterParams?: AssociationFilteringParam,
+    orderingParam?: EOrderingParam,
+  ): Promise<Array<SimplifiedAssociationDTO>>;
+  getPaged(
+    page: number,
+    pageSize: number,
+    filterParams?: AssociationFilteringParam,
+    orderingParam?: EOrderingParam,
+  ): Promise<PagedResults<SimplifiedAssociationDTO>>;
   getById(id: string): Promise<Association>;
   updateEntryById(
     id: string,
