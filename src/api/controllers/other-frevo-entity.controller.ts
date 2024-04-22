@@ -20,14 +20,11 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
-  ApiQuery,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
 import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
-import UUIDParam from 'src/application/requestObjects/uuid.param';
-import PagingParams from 'src/application/requestObjects/paging.params';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
@@ -40,6 +37,13 @@ import AssociationAdminGuard from '../guards/association-admin.guard';
 import TimeParser from 'src/shared/utils/time.parser';
 import IOtherFrevoEntityService from 'src/application/contracts/services/iother-frevo-entity.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
+import PagingParams from 'src/shared/requestObjects/params/paging.params';
+import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
+import {
+  PageIndexQuery,
+  PageSizeQuery,
+} from '../decorators/paging-params.decorators';
+import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
@@ -105,15 +109,15 @@ class OtherFrevoEntityController extends ControllerBase {
     description: 'The request has an error on the sent object.',
     type: ValidationPipeResponseRepresentation,
   })
-  @ApiQuery({ name: 'page', description: 'The page index of the request' })
-  @ApiQuery({ name: 'pageSize', description: 'The page size of the request' })
+  @PageIndexQuery()
+  @PageSizeQuery()
   public async getPagedOtherFrevoEntities(
-    @Query() pagingParams: PagingParams,
+    @Query(PagingParamsPipe) pagingParams: PagingParams,
   ): Promise<PagedResults<OtherFrevoEntity>> {
     return this.customHttpResponse(
       await this._otherFrevoEntityService.getPaged(
-        Number(pagingParams.page),
-        Number(pagingParams.pageSize),
+        pagingParams.page,
+        pagingParams.pageSize,
       ),
     );
   }

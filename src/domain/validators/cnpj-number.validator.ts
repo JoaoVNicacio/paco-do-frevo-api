@@ -4,7 +4,6 @@ import {
   registerDecorator,
 } from 'class-validator';
 import DocumentNumberValidatorTemplate from './document-number.validator';
-import Association from '../aggregates/associationAggregate/association.entity';
 
 /** The `CnpjNumberValidator` class is class that validates a given number against specific
 rules for a CNPJ (Brazilian company identification number). */
@@ -92,20 +91,22 @@ export function ValidCnpjNumber(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
-          const entity = args.object as Association;
-          const isLegalEntity = entity.isLegalEntity;
+        validate(value: any | undefined | null, args: ValidationArguments) {
+          const isLegalEntity =
+            'isLegalEntity' in args.object ? args.object.isLegalEntity : false;
 
-          if (isLegalEntity === false && value !== null) {
+          value = 'cnpj' in args.object ? args.object.cnpj : null;
+
+          if (!isLegalEntity && (value === null || value == undefined)) {
             return false;
           }
 
-          if (isLegalEntity === true) {
+          if (isLegalEntity) {
             if (!value || typeof value !== 'string') {
               return false;
             }
 
-            return new CnpjNumberValidator().validate(entity.associationCnpj);
+            return new CnpjNumberValidator().validate(value);
           }
 
           return true;

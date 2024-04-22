@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import IRequestWithUser from '../requests/iwith-user.request';
 import RoleGuardBase from './bases/base-role.guard';
-import EUserRoles from 'src/domain/entities/userAggregate/enums/euser-roles';
+import EUserRoles from 'src/domain/aggregates/userAggregate/enums/euser-roles';
 
 @Injectable()
 class AppAdminGuard extends RoleGuardBase implements CanActivate {

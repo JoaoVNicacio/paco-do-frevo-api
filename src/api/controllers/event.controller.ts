@@ -21,7 +21,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor } from '@nestjs/cache-manager/dist/interceptors/cache.interceptor';
@@ -32,6 +31,7 @@ import AssociationAdminGuard from '../guards/association-admin.guard';
 import TimeParser from 'src/shared/utils/time.parser';
 import IEventService from 'src/application/contracts/services/ievent.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
+import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
 
 @ApiTags('Events')
 @Controller('events')

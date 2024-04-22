@@ -1,4 +1,4 @@
-import IJwtPayload from 'src/application/requestObjects/ijwt.payload';
+import IJwtPayload from 'src/shared/requestObjects/ijwt.payload';
 import GuardBase from './base.guard';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 
