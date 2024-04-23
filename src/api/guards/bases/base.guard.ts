@@ -1,11 +1,17 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import IJwtPayload from 'src/shared/requestObjects/ijwt.payload';
+import { LoggerService as ILogger } from '@nestjs/common';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 @Injectable()
 class GuardBase {
-  constructor(private readonly _jwtService: JwtService) {}
+  constructor(
+    private readonly _jwtService: JwtService,
+    @Inject(Logger)
+    private readonly _logger: ILogger,
+  ) {}
 
   protected getTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
@@ -25,7 +31,10 @@ class GuardBase {
 
       return payload;
     } catch (error) {
-      console.warn('Request invalid JWT.', `➤ ${error.name}: ${error.message}`);
+      this._logger.warn(
+        'Request invalid JWT.',
+        `➤ ${error.name}: ${error.message}`,
+      );
 
       throw new UnauthorizedException('Token de acesso inválido.');
     }

@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UnauthorizedException } from '@nestjs/common';
+import { ConsoleLogger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import IRequestWithUser from 'src/api/requests/iwith-user.request';
 import AuthGuard from 'src/api/guards/auth.guard';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
@@ -18,11 +19,16 @@ describe('AuthGuard', () => {
             verifyAsync: jest.fn(),
           },
         },
+        // Loggers:
+        {
+          provide: Logger,
+          useClass: ConsoleLogger,
+        },
       ],
     }).compile();
 
-    guard = module.get<AuthGuard>(AuthGuard);
     jwtService = module.get<JwtService>(JwtService);
+    guard = module.get<AuthGuard>(AuthGuard);
   });
 
   it('should be defined', () => {

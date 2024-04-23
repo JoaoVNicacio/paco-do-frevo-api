@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ForbiddenException } from '@nestjs/common';
+import { ConsoleLogger, ForbiddenException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import IJwtPayload from 'src/application/requestObjects/ijwt.payload';
-import EUserRoles from 'src/domain/entities/userAggregate/enums/euser-roles';
 import IRequestWithUser from 'src/api/requests/iwith-user.request';
 import AssociationAdminGuard from 'src/api/guards/association-admin.guard';
+import EUserRoles from 'src/domain/aggregates/userAggregate/enums/euser-roles';
+import IJwtPayload from 'src/shared/requestObjects/ijwt.payload';
+import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 
 describe('AssociationAdminGuard', () => {
   let guard: AssociationAdminGuard;
@@ -19,6 +20,11 @@ describe('AssociationAdminGuard', () => {
           useValue: {
             verifyAsync: jest.fn(),
           },
+        },
+        // Loggers:
+        {
+          provide: Logger,
+          useClass: ConsoleLogger,
         },
       ],
     }).compile();
@@ -88,7 +94,7 @@ describe('AssociationAdminGuard', () => {
   describe('matchesRoleRules', () => {
     it('should throw ForbiddenException if user role is not ApplicationAdmin', () => {
       // Arrange:
-      const guard = new AssociationAdminGuard(jwtService);
+      const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
         userRole: EUserRoles.DataVisualizer,
         sub: '',
@@ -102,7 +108,7 @@ describe('AssociationAdminGuard', () => {
     });
 
     it('should not throw error if user role is ApplicationAdmin', () => {
-      const guard = new AssociationAdminGuard(jwtService);
+      const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
         userRole: EUserRoles.ApplicationAdmin,
         sub: '',
@@ -115,7 +121,7 @@ describe('AssociationAdminGuard', () => {
 
     it('should throw ForbiddenException if user role is not AssociationAdmin', () => {
       // Arrange:
-      const guard = new AssociationAdminGuard(jwtService);
+      const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
         userRole: EUserRoles.DataVisualizer,
         sub: '',
@@ -129,7 +135,7 @@ describe('AssociationAdminGuard', () => {
     });
 
     it('should not throw error if user role is AssociationAdmin', () => {
-      const guard = new AssociationAdminGuard(jwtService);
+      const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
         userRole: EUserRoles.AssociationAdmin,
         sub: '',
