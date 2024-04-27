@@ -80,10 +80,6 @@ class ContactService implements IContactService {
     );
   }
 
-  public async getAllContacts(): Promise<Array<Contact>> {
-    return await this._contactRepository.getAll();
-  }
-
   public async getById(id: string): Promise<Contact> {
     return this._contactRepository.getById(id);
   }
