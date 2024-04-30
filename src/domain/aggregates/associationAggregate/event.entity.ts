@@ -45,7 +45,7 @@ class Event extends UserStampedEntity<string> {
   public participantsAmount: number;
 
   @ManyToOne(() => Association, (association) => association.events, {
-    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+    onDelete: 'CASCADE',
   })
   public association: Association;
 

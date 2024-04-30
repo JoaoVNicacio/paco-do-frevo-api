@@ -13,7 +13,7 @@ class GuardBase {
     private readonly _logger: ILogger,
   ) {}
 
-  protected getTokenFromHeader(request: Request): string | undefined {
+  protected getTokenFromHeader(request: Request): string | null | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
 
     return type === 'Bearer' ? token : undefined;
