@@ -20,12 +20,12 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import UUIDParam from 'src/application/requestObjects/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import IPhoneNumberService from 'src/application/contracts/services/iphone-number.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
+import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
 
 @ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')

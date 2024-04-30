@@ -115,15 +115,12 @@ class SocialNetworkService implements ISocialNetworkService {
       );
     }
 
-    const updateResponse =
-      await this._socialNetworkRepository.updateSocialNetwork(
-        id,
-        socialNetwork,
-      );
+    const [updateResponse] = await Promise.all([
+      this._socialNetworkRepository.updateSocialNetwork(id, socialNetwork),
+      this._cacheManager.del(`social-networks/id/${id}`),
+    ]);
 
     this._logger.log(`<🔁> ➤ Updated the Social network with id: ${id}.`);
-
-    await this._cacheManager.del(`social-networks/id/${id}`);
 
     this._logger.log(
       `<🗑️> ➤ Deleted cache entries from the Social network with id: ${id} due to update.`,

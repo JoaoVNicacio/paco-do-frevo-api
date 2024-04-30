@@ -35,7 +35,7 @@ class SocialNetwork extends UserStampedEntity<string> {
 
   @Column('text')
   @IsNotEmpty({ message: 'URL is required' })
-  @Matches(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, {
+  @Matches(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/[\w .-]*)*\/?$/, {
     message: 'Invalid URL format',
   })
   @AutoMap()
