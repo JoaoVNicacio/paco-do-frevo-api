@@ -23,7 +23,7 @@ class CleanStringBuilder {
    * @returns The method is returning the CleanStringBuilder instance itself.
    */
   public withoutDashes(): CleanStringBuilder {
-    this.stringForEdition = this.stringForEdition.replace('-', '');
+    this.stringForEdition = this.stringForEdition.replace(/-/g, '');
     return this;
   }
 
@@ -32,7 +32,7 @@ class CleanStringBuilder {
    * @returns The method is returning the CleanStringBuilder instance itself.
    */
   public withoutDots(): CleanStringBuilder {
-    this.stringForEdition = this.stringForEdition.replace('.', '');
+    this.stringForEdition = this.stringForEdition.replace(/\./g, '');
     return this;
   }
 
@@ -41,7 +41,7 @@ class CleanStringBuilder {
    * @returns The method is returning the CleanStringBuilder instance itself.
    */
   public withoutSlashes(): CleanStringBuilder {
-    this.stringForEdition = this.stringForEdition.replace('/', '');
+    this.stringForEdition = this.stringForEdition.replace(/\//g, '');
     return this;
   }
 
@@ -51,7 +51,19 @@ class CleanStringBuilder {
    * @returns The method is returning the CleanStringBuilder instance itself.
    */
   public withoutSpaces(): CleanStringBuilder {
-    this.stringForEdition = this.stringForEdition.replace(' ', '');
+    this.stringForEdition = this.stringForEdition.replace(/\s/g, '');
+    return this;
+  }
+
+  /**
+   * The method `withoutUnnecessarySpaces` removes unnecessary spaces from a string in TypeScript.
+   * @returns The method `withoutUnnecessarySpaces()` is returning a `CleanStringBuilder` object.
+   */
+  public withoutUnnecessarySpaces(): CleanStringBuilder {
+    this.stringForEdition = this.stringForEdition
+      .trim()
+      .replace(/\s{2,}/g, ' ');
+
     return this;
   }
 
