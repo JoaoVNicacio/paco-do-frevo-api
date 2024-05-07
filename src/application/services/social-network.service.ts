@@ -62,6 +62,8 @@ class SocialNetworkService implements ISocialNetworkService {
 
     socialNetwork.association = association;
 
+    socialNetwork.sanitizeEntityProperties();
+
     const isValid = await socialNetwork.isValid();
 
     if (!isValid) {
@@ -101,6 +103,8 @@ class SocialNetworkService implements ISocialNetworkService {
       SocialNetworkDTO,
       SocialNetwork,
     );
+
+    socialNetwork.sanitizeEntityProperties();
 
     const isValid = await socialNetwork.isValid();
 

@@ -61,6 +61,8 @@ class PhoneNumberService implements IPhoneNumberService {
 
     phoneNumber.contact = contact;
 
+    phoneNumber.sanitizeEntityProperties();
+
     const isValid = await phoneNumber.isValid();
 
     if (!isValid) {
@@ -100,6 +102,8 @@ class PhoneNumberService implements IPhoneNumberService {
       PhoneNumberDTO,
       PhoneNumber,
     );
+
+    phoneNumber.sanitizeEntityProperties();
 
     const isValid = await phoneNumber.isValid();
 

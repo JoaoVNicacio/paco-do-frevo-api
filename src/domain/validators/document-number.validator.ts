@@ -37,8 +37,8 @@ abstract class DocumentNumberValidatorTemplate {
    * false otherwise.
    */
   protected hasAllSameDigits(number: string): boolean {
-    for (let i = 1; i < number.length; i++) {
-      if (number[i] !== number[0]) {
+    for (const char of number) {
+      if (char !== number[0]) {
         return false;
       }
     }

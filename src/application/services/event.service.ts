@@ -58,6 +58,8 @@ class EventService implements IEventService {
 
     event.association = association;
 
+    event.sanitizeEntityProperties();
+
     const isValid = await event.isValid();
 
     if (!isValid) {
@@ -87,6 +89,8 @@ class EventService implements IEventService {
     eventDto: EventDTO,
   ): Promise<ValidationResponse<Event>> {
     const event = this._mapper.map(eventDto, EventDTO, Event);
+
+    event.sanitizeEntityProperties();
 
     if (!(await event.isValid())) {
       this._logger.log(

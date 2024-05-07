@@ -56,6 +56,8 @@ class ContactService implements IContactService {
       return new ValidationResponse(contact, [error]);
     }
 
+    contact.sanitizeEntityProperties();
+
     contact.association = association;
 
     const isValid = await contact.isValid();
@@ -89,6 +91,8 @@ class ContactService implements IContactService {
     contactDTO: ContactDTO,
   ): Promise<ValidationResponse<Contact>> {
     const contact = this._mapper.map(contactDTO, ContactDTO, Contact);
+
+    contact.sanitizeEntityProperties();
 
     const isValid = await contact.isValid();
 

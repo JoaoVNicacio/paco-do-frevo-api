@@ -1,6 +1,8 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
+import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
 import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
+import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 
 /**
  * The function `generateContactProfile` creates mappings between `Contact` and
@@ -24,7 +26,9 @@ function generateContactProfile(mapper: Mapper) {
     Contact,
     forMember(
       (dest) => dest.phoneNumbers,
-      mapFrom((src) => src.phoneNumbers),
+      mapFrom((src) =>
+        mapper.mapArray(src.phoneNumbers ?? [], PhoneNumberDTO, PhoneNumber),
+      ),
     ),
   );
 }
