@@ -33,6 +33,8 @@ class UserService implements IUserService {
     const newUser = this._mapper.map(userDto, UserForCreationDTO, User);
     newUser.password = userDto.password;
 
+    newUser.sanitizeEntityProperties();
+
     const isValid = await newUser.isValid();
     const validationResult = await newUser.validateCreation();
 

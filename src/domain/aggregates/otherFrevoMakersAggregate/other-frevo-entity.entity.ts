@@ -19,6 +19,7 @@ import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 /** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'OtherFrevoEntities' })
@@ -80,6 +81,31 @@ class OtherFrevoEntity extends UserStampedEntity<string> {
   @AutoMap()
   @ApiProperty()
   public address: OtherFrevoEntityAddress | null | undefined;
+
+  public sanitizeEntityProperties(): void {
+    this.name = this.name
+      ? CleanStringBuilder.fromString(this.name)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.name;
+
+    this.type = this.type
+      ? CleanStringBuilder.fromString(this.type)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.type;
+
+    this.entityHistoryNotes = this.entityHistoryNotes
+      ? CleanStringBuilder.fromString(this.entityHistoryNotes)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.entityHistoryNotes;
+
+    this.address?.sanitizeEntityProperties();
+  }
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;

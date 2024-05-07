@@ -10,6 +10,7 @@ import {
   validate,
 } from 'class-validator';
 import IEntity from 'src/core/entities/ientity.base';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 @Schema({
   toJSON: {
@@ -90,6 +91,24 @@ class User implements IEntity<string> {
    */
   public set password(value: string) {
     this._password = value;
+  }
+
+  public sanitizeEntityProperties(): void {
+    this.firstName = this.firstName
+      ? CleanStringBuilder.fromString(this.firstName)
+          .withoutUnnecessarySpaces()
+          .withoutSlashes()
+          .toInitCap(true)
+          .build()
+      : this.firstName;
+
+    this.lastName = this.lastName
+      ? CleanStringBuilder.fromString(this.lastName)
+          .withoutUnnecessarySpaces()
+          .withoutSlashes()
+          .toInitCap(true)
+          .build()
+      : this.lastName;
   }
 
   public async isValid(): Promise<boolean> {

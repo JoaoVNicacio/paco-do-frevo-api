@@ -31,6 +31,7 @@ import AssociationConstants from './constants/association.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 /** This class represents an Carnival Association with its various properties, relationships and behaviour. */
 @Entity({ name: 'Associations' })
@@ -185,6 +186,63 @@ class Association extends UserStampedEntity<string> {
 
   public set associationCnpj(value: string) {
     this.cnpj = value;
+  }
+
+  public sanitizeEntityProperties(): void {
+    this.name = this.name
+      ? CleanStringBuilder.fromString(this.name)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.name;
+
+    this.associationType = this.associationType
+      ? CleanStringBuilder.fromString(this.associationType)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.associationType;
+
+    this.associationHistoryNotes = this.associationHistoryNotes
+      ? CleanStringBuilder.fromString(this.associationHistoryNotes)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.associationHistoryNotes;
+
+    this.cnpj = this.cnpj
+      ? CleanStringBuilder.fromString(this.cnpj)
+          .withoutSpaces()
+          .withoutDashes()
+          .withoutDots()
+          .withoutSlashes()
+          .build()
+      : this.cnpj === ''
+      ? null
+      : this.cnpj;
+
+    this.colors = this.colors.filter((color) => color);
+
+    for (let color of this.colors) {
+      color = CleanStringBuilder.fromString(color)
+        .withoutUnnecessarySpaces()
+        .withoutDashes()
+        .withoutDots()
+        .withoutSlashes()
+        .capitalizeFirstLetter()
+        .build();
+    }
+
+    this.address?.sanitizeEntityProperties();
+
+    this.members = this.members.filter((member) => member);
+    this.members.forEach((member) => member.sanitizeEntityProperties());
+
+    this.contacts = this.contacts.filter((contact) => contact);
+    this.contacts.forEach((contact) => contact.sanitizeEntityProperties());
+
+    this.events = this.events.filter((event) => event);
+    this.events.forEach((event) => event.sanitizeEntityProperties());
   }
 
   public setCreationStamps(userId: string): void {
