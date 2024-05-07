@@ -18,6 +18,7 @@ import { Type } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 @Entity('Events')
 class Event extends UserStampedEntity<string> {
@@ -45,7 +46,7 @@ class Event extends UserStampedEntity<string> {
   public participantsAmount: number;
 
   @ManyToOne(() => Association, (association) => association.events, {
-    onDelete: 'CASCADE', // Define a exclusão em cascata no banco de dados
+    onDelete: 'CASCADE',
   })
   public association: Association;
 
@@ -68,6 +69,15 @@ class Event extends UserStampedEntity<string> {
   @Column('uuid', { nullable: true })
   @ApiProperty()
   public updatedBy: string;
+
+  public sanitizeEntityProperties(): void {
+    this.eventType = this.eventType
+      ? CleanStringBuilder.fromString(this.eventType)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.eventType;
+  }
 
   public async isValid(): Promise<boolean> {
     const errors = await this.validateCreation();

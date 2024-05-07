@@ -48,6 +48,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
       );
     }
 
+    otherFrevoEntity.sanitizeEntityProperties();
+
     const isValid = await otherFrevoEntity.isValid();
 
     if (!isValid) {
@@ -118,6 +120,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
       otherFrevoEntity.address,
     );
+
+    otherFrevoEntity.sanitizeEntityProperties();
 
     const isValid = await otherFrevoEntity.isValid();
 

@@ -19,6 +19,7 @@ import {
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 @Entity({ name: 'PhoneNumbers' })
 class PhoneNumber extends UserStampedEntity<string> {
@@ -44,7 +45,7 @@ class PhoneNumber extends UserStampedEntity<string> {
 
   @Column('text')
   @IsNotEmpty({ message: 'Phone number is required' })
-  @Matches(/^[2-5]\d{7}$|^[7-9]\d{8}$/)
+  @Matches(/^[2-5]\d{7}$|^9[7-9]\d{7}$/)
   @AutoMap()
   @ApiProperty()
   public number: string;
@@ -70,6 +71,27 @@ class PhoneNumber extends UserStampedEntity<string> {
   })
   @JoinColumn()
   public contact: Contact;
+
+  public sanitizeEntityProperties(): void {
+    if (this.number) {
+      this.number = CleanStringBuilder.fromString(this.number)
+        .withoutSpaces()
+        .withoutDashes()
+        .build();
+
+      this.number = /^[789]/.test(this.number)
+        ? this.number.padStart(9, '9')
+        : this.number;
+    }
+
+    this.countryCode = this.countryCode
+      ? CleanStringBuilder.fromString(this.countryCode).withoutSpaces().build()
+      : this.countryCode;
+
+    this.areaCode = this.areaCode
+      ? CleanStringBuilder.fromString(this.areaCode).withoutSpaces().build()
+      : this.areaCode;
+  }
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;

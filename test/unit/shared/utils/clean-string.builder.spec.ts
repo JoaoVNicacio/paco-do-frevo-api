@@ -93,4 +93,52 @@ describe('CleanStringBuilder', () => {
       expect(builder.build()).toBe('');
     });
   });
+
+  describe('capitalizeFirstLetter', () => {
+    it('should capitalize the first letter of the string', () => {
+      // Arrange
+      const builder = CleanStringBuilder.fromString('test string');
+
+      // Act
+      const result = builder.capitalizeFirstLetter().build();
+
+      // Assert
+      expect(result).toBe('Test string');
+    });
+
+    it('should handle empty string', () => {
+      // Arrange
+      const builder = CleanStringBuilder.fromString('');
+
+      // Act
+      const result = builder.capitalizeFirstLetter().build();
+
+      // Assert
+      expect(result).toBe('');
+    });
+  });
+
+  describe('toInitCap', () => {
+    it('should capitalize the first letter of each word', () => {
+      // Arrange
+      const builder = CleanStringBuilder.fromString('test string with words');
+
+      // Act
+      const result = builder.toInitCap().build();
+
+      // Assert
+      expect(result).toBe('Test String With Words');
+    });
+
+    it('should ignore prepositions when shouldIgnorePrepositions is true', () => {
+      // Arrange
+      const builder = CleanStringBuilder.fromString('a casa do sol');
+
+      // Act
+      const result = builder.toInitCap(true).build();
+
+      // Assert
+      expect(result).toBe('A Casa do Sol');
+    });
+  });
 });

@@ -20,6 +20,7 @@ import MemberConstants from './constants/member.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 @Entity({ name: 'Members' })
 class Member extends UserStampedEntity<string> {
@@ -83,6 +84,24 @@ class Member extends UserStampedEntity<string> {
   @Column('uuid', { nullable: true })
   @ApiProperty()
   public updatedBy: string;
+
+  public sanitizeEntityProperties(): void {
+    this.name = this.name
+      ? CleanStringBuilder.fromString(this.name)
+          .withoutUnnecessarySpaces()
+          .withoutSlashes()
+          .toInitCap(true)
+          .build()
+      : this.name;
+
+    this.surname = this.surname
+      ? CleanStringBuilder.fromString(this.surname)
+          .withoutUnnecessarySpaces()
+          .withoutSlashes()
+          .toInitCap(true)
+          .build()
+      : this.surname;
+  }
 
   public async isValid(): Promise<boolean> {
     const errors = await this.validateCreation();

@@ -19,6 +19,7 @@ import SocialNetworkConstants from './constants/social-network.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 @Entity({ name: 'SocialNetworks' })
 class SocialNetwork extends UserStampedEntity<string> {
@@ -63,6 +64,17 @@ class SocialNetwork extends UserStampedEntity<string> {
   })
   @JoinColumn()
   public association: Association;
+
+  public sanitizeEntityProperties(): void {
+    this.socialNetworkType = this.socialNetworkType
+      ? CleanStringBuilder.fromString(this.socialNetworkType)
+          .withoutUnnecessarySpaces()
+          .capitalizeFirstLetter()
+          .build()
+      : this.socialNetworkType;
+
+    this.url = this.url?.trim();
+  }
 
   public setCreationStamps(userId: string) {
     this.createdBy = userId;
