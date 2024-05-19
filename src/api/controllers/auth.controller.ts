@@ -1,4 +1,10 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import ControllerBase from '../../core/controllers/base.controller';
 import UserForLoginDTO from 'src/application/dtos/userDtos/user-for-login.dto';
 import {
@@ -11,6 +17,8 @@ import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schem
 import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
 import IAuthService from 'src/application/contracts/services/iauth.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import TimeParser from 'src/shared/utils/time.parser';
 
 @Controller('authorization')
 @ApiTags('Authorization')
@@ -23,6 +31,8 @@ class AuthController extends ControllerBase {
   }
 
   @Post('login')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(TimeParser.fromMinutesToMilliseconds(8))
   @ApiOkResponse({
     description: 'The JWT token has been successfully created.',
     type: String,
