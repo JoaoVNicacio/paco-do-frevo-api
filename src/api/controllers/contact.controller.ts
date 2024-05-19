@@ -63,7 +63,7 @@ class ContactController extends ControllerBase {
     @Body() contactDTO: ContactDTO,
     @Param() idParam: UUIDParam,
   ): Promise<Contact> {
-    return this.customHttpValidationResponse<Contact>(
+    return this.customHttpResponse<Contact>(
       await this.contactService.createEntry(contactDTO, idParam.id),
     );
   }
@@ -103,7 +103,7 @@ class ContactController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() contactDTO: ContactDTO,
   ): Promise<Contact> {
-    return this.customHttpValidationResponse<Contact>(
+    return this.customHttpResponse<Contact>(
       await this.contactService.updateEntryById(idParam.id, contactDTO),
     );
   }

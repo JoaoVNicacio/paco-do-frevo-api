@@ -64,7 +64,7 @@ class EventController extends ControllerBase {
     @Body() eventDTO: EventDTO,
     @Param() associationId: UUIDParam,
   ): Promise<Event> {
-    return this.customHttpValidationResponse<Event>(
+    return this.customHttpResponse<Event>(
       await this._eventService.createEntry(eventDTO, associationId.id),
     );
   }
@@ -103,7 +103,7 @@ class EventController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() eventDTO: EventDTO,
   ): Promise<Event> {
-    return this.customHttpValidationResponse<Event>(
+    return this.customHttpResponse<Event>(
       await this._eventService.updateEntryById(idParam.id, eventDTO),
     );
   }

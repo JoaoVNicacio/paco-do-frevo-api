@@ -67,7 +67,7 @@ class SocialNetworkController extends ControllerBase {
     @Body() socialNetworkDTO: SocialNetworkDTO,
     @Param() idParam: UUIDParam,
   ): Promise<SocialNetwork> {
-    return this.customHttpValidationResponse<SocialNetwork>(
+    return this.customHttpResponse<SocialNetwork>(
       await this._socialNetworkService.createEntry(
         socialNetworkDTO,
         idParam.id,
@@ -117,7 +117,7 @@ class SocialNetworkController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() socialNetworkDTO: SocialNetworkDTO,
   ): Promise<SocialNetwork> {
-    return this.customHttpValidationResponse<SocialNetwork>(
+    return this.customHttpResponse<SocialNetwork>(
       await this._socialNetworkService.updateEntryById(
         idParam.id,
         socialNetworkDTO,

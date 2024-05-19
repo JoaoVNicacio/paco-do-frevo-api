@@ -67,7 +67,7 @@ class PhoneNumberController extends ControllerBase {
     @Body() phoneNumberDTO: PhoneNumberDTO,
     @Param() idParm: UUIDParam,
   ): Promise<PhoneNumber> {
-    return this.customHttpValidationResponse<PhoneNumber>(
+    return this.customHttpResponse<PhoneNumber>(
       await this._phoneNumberService.createEntry(phoneNumberDTO, idParm.id),
     );
   }
@@ -114,7 +114,7 @@ class PhoneNumberController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() phoneNumberDTO: PhoneNumberDTO,
   ): Promise<PhoneNumber> {
-    return this.customHttpValidationResponse<PhoneNumber>(
+    return this.customHttpResponse<PhoneNumber>(
       await this._phoneNumberService.updateEntryById(
         idParam.id,
         phoneNumberDTO,
