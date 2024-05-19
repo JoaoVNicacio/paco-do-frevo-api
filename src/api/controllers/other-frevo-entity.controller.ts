@@ -65,7 +65,7 @@ class OtherFrevoEntityController extends ControllerBase {
   public async createOtherFrevoEntity(
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
-    return this.customHttpValidationResponse<OtherFrevoEntity>(
+    return this.customHttpResponse<OtherFrevoEntity>(
       await this._otherFrevoEntityService.createEntry(otherFrevoEntityDTO),
     );
   }
@@ -156,7 +156,7 @@ class OtherFrevoEntityController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() otherFrevoEntityDTO: OtherFrevoEntityDTO,
   ): Promise<OtherFrevoEntity> {
-    return this.customHttpValidationResponse<OtherFrevoEntity>(
+    return this.customHttpResponse<OtherFrevoEntity>(
       await this._otherFrevoEntityService.updateEntryById(
         idParam.id,
         otherFrevoEntityDTO,

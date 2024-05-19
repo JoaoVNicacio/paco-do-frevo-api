@@ -79,7 +79,7 @@ class AssociationController extends ControllerBase {
   public async createAssociation(
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    return this.customHttpValidationResponse<Association>(
+    return this.customHttpResponse<Association>(
       await this._associationService.createEntry(associationDTO),
     );
   }
@@ -198,7 +198,7 @@ class AssociationController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    return this.customHttpValidationResponse<Association>(
+    return this.customHttpResponse<Association>(
       await this._associationService.updateEntryById(
         idParam.id,
         associationDTO,
