@@ -117,7 +117,7 @@ class SocialNetworkController extends ControllerBase {
     );
   }
 
-  @Delete('id/:icustomHttpResponse')
+  @Delete('id/:id')
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: Object,
