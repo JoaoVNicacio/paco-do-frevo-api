@@ -42,7 +42,7 @@ dotenv.config();
       url: process.env.DB_URL,
       synchronize: true,
       logging: true,
-      autoLoadEntities: true,
+      autoLoadEntities: false,
       entities: [
         Association,
         AssociationAddress,
@@ -55,8 +55,8 @@ dotenv.config();
         OtherFrevoEntity,
         OtherFrevoEntityAddress,
       ],
-      migrations: ['src/migration/**/*.ts'],
-      subscribers: ['src/subscriber/**/*.ts'],
+      migrations: ['src/infra/migrations/**/*.ts'],
+      subscribers: ['src/infra/subscribers/**/*.ts'],
     }),
 
     // MongoDB Config:
