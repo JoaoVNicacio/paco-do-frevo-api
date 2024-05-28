@@ -1,4 +1,4 @@
-import PagedResults from 'src/application/responseObjects/paged.results';
+import PagedResults from 'src/shared/responseObjects/paged.results';
 import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
 
 /** The interface `IGetPagedAsyncUseCase` has

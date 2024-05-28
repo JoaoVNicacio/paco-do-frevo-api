@@ -10,7 +10,7 @@ import {
   Inject,
   UseInterceptors,
 } from '@nestjs/common';
-import PagedResults from 'src/application/responseObjects/paged.results';
+import PagedResults from 'src/shared/responseObjects/paged.results';
 import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
