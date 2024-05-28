@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import IRequestWithUser from '../requests/iwith-user.request';
-import GuardBase from './bases/base.guard';
+import GuardBase from '../../core/guards/base.guard';
 
 @Injectable()
 class AuthGuard extends GuardBase implements CanActivate {
