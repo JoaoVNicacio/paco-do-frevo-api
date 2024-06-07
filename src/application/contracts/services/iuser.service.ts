@@ -1,4 +1,4 @@
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
 import User from 'src/domain/aggregates/userAggregate/user.entity';

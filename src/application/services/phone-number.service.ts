@@ -2,7 +2,7 @@ import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';

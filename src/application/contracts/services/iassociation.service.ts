@@ -1,5 +1,5 @@
-import ValidationResponse from 'src/application/responseObjects/validation.response';
-import PagedResults from 'src/application/responseObjects/paged.results';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
+import PagedResults from 'src/shared/responseObjects/paged.results';
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import IGetAllAsyncUseCase from 'src/application/useCases/generics/iget-all-async.use-case';

@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
+import PagedResults from 'src/shared/responseObjects/paged.results';
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import ControllerBase from '../../core/controllers/base.controller';
 import {

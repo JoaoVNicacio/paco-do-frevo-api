@@ -9,8 +9,8 @@ import {
 import { ApiBearerAuth, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/validation-error-signature.dto';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import PagedResults from 'src/shared/responseObjects/paged.results';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import { Mapper } from 'src/application/symbols/dependency-injection.symbols';
 import NoContentException from 'src/shared/exceptions/no-content.exception';
 
