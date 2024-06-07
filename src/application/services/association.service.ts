@@ -1,8 +1,8 @@
 import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import PagedResults from 'src/shared/responseObjects/paged.results';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import {

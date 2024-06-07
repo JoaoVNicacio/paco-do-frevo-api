@@ -1,4 +1,4 @@
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 
 /**
  * Interface representing an asynchronous use case for creating entries.
