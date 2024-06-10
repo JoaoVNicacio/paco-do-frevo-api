@@ -3,7 +3,7 @@ import User from 'src/domain/aggregates/userAggregate/user.entity';
 import IUserRepository from 'src/domain/repositories/iuser.repository';
 import { Mapper as IMapper } from '@automapper/core';
 import UserForCreationDTO from 'src/application/dtos/userDtos/user-for-creation.dto';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import HashingPipe from 'src/application/pipes/hashing.pipe';
 import UserDTO from 'src/application/dtos/userDtos/user.dto';
 import { ValidationError } from 'class-validator';
@@ -32,6 +32,8 @@ class UserService implements IUserService {
   ): Promise<ValidationResponse<UserDTO>> {
     const newUser = this._mapper.map(userDto, UserForCreationDTO, User);
     newUser.password = userDto.password;
+
+    newUser.sanitizeEntityProperties();
 
     const isValid = await newUser.isValid();
     const validationResult = await newUser.validateCreation();

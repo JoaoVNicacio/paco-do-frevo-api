@@ -21,6 +21,7 @@ import {
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
+import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
 @Entity({ name: 'Contacts' })
 class Contact extends UserStampedEntity<string> {
@@ -76,6 +77,21 @@ class Contact extends UserStampedEntity<string> {
   })
   @JoinColumn()
   public association: Association;
+
+  public sanitizeEntityProperties(): void {
+    this.addressTo = this.addressTo
+      ? CleanStringBuilder.fromString(this.addressTo)
+          .withoutUnnecessarySpaces()
+          .toInitCap(true)
+          .build()
+      : this.addressTo;
+
+    this.phoneNumbers = this.phoneNumbers.filter((phoneNumber) => phoneNumber);
+
+    this.phoneNumbers.forEach((phoneNumber) =>
+      phoneNumber.sanitizeEntityProperties(),
+    );
+  }
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;

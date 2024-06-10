@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
+import PagedResults from 'src/shared/responseObjects/paged.results';
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import ControllerBase from '../../core/controllers/base.controller';
 import {
@@ -79,7 +79,7 @@ class AssociationController extends ControllerBase {
   public async createAssociation(
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    return this.customHttpValidationResponse<Association>(
+    return this.customHttpResponse<Association>(
       await this._associationService.createEntry(associationDTO),
     );
   }
@@ -198,7 +198,7 @@ class AssociationController extends ControllerBase {
     @Param() idParam: UUIDParam,
     @Body() associationDTO: AssociationDTO,
   ): Promise<Association> {
-    return this.customHttpValidationResponse<Association>(
+    return this.customHttpResponse<Association>(
       await this._associationService.updateEntryById(
         idParam.id,
         associationDTO,

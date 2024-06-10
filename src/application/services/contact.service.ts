@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
@@ -56,6 +56,8 @@ class ContactService implements IContactService {
       return new ValidationResponse(contact, [error]);
     }
 
+    contact.sanitizeEntityProperties();
+
     contact.association = association;
 
     const isValid = await contact.isValid();
@@ -93,6 +95,8 @@ class ContactService implements IContactService {
     contactDTO: ContactDTO,
   ): Promise<ValidationResponse<Contact>> {
     const contact = this._mapper.map(contactDTO, ContactDTO, Contact);
+
+    contact.sanitizeEntityProperties();
 
     const isValid = await contact.isValid();
 

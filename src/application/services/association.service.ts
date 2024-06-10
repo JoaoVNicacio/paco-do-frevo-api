@@ -1,9 +1,8 @@
 import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
-import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import PagedResults from 'src/shared/responseObjects/paged.results';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import {
@@ -52,6 +51,8 @@ class AssociationService implements IAssociationService {
       );
     }
 
+    association.sanitizeEntityProperties();
+
     const isValid = await association.isValid();
 
     if (!isValid) {
@@ -63,16 +64,6 @@ class AssociationService implements IAssociationService {
         association,
         await association.validateCreation(),
       );
-    }
-
-    if (association.associationCnpj) {
-      association.associationCnpj = CleanStringBuilder.fromString(
-        association.associationCnpj,
-      )
-        .withoutDashes()
-        .withoutDots()
-        .withoutSlashes()
-        .build();
     }
 
     const [insertResponse] = await Promise.all([
@@ -153,6 +144,8 @@ class AssociationService implements IAssociationService {
       association.address,
     );
 
+    association.sanitizeEntityProperties();
+
     const isValid = await association.isValid();
 
     if (!isValid) {
@@ -165,14 +158,6 @@ class AssociationService implements IAssociationService {
         await association.validateCreation(),
       );
     }
-
-    association.associationCnpj = association.associationCnpj
-      ? CleanStringBuilder.fromString(association.associationCnpj)
-          .withoutDashes()
-          .withoutDots()
-          .withoutSlashes()
-          .build()
-      : null;
 
     const [updateResponse] = await Promise.all([
       this._associationRepository.updateAssociation(id, association),

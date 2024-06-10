@@ -4,7 +4,7 @@ import UserForLoginDTO from 'src/application/dtos/userDtos/user-for-login.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiOkResponse,
+  ApiCreatedResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
@@ -23,7 +23,7 @@ class AuthController extends ControllerBase {
   }
 
   @Post('login')
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'The JWT token has been successfully created.',
     type: String,
   })

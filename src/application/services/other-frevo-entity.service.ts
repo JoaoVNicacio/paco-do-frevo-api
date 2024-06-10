@@ -1,8 +1,8 @@
 import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import OtherFrevoEntityDTO from 'src/application/dtos/otherFrevoMakersDtos/other-frevo-entity.dto';
-import PagedResults from 'src/application/responseObjects/paged.results';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import PagedResults from 'src/shared/responseObjects/paged.results';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import {
@@ -47,6 +47,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
         otherFrevoEntity.address,
       );
     }
+
+    otherFrevoEntity.sanitizeEntityProperties();
 
     const isValid = await otherFrevoEntity.isValid();
 
@@ -118,6 +120,8 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     otherFrevoEntity.address.zipCode = this._normalizeZipCodePipe.transform(
       otherFrevoEntity.address,
     );
+
+    otherFrevoEntity.sanitizeEntityProperties();
 
     const isValid = await otherFrevoEntity.isValid();
 
