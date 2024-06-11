@@ -148,7 +148,7 @@ class AssociationAddress extends UserStampedEntity<string> implements IAddress {
 
     this.state = this.state.toLocaleUpperCase();
 
-    this.country = this.country.toLocaleUpperCase();
+    this.country = this.country ? this.country.toLocaleUpperCase() : 'BR';
 
     this.complement = this.complement
       ? CleanStringBuilder.fromString(this.complement)
