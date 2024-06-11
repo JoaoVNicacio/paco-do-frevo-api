@@ -1,6 +1,6 @@
 import EventDTO from 'src/application/dtos/associationDtos/event.dto';
 import Event from 'src/domain/aggregates/associationAggregate/event.entity';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import IGetByIdAsyncUseCase from 'src/application/useCases/generics/iget-by-id-async.use-case';
 import ICreateEntryForRootAsyncUseCase from 'src/application/useCases/generics/icreate-for-root.use-case';
 import IDeleteEntryAsyncUseCase from 'src/application/useCases/generics/idelete-entry.use-case';

@@ -2,7 +2,7 @@ import { Mapper as IMapper } from '@automapper/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
-import ValidationResponse from 'src/application/responseObjects/validation.response';
+import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
