@@ -17,7 +17,7 @@ class NormalizeZipCodePipe implements PipeTransform {
    * @returns The `transform` method is returning the zip code with the possible edit.
    */
   public transform(value: IAddress | AddressDTO): string {
-    return value.zipCode[5] !== '-'
+    return value.zipCode.length > 5 && value.zipCode[5] !== '-'
       ? getStringWithSubstringAtIndex(value.zipCode, '-', 5)
       : value.zipCode;
   }
