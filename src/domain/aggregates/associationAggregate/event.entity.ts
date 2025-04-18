@@ -88,6 +88,14 @@ class Event extends UserStampedEntity<string> {
   public async validateCreation(): Promise<Array<ValidationError>> {
     return await validate(this);
   }
+
+  public setCreationStamps(userId: string): void {
+    this.createdBy = userId;
+  }
+
+  public setUpdateStamps(userId: string): void {
+    this.updatedBy = userId;
+  }
 }
 
 export default Event;

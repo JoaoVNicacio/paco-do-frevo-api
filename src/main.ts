@@ -29,7 +29,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Paço do Frevo - API')
-    .setDescription(apiDescription)
+    .setDescription(API_DESCRIPTION)
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -43,7 +43,7 @@ async function bootstrap() {
 
 bootstrap();
 
-const apiDescription = `Our software is like a trusted friend for frevo,
+const API_DESCRIPTION = `Our software is like a trusted friend for frevo,
 the heartbeat of Pernambuco's culture and an intangible heritage of humanity.
 It's here to preserve all the magic of frevo, from its colorful history to
 the vibrant community that keeps it alive and kicking.`;

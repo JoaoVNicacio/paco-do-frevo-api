@@ -42,7 +42,7 @@ import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
 import {
   PageIndexQuery,
   PageSizeQuery,
-} from '../decorators/paging-params.decorators';
+} from '../decorators/paging-params.decorator';
 import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
 
 @ApiTags('OtherFrevoEntity')

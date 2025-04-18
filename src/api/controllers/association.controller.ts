@@ -1,31 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Param,
-  Body,
-  Query,
-  Inject,
-  UseInterceptors,
-  UseGuards,
-} from '@nestjs/common';
 import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
 import PagedResults from 'src/shared/responseObjects/paged.results';
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import ControllerBase from '../../core/controllers/base.controller';
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiNoContentResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiQuery,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
 import PagingParams from '../../shared/requestObjects/params/paging.params';
 import UUIDParam from '../../shared/requestObjects/params/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
@@ -41,6 +17,36 @@ import TimeParser from 'src/shared/utils/time.parser';
 import IAssociationService from 'src/application/contracts/services/iassociation.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
 import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
+import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
+import SimplifiedAssociationDTO from 'src/application/dtos/associationDtos/simplified-association.dto';
+import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
+import AssociationFilteringParamPipe from 'src/application/pipes/association.filtering-param.pipe';
+import { User } from '../decorators/user-token.decorator';
+import IJwtPayload from 'src/shared/requestObjects/ijwt.payload';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  Query,
+  Inject,
+  UseInterceptors,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   SearchParamQuery,
   AssociationTypeQuery,
@@ -49,15 +55,11 @@ import {
   StateQuery,
   MinMemberAmmountQuery,
   MaxMemberAmmountQuery,
-} from '../decorators/association.filtering-param.decorators';
-import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
-import SimplifiedAssociationDTO from 'src/application/dtos/associationDtos/simplified-association.dto';
+} from '../decorators/association.filtering-param.decorator';
 import {
   PageIndexQuery,
   PageSizeQuery,
-} from '../decorators/paging-params.decorators';
-import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
-import AssociationFilteringParamPipe from 'src/application/pipes/association.filtering-param.pipe';
+} from '../decorators/paging-params.decorator';
 
 @ApiTags('Association')
 @Controller('associations')
@@ -87,9 +89,10 @@ class AssociationController extends ControllerBase {
   })
   public async createAssociation(
     @Body() associationDTO: AssociationDTO,
+    @User() user: IJwtPayload,
   ): Promise<Association> {
     return this.customHttpResponse<Association>(
-      await this._associationService.createEntry(associationDTO),
+      await this._associationService.createEntry(associationDTO, user.sub),
     );
   }
 

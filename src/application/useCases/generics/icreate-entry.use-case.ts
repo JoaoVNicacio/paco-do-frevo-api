@@ -11,7 +11,10 @@ interface ICreateEntryAsyncUseCase<TEntity, TDTO> {
    * @param entryDTO - The data transfer object representing the entry to be created.
    * @returns A promise that resolves to a ValidationResponse containing the created entity.
    */
-  createEntry(entryDTO: TDTO): Promise<ValidationResponse<TEntity>>;
+  createEntry(
+    entryDTO: TDTO,
+    userId?: string,
+  ): Promise<ValidationResponse<TEntity>>;
 }
 
 export default ICreateEntryAsyncUseCase;

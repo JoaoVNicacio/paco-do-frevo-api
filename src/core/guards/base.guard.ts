@@ -21,11 +21,10 @@ class GuardBase {
 
   protected async getJwtPayload(token: string): Promise<IJwtPayload> {
     try {
-      if (!token) {
+      if (!token)
         throw new UnauthorizedException(
           'Acesso não permitido para requisições sem autentição.',
         );
-      }
 
       const payload = await this._jwtService.verifyAsync(token);
 
