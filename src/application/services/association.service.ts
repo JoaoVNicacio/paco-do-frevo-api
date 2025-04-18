@@ -38,6 +38,7 @@ class AssociationService implements IAssociationService {
 
   public async createEntry(
     associationDTO: AssociationDTO,
+    userId?: string,
   ): Promise<ValidationResponse<Association>> {
     const association = this._mapper.map(
       associationDTO,
@@ -52,6 +53,7 @@ class AssociationService implements IAssociationService {
     }
 
     association.sanitizeEntityProperties();
+    association.setCreationStamps(userId);
 
     const isValid = await association.isValid();
 
@@ -72,11 +74,11 @@ class AssociationService implements IAssociationService {
     ]);
 
     this._logger.log(
-      `<💾> ➤ Created the Association with id: ${insertResponse.id} and related objects.`,
+      `<🗑️> ➤ Deleted cache of get all Associations due to creation of ${insertResponse.id}.`,
     );
 
     this._logger.log(
-      `<🗑️> ➤ Deleted cache of get all Associations due to creation of ${insertResponse.id}.`,
+      `<💾> ➤ Created the Association with id: ${insertResponse.id} and related objects.`,
     );
 
     const response = new ValidationResponse(

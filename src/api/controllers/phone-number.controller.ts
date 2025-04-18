@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import PhoneNumberDTO from 'src/application/dtos/associationDtos/phone-number.dto';
@@ -23,12 +24,18 @@ import {
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AssociationAdminGuard from '../guards/association-admin.guard';
 import IPhoneNumberService from 'src/application/contracts/services/iphone-number.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
+import TimeParser from 'src/shared/utils/time.parser';
 import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
 
 @ApiTags('PhoneNumbers')
 @Controller('phoneNumbers')
+@UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class PhoneNumberController extends ControllerBase {
   constructor(
     @Inject(IPhoneNumberService)
@@ -38,6 +45,7 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Post('contact/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: PhoneNumber,
@@ -82,8 +90,9 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(20000)
+  @CacheTTL(TimeParser.fromSecondsToMilliseconds(20))
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: PhoneNumber,
@@ -114,6 +123,7 @@ class PhoneNumberController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: Object,

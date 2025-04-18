@@ -8,6 +8,7 @@ import {
   Body,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import ContactDTO from 'src/application/dtos/associationDtos/contact.dto';
 import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
@@ -24,12 +25,17 @@ import UUIDParam from '../../shared/requestObjects/params/uuid.param';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AssociationAdminGuard from '../guards/association-admin.guard';
 import TimeParser from 'src/shared/utils/time.parser';
 import IContactService from 'src/application/contracts/services/icontact.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
 
 @ApiTags('Contacts')
 @Controller('contacts')
+@UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class ContactController extends ControllerBase {
   constructor(
     @Inject(IContactService)
@@ -39,6 +45,7 @@ class ContactController extends ControllerBase {
   }
 
   @Post('association/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: Contact,
@@ -77,6 +84,7 @@ class ContactController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: Contact,
@@ -101,6 +109,7 @@ class ContactController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: null,

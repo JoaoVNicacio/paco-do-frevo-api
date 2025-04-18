@@ -8,6 +8,7 @@ import {
   Body,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
@@ -23,6 +24,9 @@ import {
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AssociationAdminGuard from '../guards/association-admin.guard';
 import TimeParser from 'src/shared/utils/time.parser';
 import ISocialNetworkService from 'src/application/contracts/services/isocial-network.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
@@ -30,6 +34,8 @@ import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
 
 @ApiTags('SocialNetworks')
 @Controller('social-networks')
+@UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class SocialNetworkController extends ControllerBase {
   constructor(
     @Inject(ISocialNetworkService)
@@ -39,6 +45,7 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Post('association/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: SocialNetwork,
@@ -88,6 +95,7 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: SocialNetwork,
@@ -118,6 +126,7 @@ class SocialNetworkController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: Object,

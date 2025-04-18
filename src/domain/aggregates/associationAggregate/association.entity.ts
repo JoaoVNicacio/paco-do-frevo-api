@@ -247,6 +247,13 @@ class Association extends UserStampedEntity<string> {
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;
+    this.address?.setCreationStamps(userId);
+
+    this.members.forEach((member) => member.setCreationStamps(userId));
+
+    this.contacts.forEach((contact) => contact.setCreationStamps(userId));
+
+    this.events.forEach((event) => event.setCreationStamps(userId));
   }
 
   public setUpdateStamps(userId: string): void {

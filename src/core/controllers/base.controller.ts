@@ -6,7 +6,7 @@ import {
   Inject,
   NotFoundException,
 } from '@nestjs/common';
-import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/validation-error-signature.dto';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import PagedResults from 'src/shared/responseObjects/paged.results';
@@ -34,6 +34,7 @@ well as handling errors. */
     },
   },
 })
+@ApiBearerAuth()
 class ControllerBase {
   @Inject(Mapper)
   protected readonly _mapper: IMapper;
