@@ -69,22 +69,17 @@ class AssociationService implements IAssociationService {
     }
 
     const [insertResponse] = await Promise.all([
-      this._associationRepository
-        .createAssociation(association)
-        .then(() =>
-          this._logger.log(
-            `<💾> ➤ Created the Association with id: ${insertResponse.id} and related objects.`,
-          ),
-        ),
-
-      this._cacheManager
-        .del(`associations`)
-        .then(() =>
-          this._logger.log(
-            `<🗑️> ➤ Deleted cache of get all Associations due to creation of ${insertResponse.id}.`,
-          ),
-        ),
+      this._associationRepository.createAssociation(association),
+      this._cacheManager.del(`associations`),
     ]);
+
+    this._logger.log(
+      `<🗑️> ➤ Deleted cache of get all Associations due to creation of ${insertResponse.id}.`,
+    );
+
+    this._logger.log(
+      `<💾> ➤ Created the Association with id: ${insertResponse.id} and related objects.`,
+    );
 
     const response = new ValidationResponse(
       insertResponse,
