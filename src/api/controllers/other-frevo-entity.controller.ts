@@ -9,6 +9,7 @@ import {
   Query,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import PagedResults from 'src/shared/responseObjects/paged.results';
 import ControllerBase from '../../core/controllers/base.controller';
@@ -28,6 +29,11 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AppAdminGuard from '../guards/app-admin.guard';
+import { ApiForbiddenResponseWithSchema } from '../swaggerSchemas/forbidden.schema';
+import AssociationAdminGuard from '../guards/association-admin.guard';
 import TimeParser from 'src/shared/utils/time.parser';
 import IOtherFrevoEntityService from 'src/application/contracts/services/iother-frevo-entity.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
@@ -36,11 +42,13 @@ import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
 import {
   PageIndexQuery,
   PageSizeQuery,
-} from '../decorators/paging-params.decorators';
+} from '../decorators/paging-params.decorator';
 import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
 
 @ApiTags('OtherFrevoEntity')
 @Controller('other-frevo-entities')
+@UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class OtherFrevoEntityController extends ControllerBase {
   constructor(
     @Inject(IOtherFrevoEntityService)
@@ -50,6 +58,7 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Post()
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: OtherFrevoEntity,
@@ -135,6 +144,7 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: OtherFrevoEntity,
@@ -165,6 +175,7 @@ class OtherFrevoEntityController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AppAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: null,
@@ -173,6 +184,7 @@ class OtherFrevoEntityController extends ControllerBase {
     description: 'The request has an invalid id format.',
     type: ValidationPipeResponseRepresentation,
   })
+  @ApiForbiddenResponseWithSchema()
   @ApiNotFoundResponseWithSchema()
   public async deleteOtherFrevoEntity(
     @Param() idParam: UUIDParam,

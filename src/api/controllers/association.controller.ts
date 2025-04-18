@@ -1,3 +1,28 @@
+import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
+import PagedResults from 'src/shared/responseObjects/paged.results';
+import Association from 'src/domain/aggregates/associationAggregate/association.entity';
+import ControllerBase from '../../core/controllers/base.controller';
+import PagingParams from '../../shared/requestObjects/params/paging.params';
+import UUIDParam from '../../shared/requestObjects/params/uuid.param';
+import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
+import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AppAdminGuard from '../guards/app-admin.guard';
+import { ApiForbiddenResponseWithSchema } from '../swaggerSchemas/forbidden.schema';
+import AssociationAdminGuard from '../guards/association-admin.guard';
+import TimeParser from 'src/shared/utils/time.parser';
+import IAssociationService from 'src/application/contracts/services/iassociation.service';
+import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
+import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
+import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
+import SimplifiedAssociationDTO from 'src/application/dtos/associationDtos/simplified-association.dto';
+import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
+import AssociationFilteringParamPipe from 'src/application/pipes/association.filtering-param.pipe';
+import { User } from '../decorators/user-token.decorator';
+import IJwtPayload from 'src/shared/requestObjects/ijwt.payload';
 import {
   Controller,
   Get,
@@ -9,11 +34,8 @@ import {
   Query,
   Inject,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
-import AssociationDTO from 'src/application/dtos/associationDtos/association.dto';
-import PagedResults from 'src/shared/responseObjects/paged.results';
-import Association from 'src/domain/aggregates/associationAggregate/association.entity';
-import ControllerBase from '../../core/controllers/base.controller';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -25,16 +47,6 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import PagingParams from '../../shared/requestObjects/params/paging.params';
-import UUIDParam from '../../shared/requestObjects/params/uuid.param';
-import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
-import { ApiPagedResultsResponse } from '../swaggerSchemas/paged-results.schema';
-import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import TimeParser from 'src/shared/utils/time.parser';
-import IAssociationService from 'src/application/contracts/services/iassociation.service';
-import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
-import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
 import {
   SearchParamQuery,
   AssociationTypeQuery,
@@ -43,18 +55,16 @@ import {
   StateQuery,
   MinMemberAmmountQuery,
   MaxMemberAmmountQuery,
-} from '../decorators/association.filtering-param.decorators';
-import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
-import SimplifiedAssociationDTO from 'src/application/dtos/associationDtos/simplified-association.dto';
+} from '../decorators/association.filtering-param.decorator';
 import {
   PageIndexQuery,
   PageSizeQuery,
-} from '../decorators/paging-params.decorators';
-import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
-import AssociationFilteringParamPipe from 'src/application/pipes/association.filtering-param.pipe';
+} from '../decorators/paging-params.decorator';
 
 @ApiTags('Association')
 @Controller('associations')
+@UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class AssociationController extends ControllerBase {
   constructor(
     @Inject(IAssociationService)
@@ -64,6 +74,7 @@ class AssociationController extends ControllerBase {
   }
 
   @Post()
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: Association,
@@ -78,9 +89,10 @@ class AssociationController extends ControllerBase {
   })
   public async createAssociation(
     @Body() associationDTO: AssociationDTO,
+    @User() user: IJwtPayload,
   ): Promise<Association> {
     return this.customHttpResponse<Association>(
-      await this._associationService.createEntry(associationDTO),
+      await this._associationService.createEntry(associationDTO, user.sub),
     );
   }
 
@@ -177,6 +189,7 @@ class AssociationController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: Association,
@@ -207,6 +220,7 @@ class AssociationController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AppAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: null,
@@ -215,6 +229,7 @@ class AssociationController extends ControllerBase {
     description: 'The request has an invalid id format.',
     type: ValidationPipeResponseRepresentation,
   })
+  @ApiForbiddenResponseWithSchema()
   @ApiNotFoundResponseWithSchema()
   @ApiParam({ name: 'id', description: 'The record id.' })
   public async deleteAssociation(@Param() idParam: UUIDParam): Promise<void> {

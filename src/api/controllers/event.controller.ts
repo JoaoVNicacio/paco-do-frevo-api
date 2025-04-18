@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import Event from 'src/domain/aggregates/associationAggregate/event.entity';
@@ -24,13 +25,18 @@ import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/valida
 import { ApiNotFoundResponseWithSchema } from '../swaggerSchemas/not-found.schema';
 import { CacheInterceptor } from '@nestjs/cache-manager/dist/interceptors/cache.interceptor';
 import { CacheTTL } from '@nestjs/cache-manager';
+import AuthGuard from '../guards/auth.guard';
+import { ApiUnauthorizedResponseWithSchema } from '../swaggerSchemas/unauthorized.schema';
+import AssociationAdminGuard from '../guards/association-admin.guard';
 import TimeParser from 'src/shared/utils/time.parser';
 import IEventService from 'src/application/contracts/services/ievent.service';
 import { ValidationPipeResponseRepresentation } from 'src/shared/valueRepresentations/values.representations';
 import UUIDParam from 'src/shared/requestObjects/params/uuid.param';
 
 @ApiTags('Events')
-@Controller('event')
+@Controller('events')
+@UseGuards(AuthGuard)
+@ApiUnauthorizedResponseWithSchema()
 class EventController extends ControllerBase {
   constructor(
     @Inject(IEventService)
@@ -40,6 +46,7 @@ class EventController extends ControllerBase {
   }
 
   @Post('association/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: Event,
@@ -78,6 +85,7 @@ class EventController extends ControllerBase {
   }
 
   @Put('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully updated.',
     type: Event,
@@ -101,6 +109,7 @@ class EventController extends ControllerBase {
   }
 
   @Delete('id/:id')
+  @UseGuards(AssociationAdminGuard)
   @ApiOkResponse({
     description: 'The record has been successfully deleted.',
     type: null,

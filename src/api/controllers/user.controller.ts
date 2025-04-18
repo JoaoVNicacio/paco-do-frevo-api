@@ -35,7 +35,7 @@ class UserController extends ControllerBase {
     type: UserForCreationDTO,
   })
   public async createUser(@Body() user: UserForCreationDTO): Promise<UserDTO> {
-    return this.customHttpResponse(await this._userService.createUser(user));
+    return this.customHttpResponse(await this._userService.createEntry(user));
   }
 }
 

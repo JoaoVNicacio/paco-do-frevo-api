@@ -70,6 +70,7 @@ dotenv.config();
           socket: {
             host: process.env.REDIS_HOST,
             port: parseInt(process.env.REDIS_PORT!),
+            tls: true,
           },
           password: process.env.REDIS_PASSWORD,
         }),

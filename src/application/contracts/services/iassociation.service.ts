@@ -24,6 +24,7 @@ interface IAssociationService
     IDeleteEntryAsyncUseCase<string> {
   createEntry(
     associationDTO: AssociationDTO,
+    userId?: string,
   ): Promise<ValidationResponse<Association>>;
   getAll(
     filterParams?: AssociationFilteringParam,
