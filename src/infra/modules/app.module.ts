@@ -3,24 +3,24 @@ import { EventModule } from './event.module';
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-import AssociationAddress from 'src/domain/aggregates/associationAggregate/address.entity';
-import Association from 'src/domain/aggregates/associationAggregate/association.entity';
 import { AssociationModule } from './association.module';
-import Event from 'src/domain/aggregates/associationAggregate/event.entity';
 import { PhoneNumberModule } from './phone-number.module';
-import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
-import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
-import Member from 'src/domain/aggregates/associationAggregate/member.entity';
 import { ContactModule } from './contact.module';
-import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 import { SocialNetworkModule } from './social-network.module';
-import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
-import OtherFrevoEntityAddress from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 import { OtherFrevoEntityModule } from './other-frevo-entity.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { AuthModule } from './auth.module';
+import AssociationDBSchema from '../schemas/associationAggregate/association.schema';
+import AssociationAddressDBSchema from '../schemas/associationAggregate/address.schema';
+import MemberDBSchema from '../schemas/associationAggregate/member.schema';
+import EventDBSchema from '../schemas/associationAggregate/event.schema';
+import PhoneNumberDBSchema from '../schemas/associationAggregate/phone-number.schema';
+import ContactDBSchema from '../schemas/associationAggregate/contact.schema';
+import SocialNetworkDBSchema from '../schemas/associationAggregate/social-network.schema';
+import OtherFrevoEntityDBSchema from '../schemas/otherFrevoMakersAggregate/other-frevo-entity.schema';
+import OtherFrevoEntityAddressDBSchema from '../schemas/otherFrevoMakersAggregate/other-frevo-entity-address.schema';
 
 dotenv.config();
 
@@ -44,16 +44,16 @@ dotenv.config();
       logging: true,
       autoLoadEntities: false,
       entities: [
-        Association,
-        AssociationAddress,
-        Event,
-        Member,
-        PhoneNumber,
-        Contact,
-        Event,
-        SocialNetwork,
-        OtherFrevoEntity,
-        OtherFrevoEntityAddress,
+        AssociationDBSchema,
+        AssociationAddressDBSchema,
+        EventDBSchema,
+        MemberDBSchema,
+        PhoneNumberDBSchema,
+        ContactDBSchema,
+        EventDBSchema,
+        SocialNetworkDBSchema,
+        OtherFrevoEntityDBSchema,
+        OtherFrevoEntityAddressDBSchema,
       ],
       migrations: ['src/infra/migrations/**/*.ts'],
       subscribers: ['src/infra/subscribers/**/*.ts'],

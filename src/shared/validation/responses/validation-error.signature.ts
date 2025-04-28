@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { ValidationError } from 'class-validator';
 
-class ValidationErrorCopy {
+class ValidationErrorSignature {
   @AutoMap()
   public target?: object;
 
@@ -23,4 +23,4 @@ class ValidationErrorCopy {
   };
 }
 
-export default ValidationErrorCopy;
+export default ValidationErrorSignature;

@@ -1,12 +1,3 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
 import Contact from './contact.entity';
 import {
   IsNotEmpty,
@@ -21,13 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
-@Entity({ name: 'PhoneNumbers' })
 class PhoneNumber extends UserStampedEntity<string> {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
-  public id: string;
-
-  @Column('text')
   @IsNotEmpty({ message: 'Country code is required' })
   @Length(2, 2, { message: 'Country code must contain exactly 2 numbers' })
   @IsNumberString()
@@ -35,7 +20,6 @@ class PhoneNumber extends UserStampedEntity<string> {
   @ApiProperty()
   public countryCode: string;
 
-  @Column('text')
   @IsNotEmpty({ message: 'Area code is required' })
   @Length(2, 2, { message: 'Area code must contain exactly 2 numbers' })
   @IsNumberString()
@@ -43,33 +27,12 @@ class PhoneNumber extends UserStampedEntity<string> {
   @ApiProperty()
   public areaCode: string;
 
-  @Column('text')
   @IsNotEmpty({ message: 'Phone number is required' })
   @Matches(/^[2-5]\d{7}$|^9[7-9]\d{7}$/)
   @AutoMap()
   @ApiProperty()
   public number: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public updatedAt: Date;
-
-  @Column('uuid', { nullable: true })
-  @ApiProperty()
-  public createdBy: string;
-
-  @Column('uuid', { nullable: true })
-  @ApiProperty()
-  public updatedBy: string;
-
-  @ManyToOne(() => Contact, (contact) => contact.phoneNumbers, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
   public contact: Contact;
 
   public sanitizeEntityProperties(): void {
@@ -91,14 +54,6 @@ class PhoneNumber extends UserStampedEntity<string> {
     this.areaCode = this.areaCode
       ? CleanStringBuilder.fromString(this.areaCode).withoutSpaces().build()
       : this.areaCode;
-  }
-
-  public setCreationStamps(userId: string): void {
-    this.createdBy = userId;
-  }
-
-  public setUpdateStamps(userId: string): void {
-    this.updatedBy = userId;
   }
 
   public async isValid(): Promise<boolean> {

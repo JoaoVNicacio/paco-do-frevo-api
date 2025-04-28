@@ -1,12 +1,4 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToOne,
-} from 'typeorm';
-import {
   IsNotEmpty,
   IsOptional,
   IsUUID,
@@ -26,23 +18,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
-@Entity({ name: 'OtherFrevoEntityAddresses' })
 class OtherFrevoEntityAddress
   extends UserStampedEntity<string>
   implements IAddress
 {
-  @PrimaryGeneratedColumn('uuid')
-  @AutoMap()
-  @ApiProperty()
-  public id: string;
-
-  @Column('text')
   @IsNotEmpty({ message: 'Address site is required' })
   @AutoMap()
   @ApiProperty()
   public addressSite: string;
 
-  @Column({ type: 'text' })
   @IsNotEmpty({ message: 'Number is required' })
   @Validate(
     (value: string, args) => {
@@ -55,25 +39,21 @@ class OtherFrevoEntityAddress
   @ApiProperty()
   public number: string;
 
-  @Column('text', { nullable: true })
   @IsOptional()
   @AutoMap()
   @ApiProperty()
   public complement: string | null;
 
-  @Column('text')
   @IsNotEmpty({ message: 'District is required' })
   @AutoMap()
   @ApiProperty()
   public district: string;
 
-  @Column('text')
   @IsNotEmpty({ message: 'City is required' })
   @AutoMap()
   @ApiProperty()
   public city: string;
 
-  @Column('text')
   @IsNotEmpty({ message: 'State is required' })
   @Length(2)
   @IsIn(AddressConstants.brazilianStates)
@@ -81,7 +61,6 @@ class OtherFrevoEntityAddress
   @ApiProperty()
   public state: string;
 
-  @Column('text')
   @IsNotEmpty({ message: 'Country is required' })
   @Length(2)
   @Equals('BR')
@@ -89,30 +68,18 @@ class OtherFrevoEntityAddress
   @ApiProperty()
   public country: string;
 
-  @Column('text')
   @IsPostalCode('BR', { message: 'Invalid ZIP code format' })
   @AutoMap()
   @ApiProperty()
   public zipCode: string;
 
-  @OneToOne(() => OtherFrevoEntity, (address) => address.address)
   public otherFrevoEntity: OtherFrevoEntity;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public updatedAt: Date;
-
-  @Column('uuid', { nullable: true })
   @IsUUID()
   @IsOptional()
   @ApiProperty()
   public createdBy: string;
 
-  @Column('uuid', { nullable: true })
   @IsUUID()
   @IsOptional()
   @ApiProperty()

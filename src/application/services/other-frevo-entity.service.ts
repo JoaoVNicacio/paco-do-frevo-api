@@ -64,7 +64,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
     }
 
     const [insertResponse] = await Promise.all([
-      this._otherFrevoEntityRepository.createResume(otherFrevoEntity),
+      this._otherFrevoEntityRepository.createOtherFrevoEntity(otherFrevoEntity),
       this._cacheManager.del(`other-frevo-entities`),
     ]);
 

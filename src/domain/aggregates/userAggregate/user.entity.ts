@@ -1,5 +1,3 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { v4 as generateUUIDv4 } from 'uuid';
 import EUserRoles from './enums/euser-roles';
 import { AutoMap } from '@automapper/classes';
 import {
@@ -12,41 +10,21 @@ import {
 import IEntity from 'src/core/entities/ientity.base';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
-@Schema({
-  toJSON: {
-    getters: true,
-    virtuals: true,
-    transform: function (doc, ret) {
-      delete ret._password;
-      return ret;
-    },
-  },
-  timestamps: true,
-})
 class User implements IEntity<string> {
-  @Prop({
-    type: String,
-    unique: true,
-    default: () => generateUUIDv4(),
-  })
   public id: string;
 
-  @Prop({ required: true })
   @IsNotEmpty()
   @AutoMap()
   public firstName: string;
 
-  @Prop({ required: true })
   @IsNotEmpty()
   @AutoMap()
   public lastName: string;
 
-  @Prop({ type: String, enum: EUserRoles, default: EUserRoles.DataVisualizer })
   @IsNotEmpty()
   @AutoMap()
   public role: EUserRoles;
 
-  @Prop({ required: true, unique: true })
   @IsEmail({}, { message: 'Invalid email format' })
   @AutoMap()
   public email: string;
@@ -55,19 +33,10 @@ class User implements IEntity<string> {
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   private _password: string;
 
-  @Prop({ required: true })
   public passwordHash: string;
 
-  @Prop({
-    required: false,
-    default: () => Date.now(),
-  })
   public createdAt: Date;
 
-  @Prop({
-    required: false,
-    default: () => Date.now(),
-  })
   public updatedAt: Date;
 
   /**
@@ -121,7 +90,5 @@ class User implements IEntity<string> {
     return await validate(this);
   }
 }
-
-export const UserSchema = SchemaFactory.createForClass(User);
 
 export default User;

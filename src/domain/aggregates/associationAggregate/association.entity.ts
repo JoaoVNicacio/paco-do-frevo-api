@@ -1,13 +1,3 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  JoinColumn,
-  OneToOne,
-  OneToMany,
-} from 'typeorm';
 import AssociationAddress from './address.entity';
 import Event from './event.entity';
 import Member from './member.entity';
@@ -33,29 +23,21 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
-/** This class represents an Carnival Association with its various properties, relationships and behaviour. */
-@Entity({ name: 'Associations' })
+/** This class represents a Carnival Association with its various properties, relationships and behaviour. */
 class Association extends UserStampedEntity<string> {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
-  public id: string;
-
   @IsNotEmpty()
   @IsString()
-  @Column('text')
   @AutoMap()
   @ApiProperty()
   public name: string;
 
   @Type(() => Date)
-  @Column('timestamp')
   @AutoMap()
   @ApiProperty()
   public foundationDate: Date;
 
   @IsArray()
   @IsString({ each: true })
-  @Column('simple-array', { nullable: true })
   @AutoMap()
   @ApiProperty({ type: [String] })
   public colors: Array<string>;
@@ -63,117 +45,84 @@ class Association extends UserStampedEntity<string> {
   @IsNotEmpty()
   @IsString()
   @IsIn(AssociationConstants.associationTypes)
-  @Column('text')
   @AutoMap()
   @ApiProperty()
   public associationType: string;
 
   @IsInt()
-  @Column('int')
   @AutoMap()
   @ApiProperty()
   public activeMembers: number;
 
   @IsBoolean()
-  @Column('boolean')
   @AutoMap()
   @ApiProperty()
   public isSharedWithAResidence: boolean;
 
   @IsBoolean()
-  @Column('boolean')
   @AutoMap()
   @ApiProperty()
   public hasOwnedHeadquarters: boolean;
 
   @IsBoolean()
-  @Column('boolean')
   @AutoMap()
   @ApiProperty()
   public isLegalEntity: boolean;
 
   @IsOptional()
   @IsString()
-  @Column({ nullable: true, default: null })
   @ValidCnpjNumber({ message: 'The given CNPJ is invalid' })
   @AutoMap()
   @ApiPropertyOptional()
-  private cnpj: string | null | undefined;
+  protected cnpj: string | null | undefined;
 
   @IsBoolean()
-  @Column('boolean')
   @AutoMap()
   @ApiProperty()
   public canIssueOwnReceipts: boolean;
 
   @IsNotEmpty()
   @IsString()
-  @Column('text')
   @AutoMap()
   @ApiProperty()
   public associationHistoryNotes: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
   @ApiProperty()
   public createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
   @ApiProperty()
   public updatedAt: Date;
 
-  @Column('uuid', { nullable: true })
   @ApiProperty()
   public createdBy: string;
 
-  @Column('uuid', { nullable: true })
   @ApiProperty()
   public updatedBy: string;
 
-  @OneToOne(() => AssociationAddress, (address) => address.association, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
   @ValidateNested()
   @AutoMap()
   @ApiPropertyOptional({ type: AssociationAddress })
   @IsOptional()
   public address: AssociationAddress | null | undefined;
 
-  @OneToMany(() => SocialNetwork, (social) => social.association, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [SocialNetwork] })
   @IsOptional()
   public socialNetworks: Array<SocialNetwork>;
 
-  @OneToMany(() => Event, (event) => event.association, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Event] })
   @IsOptional()
   public events: Array<Event>;
 
-  @OneToMany(() => Member, (member) => member.association, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Member] })
   @IsOptional()
   public members: Array<Member>;
 
-  @OneToMany(() => Contact, (contact) => contact.association, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
   @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Contact] })
@@ -245,7 +194,7 @@ class Association extends UserStampedEntity<string> {
     this.events.forEach((event) => event.sanitizeEntityProperties());
   }
 
-  public setCreationStamps(userId: string): void {
+  public override setCreationStamps(userId: string): void {
     this.createdBy = userId;
     this.address?.setCreationStamps(userId);
 

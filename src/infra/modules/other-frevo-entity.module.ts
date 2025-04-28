@@ -1,8 +1,6 @@
 import OtherFrevoEntityService from 'src/application/services/other-frevo-entity.service';
 import OtherFrevoEntityRepository from '../repositories/other-frevo-entity.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
-import OtherFrevoEntityAddress from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity-address.entity';
 import { ConsoleLogger, Module } from '@nestjs/common';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import {
@@ -15,10 +13,15 @@ import IOtherFrevoEntityService from 'src/application/contracts/services/iother-
 import mapper from 'src/application/mapping/mapper';
 import OtherFrevoEntityController from 'src/api/controllers/other-frevo-entity.controller';
 import NormalizeZipCodePipe from 'src/application/pipes/normalize-zipcode.pipe';
+import OtherFrevoEntityDBSchema from '../schemas/otherFrevoMakersAggregate/other-frevo-entity.schema';
+import OtherFrevoEntityAddressDBSchema from '../schemas/otherFrevoMakersAggregate/other-frevo-entity-address.schema';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OtherFrevoEntity, OtherFrevoEntityAddress]),
+    TypeOrmModule.forFeature([
+      OtherFrevoEntityDBSchema,
+      OtherFrevoEntityAddressDBSchema,
+    ]),
   ],
   controllers: [OtherFrevoEntityController],
   providers: [

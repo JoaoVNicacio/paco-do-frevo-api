@@ -1,5 +1,7 @@
 import { ValidationError } from 'class-validator';
 import IEntity from './ientity.base';
+import { ApiProperty } from '@nestjs/swagger';
+import { AutoMap } from '@automapper/classes';
 
 /**
  * The `IUserStampedEntity` interface extends the `IEntity` interface with additional properties
@@ -25,11 +27,25 @@ export interface IUserStampedEntity<TId> extends IEntity<TId> {
 export abstract class UserStampedEntity<TId>
   implements IUserStampedEntity<TId>
 {
-  public abstract id: TId;
-  public abstract createdBy: string;
-  public abstract updatedBy: string;
-  public abstract createdAt: Date;
-  public abstract updatedAt: Date;
+  @ApiProperty()
+  @AutoMap()
+  public id: TId;
+
+  @ApiProperty()
+  @AutoMap()
+  public createdBy: string;
+
+  @ApiProperty()
+  @AutoMap()
+  public updatedBy: string;
+
+  @ApiProperty()
+  @AutoMap()
+  public createdAt: Date;
+
+  @ApiProperty()
+  @AutoMap()
+  public updatedAt: Date;
 
   public abstract isValid(): boolean | Promise<boolean>;
 

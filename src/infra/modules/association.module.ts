@@ -1,18 +1,11 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import Association from 'src/domain/aggregates/associationAggregate/association.entity';
-import AssociationAddress from 'src/domain/aggregates/associationAggregate/address.entity';
 import AssociationService from 'src/application/services/association.service';
 import AssociationRepository from '../repositories/association.repository';
-import Event from 'src/domain/aggregates/associationAggregate/event.entity';
-import Member from 'src/domain/aggregates/associationAggregate/member.entity';
-import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
-import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 import { EventModule } from './event.module';
 import { PhoneNumberModule } from './phone-number.module';
 import { ContactModule } from './contact.module';
 import { SocialNetworkModule } from './social-network.module';
-import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import {
   CacheManager,
@@ -26,6 +19,13 @@ import AssociationController from 'src/api/controllers/association.controller';
 import NormalizeZipCodePipe from 'src/application/pipes/normalize-zipcode.pipe';
 import PagingParamsPipe from 'src/application/pipes/paging-results.pipe';
 import AssociationFilteringParamPipe from 'src/application/pipes/association.filtering-param.pipe';
+import AssociationDBSchema from '../schemas/associationAggregate/association.schema';
+import AssociationAddressDBSchema from '../schemas/associationAggregate/address.schema';
+import PhoneNumberDBSchema from '../schemas/associationAggregate/phone-number.schema';
+import EventDBSchema from '../schemas/associationAggregate/event.schema';
+import MemberDBSchema from '../schemas/associationAggregate/member.schema';
+import ContactDBSchema from '../schemas/associationAggregate/contact.schema';
+import SocialNetworkDBSchema from '../schemas/associationAggregate/social-network.schema';
 
 @Module({
   imports: [
@@ -34,14 +34,14 @@ import AssociationFilteringParamPipe from 'src/application/pipes/association.fil
     ContactModule,
     SocialNetworkModule,
     TypeOrmModule.forFeature([
-      Association,
-      AssociationAddress,
-      Event,
-      Member,
-      PhoneNumber,
-      Contact,
-      Event,
-      SocialNetwork,
+      AssociationDBSchema,
+      AssociationAddressDBSchema,
+      EventDBSchema,
+      MemberDBSchema,
+      PhoneNumberDBSchema,
+      ContactDBSchema,
+      EventDBSchema,
+      SocialNetworkDBSchema,
     ]),
   ],
   controllers: [AssociationController],

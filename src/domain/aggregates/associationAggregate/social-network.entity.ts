@@ -1,12 +1,3 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  JoinColumn,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
 import Association from './association.entity';
 import {
   IsIn,
@@ -21,20 +12,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
 
-@Entity({ name: 'SocialNetworks' })
 class SocialNetwork extends UserStampedEntity<string> {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
-  public id: string;
-
-  @Column('text')
   @IsNotEmpty({ message: 'Social network type is required' })
   @IsIn(SocialNetworkConstants.socialNetworkTypes)
   @AutoMap()
   @ApiProperty()
   public socialNetworkType: string;
 
-  @Column('text')
   @IsNotEmpty({ message: 'URL is required' })
   @Matches(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/[\w .-]*)*\/?$/, {
     message: 'Invalid URL format',
@@ -43,26 +27,12 @@ class SocialNetwork extends UserStampedEntity<string> {
   @ApiProperty()
   public url: string;
 
-  @Column('uuid', { nullable: true })
   @ApiProperty()
   public createdBy: string;
 
-  @Column('uuid', { nullable: true })
   @ApiProperty()
   public updatedBy: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public updatedAt: Date;
-
-  @ManyToOne(() => Association, (association) => association.socialNetworks, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
   public association: Association;
 
   public sanitizeEntityProperties(): void {
@@ -74,14 +44,6 @@ class SocialNetwork extends UserStampedEntity<string> {
       : this.socialNetworkType;
 
     this.url = this.url?.trim();
-  }
-
-  public setCreationStamps(userId: string) {
-    this.createdBy = userId;
-  }
-
-  public setUpdateStamps(userId: string) {
-    this.updatedBy = userId;
   }
 
   public async isValid(): Promise<boolean> {
