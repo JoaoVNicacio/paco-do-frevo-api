@@ -1,5 +1,4 @@
 import { AutoMap } from '@automapper/classes';
-import { ValidationError } from 'class-validator';
 
 class ValidationErrorSignature {
   @AutoMap()
@@ -15,7 +14,7 @@ class ValidationErrorSignature {
   public constraints?: { [type: string]: string };
 
   @AutoMap()
-  public children?: ValidationError[];
+  public children?: ValidationErrorSignature[];
 
   @AutoMap()
   public contexts?: {
