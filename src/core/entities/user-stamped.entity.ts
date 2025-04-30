@@ -1,7 +1,7 @@
-import { ValidationError } from 'class-validator';
 import IEntity from './ientity.base';
 import { ApiProperty } from '@nestjs/swagger';
 import { AutoMap } from '@automapper/classes';
+import ValidationErrorSignature from '../../shared/validation/responses/validation-error.signature';
 
 /**
  * The `IUserStampedEntity` interface extends the `IEntity` interface with additional properties
@@ -49,9 +49,9 @@ export abstract class UserStampedEntity<TId>
 
   public abstract isValid(): boolean | Promise<boolean>;
 
-  public abstract validateCreation():
-    | ValidationError[]
-    | Promise<ValidationError[]>;
+  public abstract validateEntity():
+    | Array<ValidationErrorSignature>
+    | Promise<Array<ValidationErrorSignature>>;
 
   public setCreationStamps(userId: string): void {
     this.createdBy = userId;

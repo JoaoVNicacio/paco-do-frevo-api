@@ -13,25 +13,25 @@ import AssociationDBSchema from './association.schema';
 @Entity({ name: 'SocialNetworks' })
 class SocialNetworkDBSchema extends SocialNetwork {
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  public override id: string;
 
   @Column('text')
-  public socialNetworkType: string;
+  public override socialNetworkType: string;
 
   @Column('text')
-  public url: string;
+  public override url: string;
 
   @Column('uuid', { nullable: true })
-  public createdBy: string;
+  public override createdBy: string;
 
   @Column('uuid', { nullable: true })
-  public updatedBy: string;
+  public override updatedBy: string;
 
   @CreateDateColumn({ type: 'timestamp' })
-  public createdAt: Date;
+  public override createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  public updatedAt: Date;
+  public override updatedAt: Date;
 
   @ManyToOne(
     () => AssociationDBSchema,
@@ -41,7 +41,7 @@ class SocialNetworkDBSchema extends SocialNetwork {
     },
   )
   @JoinColumn()
-  public association: AssociationDBSchema;
+  public override association: AssociationDBSchema;
 
   public static fromDomainEntity(entity: SocialNetwork): SocialNetworkDBSchema {
     return entity as SocialNetworkDBSchema;

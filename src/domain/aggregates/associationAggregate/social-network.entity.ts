@@ -1,39 +1,40 @@
 import Association from './association.entity';
-import {
-  IsIn,
-  IsNotEmpty,
-  Matches,
-  ValidationError,
-  validate,
-} from 'class-validator';
-import SocialNetworkConstants from './constants/social-network.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
 class SocialNetwork extends UserStampedEntity<string> {
-  @IsNotEmpty({ message: 'Social network type is required' })
-  @IsIn(SocialNetworkConstants.socialNetworkTypes)
   @AutoMap()
   @ApiProperty()
   public socialNetworkType: string;
 
-  @IsNotEmpty({ message: 'URL is required' })
-  @Matches(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/[\w .-]*)*\/?$/, {
-    message: 'Invalid URL format',
-  })
   @AutoMap()
   @ApiProperty()
   public url: string;
 
-  @ApiProperty()
-  public createdBy: string;
-
-  @ApiProperty()
-  public updatedBy: string;
-
   public association: Association;
+
+  public validationDelegate:
+    | ValidationDelegate<SocialNetwork>
+    | null
+    | undefined = null;
+
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
+
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
+  }
 
   public sanitizeEntityProperties(): void {
     this.socialNetworkType = this.socialNetworkType
@@ -44,16 +45,6 @@ class SocialNetwork extends UserStampedEntity<string> {
       : this.socialNetworkType;
 
     this.url = this.url?.trim();
-  }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
   }
 }
 

@@ -1,41 +1,28 @@
-import {
-  IsNotEmpty,
-  IsInt,
-  IsBoolean,
-  validate,
-  ValidationError,
-  IsIn,
-} from 'class-validator';
 import Association from './association.entity';
-import MemberConstants from './constants/member.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
 class Member extends UserStampedEntity<string> {
-  @IsNotEmpty({ message: 'Name is required' })
   @AutoMap()
   @ApiProperty()
   public name: string;
 
-  @IsNotEmpty({ message: 'Surname is required' })
   @AutoMap()
   @ApiProperty()
   public surname: string;
 
-  @IsNotEmpty({ message: 'Role is required' })
-  @IsIn(MemberConstants.memberTypes)
   @AutoMap()
   @ApiProperty()
   public role: string;
 
-  @IsInt({ message: 'Actuation time must be an integer' })
   @AutoMap()
   @ApiProperty()
   public actuationTimeInMonths: number;
 
-  @IsBoolean({ message: 'isFrevoTheMainRevenueIncome must be a boolean' })
   @AutoMap()
   @ApiProperty()
   public isFrevoTheMainRevenueIncome: boolean;
@@ -44,6 +31,23 @@ class Member extends UserStampedEntity<string> {
 
   @ApiProperty()
   public associationId: string;
+
+  public validationDelegate: ValidationDelegate<Member> | null | undefined =
+    null;
+
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
+
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
+  }
 
   public sanitizeEntityProperties(): void {
     this.name = this.name
@@ -61,16 +65,6 @@ class Member extends UserStampedEntity<string> {
           .toInitCap(true)
           .build()
       : this.surname;
-  }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
   }
 }
 

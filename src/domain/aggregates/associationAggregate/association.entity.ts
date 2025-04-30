@@ -3,130 +3,77 @@ import Event from './event.entity';
 import Member from './member.entity';
 import SocialNetwork from './social-network.entity';
 import Contact from './contact.entity';
-import {
-  IsArray,
-  IsBoolean,
-  IsIn,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateNested,
-  ValidationError,
-  validate,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-import { ValidCnpjNumber } from 'src/domain/validators/cnpj-number.validator';
-import AssociationConstants from './constants/association.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
 /** This class represents a Carnival Association with its various properties, relationships and behaviour. */
 class Association extends UserStampedEntity<string> {
-  @IsNotEmpty()
-  @IsString()
   @AutoMap()
   @ApiProperty()
   public name: string;
 
-  @Type(() => Date)
   @AutoMap()
   @ApiProperty()
   public foundationDate: Date;
 
-  @IsArray()
-  @IsString({ each: true })
   @AutoMap()
   @ApiProperty({ type: [String] })
   public colors: Array<string>;
 
-  @IsNotEmpty()
-  @IsString()
-  @IsIn(AssociationConstants.associationTypes)
   @AutoMap()
   @ApiProperty()
   public associationType: string;
 
-  @IsInt()
   @AutoMap()
   @ApiProperty()
   public activeMembers: number;
 
-  @IsBoolean()
   @AutoMap()
   @ApiProperty()
   public isSharedWithAResidence: boolean;
 
-  @IsBoolean()
   @AutoMap()
   @ApiProperty()
   public hasOwnedHeadquarters: boolean;
 
-  @IsBoolean()
   @AutoMap()
   @ApiProperty()
   public isLegalEntity: boolean;
 
-  @IsOptional()
-  @IsString()
-  @ValidCnpjNumber({ message: 'The given CNPJ is invalid' })
   @AutoMap()
   @ApiPropertyOptional()
   protected cnpj: string | null | undefined;
 
-  @IsBoolean()
   @AutoMap()
   @ApiProperty()
   public canIssueOwnReceipts: boolean;
 
-  @IsNotEmpty()
-  @IsString()
   @AutoMap()
   @ApiProperty()
   public associationHistoryNotes: string;
 
-  @ApiProperty()
-  public createdAt: Date;
-
-  @ApiProperty()
-  public updatedAt: Date;
-
-  @ApiProperty()
-  public createdBy: string;
-
-  @ApiProperty()
-  public updatedBy: string;
-
-  @ValidateNested()
   @AutoMap()
   @ApiPropertyOptional({ type: AssociationAddress })
-  @IsOptional()
   public address: AssociationAddress | null | undefined;
 
-  @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [SocialNetwork] })
-  @IsOptional()
   public socialNetworks: Array<SocialNetwork>;
 
-  @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Event] })
-  @IsOptional()
   public events: Array<Event>;
 
-  @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Member] })
-  @IsOptional()
   public members: Array<Member>;
 
-  @ValidateNested()
   @AutoMap()
   @ApiProperty({ type: [Contact] })
-  @IsOptional()
   public contacts: Array<Contact>;
 
   public get associationCnpj(): string {
@@ -135,6 +82,25 @@ class Association extends UserStampedEntity<string> {
 
   public set associationCnpj(value: string) {
     this.cnpj = value;
+  }
+
+  public validationDelegate:
+    | ValidationDelegate<Association>
+    | null
+    | undefined = null;
+
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
+
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
   }
 
   public sanitizeEntityProperties(): void {
@@ -203,20 +169,6 @@ class Association extends UserStampedEntity<string> {
     this.contacts.forEach((contact) => contact.setCreationStamps(userId));
 
     this.events.forEach((event) => event.setCreationStamps(userId));
-  }
-
-  public setUpdateStamps(userId: string): void {
-    this.updatedBy = userId;
-  }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
   }
 }
 

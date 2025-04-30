@@ -1,36 +1,25 @@
 import EUserRoles from './enums/euser-roles';
 import { AutoMap } from '@automapper/classes';
-import {
-  IsEmail,
-  IsNotEmpty,
-  Matches,
-  ValidationError,
-  validate,
-} from 'class-validator';
 import IEntity from 'src/core/entities/ientity.base';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
 class User implements IEntity<string> {
   public id: string;
 
-  @IsNotEmpty()
   @AutoMap()
   public firstName: string;
 
-  @IsNotEmpty()
   @AutoMap()
   public lastName: string;
 
-  @IsNotEmpty()
   @AutoMap()
   public role: EUserRoles;
 
-  @IsEmail({}, { message: 'Invalid email format' })
   @AutoMap()
   public email: string;
 
-  @IsNotEmpty()
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   private _password: string;
 
   public passwordHash: string;
@@ -62,6 +51,26 @@ class User implements IEntity<string> {
     this._password = value;
   }
 
+  public get password() {
+    return this._password;
+  }
+
+  public validationDelegate: ValidationDelegate<User> | null | undefined = null;
+
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
+
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
+  }
+
   public sanitizeEntityProperties(): void {
     this.firstName = this.firstName
       ? CleanStringBuilder.fromString(this.firstName)
@@ -78,16 +87,6 @@ class User implements IEntity<string> {
           .toInitCap(true)
           .build()
       : this.lastName;
-  }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
   }
 }
 

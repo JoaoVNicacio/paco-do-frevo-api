@@ -14,22 +14,19 @@ import { Cache } from 'cache-manager';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import ISocialNetworkService from '../contracts/services/isocial-network.service';
+import SocialNetworkValidator from '../validation/social-network.validator';
 
 @Injectable()
 class SocialNetworkService implements ISocialNetworkService {
   constructor(
     @Inject(ISocialNetworkRepository)
     private readonly _socialNetworkRepository: ISocialNetworkRepository,
-
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
-
     @Inject(Mapper)
     private readonly _mapper: IMapper,
-
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
-
     @Inject(Logger)
     private readonly _logger: ILogger,
   ) {}
@@ -64,6 +61,9 @@ class SocialNetworkService implements ISocialNetworkService {
 
     socialNetwork.sanitizeEntityProperties();
 
+    socialNetwork.validationDelegate =
+      new SocialNetworkValidator().validate.bind(new SocialNetworkValidator());
+
     const isValid = await socialNetwork.isValid();
 
     if (!isValid) {
@@ -73,7 +73,7 @@ class SocialNetworkService implements ISocialNetworkService {
 
       return new ValidationResponse(
         socialNetwork,
-        await socialNetwork.validateCreation(),
+        await socialNetwork.validateEntity(),
       );
     }
 
@@ -86,7 +86,7 @@ class SocialNetworkService implements ISocialNetworkService {
 
     return new ValidationResponse(
       insertResponse,
-      await socialNetwork.validateCreation(),
+      await socialNetwork.validateEntity(),
     );
   }
 
@@ -106,6 +106,9 @@ class SocialNetworkService implements ISocialNetworkService {
 
     socialNetwork.sanitizeEntityProperties();
 
+    socialNetwork.validationDelegate =
+      new SocialNetworkValidator().validate.bind(new SocialNetworkValidator());
+
     const isValid = await socialNetwork.isValid();
 
     if (!isValid) {
@@ -115,7 +118,7 @@ class SocialNetworkService implements ISocialNetworkService {
 
       return new ValidationResponse(
         socialNetwork,
-        await socialNetwork.validateCreation(),
+        await socialNetwork.validateEntity(),
       );
     }
 
@@ -132,7 +135,7 @@ class SocialNetworkService implements ISocialNetworkService {
 
     return new ValidationResponse(
       updateResponse,
-      await socialNetwork.validateCreation(),
+      await socialNetwork.validateEntity(),
     );
   }
 

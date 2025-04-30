@@ -14,6 +14,7 @@ import { Cache } from 'cache-manager';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IEventService from '../contracts/services/ievent.service';
+import EventValidator from '../validation/event.validator';
 
 @Injectable()
 class EventService implements IEventService {
@@ -60,6 +61,10 @@ class EventService implements IEventService {
 
     event.sanitizeEntityProperties();
 
+    event.validationDelegate = new EventValidator().validate.bind(
+      new EventValidator(),
+    );
+
     const isValid = await event.isValid();
 
     if (!isValid) {
@@ -67,17 +72,14 @@ class EventService implements IEventService {
         `<⛔️> ➤ The Event for the association: ${associationId} didn't pass validation.`,
       );
 
-      return new ValidationResponse(event, await event.validateCreation());
+      return new ValidationResponse(event, await event.validateEntity());
     }
 
     const insertResponse = await this._eventRepository.createEvent(event);
 
     this._logger.log(`<💾> ➤ Created the Event with id: ${insertResponse.id}`);
 
-    return new ValidationResponse(
-      insertResponse,
-      await event.validateCreation(),
-    );
+    return new ValidationResponse(insertResponse, await event.validateEntity());
   }
 
   public async getById(id: string): Promise<Event> {
@@ -92,12 +94,16 @@ class EventService implements IEventService {
 
     event.sanitizeEntityProperties();
 
+    event.validationDelegate = new EventValidator().validate.bind(
+      new EventValidator(),
+    );
+
     if (!(await event.isValid())) {
       this._logger.log(
         `<⛔️> ➤ The update for the Event ${id} didn't pass validation.`,
       );
 
-      return new ValidationResponse(event, await event.validateCreation());
+      return new ValidationResponse(event, await event.validateEntity());
     }
 
     const updateResponse = await this._eventRepository.updateEvent(id, event);
@@ -110,10 +116,7 @@ class EventService implements IEventService {
       `<🗑️> ➤ Deleted event with id: ${id} from cache entries due to update.`,
     );
 
-    return new ValidationResponse(
-      updateResponse,
-      await event.validateCreation(),
-    );
+    return new ValidationResponse(updateResponse, await event.validateEntity());
   }
 
   public async deleteEntryById(id: string): Promise<void> {

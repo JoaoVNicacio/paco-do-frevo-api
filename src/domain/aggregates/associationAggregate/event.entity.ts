@@ -1,30 +1,20 @@
-import {
-  IsNotEmpty,
-  IsInt,
-  Min,
-  ValidationError,
-  validate,
-} from 'class-validator';
 import Association from './association.entity';
-import { Type } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
 class Event extends UserStampedEntity<string> {
-  @IsNotEmpty({ message: 'Event type is required' })
   @AutoMap()
   @ApiProperty()
   public eventType: string;
 
-  @Type(() => Date)
   @AutoMap()
   @ApiProperty()
   public dateOfAccomplishment: Date;
 
-  @IsInt({ message: 'Participants amount must be an integer' })
-  @Min(0)
   @AutoMap()
   @ApiProperty()
   public participantsAmount: number;
@@ -34,17 +24,22 @@ class Event extends UserStampedEntity<string> {
   @ApiProperty()
   public associationId: string;
 
-  @ApiProperty()
-  public createdAt: Date;
+  public validationDelegate: ValidationDelegate<Event> | null | undefined =
+    null;
 
-  @ApiProperty()
-  public updatedAt: Date;
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
 
-  @ApiProperty()
-  public createdBy: string;
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
 
-  @ApiProperty()
-  public updatedBy: string;
+    return [];
+  }
 
   public sanitizeEntityProperties(): void {
     this.eventType = this.eventType
@@ -53,16 +48,6 @@ class Event extends UserStampedEntity<string> {
           .capitalizeFirstLetter()
           .build()
       : this.eventType;
-  }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
   }
 }
 
