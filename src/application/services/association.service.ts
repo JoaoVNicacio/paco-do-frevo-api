@@ -17,22 +17,19 @@ import NormalizeZipCodePipe from '../pipes/normalize-zipcode.pipe';
 import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
 import SimplifiedAssociationDTO from '../dtos/associationDtos/simplified-association.dto';
 import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
+import AssociationValidator from '../validation/association.validator';
 
 @Injectable()
 class AssociationService implements IAssociationService {
   constructor(
     @Inject(IAssociationRepository)
     private readonly _associationRepository: IAssociationRepository,
-
     @Inject(Mapper)
     private readonly _mapper: IMapper,
-
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
-
     @Inject(Logger)
     private readonly _logger: ILogger,
-
     private readonly _normalizeZipCodePipe: NormalizeZipCodePipe,
   ) {}
 
@@ -55,6 +52,10 @@ class AssociationService implements IAssociationService {
     association.sanitizeEntityProperties();
     association.setCreationStamps(userId);
 
+    association.validationDelegate = new AssociationValidator().validate.bind(
+      new AssociationValidator(),
+    );
+
     const isValid = await association.isValid();
 
     if (!isValid) {
@@ -64,7 +65,7 @@ class AssociationService implements IAssociationService {
 
       return new ValidationResponse(
         association,
-        await association.validateCreation(),
+        await association.validateEntity(),
       );
     }
 
@@ -83,7 +84,7 @@ class AssociationService implements IAssociationService {
 
     const response = new ValidationResponse(
       insertResponse,
-      await association.validateCreation(),
+      await association.validateEntity(),
     );
 
     if (response.isValid) {
@@ -148,6 +149,10 @@ class AssociationService implements IAssociationService {
 
     association.sanitizeEntityProperties();
 
+    association.validationDelegate = new AssociationValidator().validate.bind(
+      new AssociationValidator(),
+    );
+
     const isValid = await association.isValid();
 
     if (!isValid) {
@@ -157,7 +162,7 @@ class AssociationService implements IAssociationService {
 
       return new ValidationResponse(
         association,
-        await association.validateCreation(),
+        await association.validateEntity(),
       );
     }
 
@@ -177,7 +182,7 @@ class AssociationService implements IAssociationService {
 
     const response = new ValidationResponse(
       updateResponse,
-      await association.validateCreation(),
+      await association.validateEntity(),
     );
 
     return response;

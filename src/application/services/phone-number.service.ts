@@ -14,6 +14,7 @@ import { Cache } from 'cache-manager';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IPhoneNumberService from '../contracts/services/iphone-number.service';
+import PhoneNumberValidator from '../validation/phone-number.validator';
 
 @Injectable()
 class PhoneNumberService implements IPhoneNumberService {
@@ -63,6 +64,10 @@ class PhoneNumberService implements IPhoneNumberService {
 
     phoneNumber.sanitizeEntityProperties();
 
+    phoneNumber.validationDelegate = new PhoneNumberValidator().validate.bind(
+      new PhoneNumberValidator(),
+    );
+
     const isValid = await phoneNumber.isValid();
 
     if (!isValid) {
@@ -72,7 +77,7 @@ class PhoneNumberService implements IPhoneNumberService {
 
       return new ValidationResponse(
         phoneNumber,
-        await phoneNumber.validateCreation(),
+        await phoneNumber.validateEntity(),
       );
     }
 
@@ -85,7 +90,7 @@ class PhoneNumberService implements IPhoneNumberService {
 
     return new ValidationResponse(
       insertResponse,
-      await phoneNumber.validateCreation(),
+      await phoneNumber.validateEntity(),
     );
   }
 
@@ -105,6 +110,10 @@ class PhoneNumberService implements IPhoneNumberService {
 
     phoneNumber.sanitizeEntityProperties();
 
+    phoneNumber.validationDelegate = new PhoneNumberValidator().validate.bind(
+      new PhoneNumberValidator(),
+    );
+
     const isValid = await phoneNumber.isValid();
 
     if (!isValid) {
@@ -114,7 +123,7 @@ class PhoneNumberService implements IPhoneNumberService {
 
       return new ValidationResponse(
         phoneNumber,
-        await phoneNumber.validateCreation(),
+        await phoneNumber.validateEntity(),
       );
     }
 
@@ -131,7 +140,7 @@ class PhoneNumberService implements IPhoneNumberService {
 
     return new ValidationResponse(
       updateResponse,
-      await phoneNumber.validateCreation(),
+      await phoneNumber.validateEntity(),
     );
   }
 

@@ -1,11 +1,11 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
-import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/validation-error-signature.dto';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
 function generateValidationResponseProfile(mapper: Mapper) {
   createMap(
     mapper,
-    ValidationErrorCopy,
+    ValidationErrorSignature,
     ValidationErrorDTO,
     forMember(
       (dest) => dest.constraints,
@@ -14,7 +14,11 @@ function generateValidationResponseProfile(mapper: Mapper) {
     forMember(
       (dest) => dest.children,
       mapFrom((src) =>
-        mapper.mapArray(src.children, ValidationErrorCopy, ValidationErrorDTO),
+        mapper.mapArray(
+          src.children,
+          ValidationErrorSignature,
+          ValidationErrorDTO,
+        ),
       ),
     ),
     forMember(
@@ -26,7 +30,7 @@ function generateValidationResponseProfile(mapper: Mapper) {
   createMap(
     mapper,
     ValidationErrorDTO,
-    ValidationErrorCopy,
+    ValidationErrorSignature,
     forMember(
       (dest) => dest.constraints,
       mapFrom((src) => src.constraints),

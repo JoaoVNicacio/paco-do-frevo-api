@@ -1,76 +1,44 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
 import Contact from './contact.entity';
-import {
-  IsNotEmpty,
-  IsNumberString,
-  Length,
-  Matches,
-  ValidationError,
-  validate,
-} from 'class-validator';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
-@Entity({ name: 'PhoneNumbers' })
 class PhoneNumber extends UserStampedEntity<string> {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
-  public id: string;
-
-  @Column('text')
-  @IsNotEmpty({ message: 'Country code is required' })
-  @Length(2, 2, { message: 'Country code must contain exactly 2 numbers' })
-  @IsNumberString()
   @AutoMap()
   @ApiProperty()
   public countryCode: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'Area code is required' })
-  @Length(2, 2, { message: 'Area code must contain exactly 2 numbers' })
-  @IsNumberString()
   @AutoMap()
   @ApiProperty()
   public areaCode: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'Phone number is required' })
-  @Matches(/^[2-5]\d{7}$|^9[7-9]\d{7}$/)
   @AutoMap()
   @ApiProperty()
   public number: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public updatedAt: Date;
-
-  @Column('uuid', { nullable: true })
-  @ApiProperty()
-  public createdBy: string;
-
-  @Column('uuid', { nullable: true })
-  @ApiProperty()
-  public updatedBy: string;
-
-  @ManyToOne(() => Contact, (contact) => contact.phoneNumbers, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
   public contact: Contact;
+
+  public validationDelegate:
+    | ValidationDelegate<PhoneNumber>
+    | null
+    | undefined = null;
+
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
+
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
+  }
 
   public sanitizeEntityProperties(): void {
     if (this.number) {
@@ -91,24 +59,6 @@ class PhoneNumber extends UserStampedEntity<string> {
     this.areaCode = this.areaCode
       ? CleanStringBuilder.fromString(this.areaCode).withoutSpaces().build()
       : this.areaCode;
-  }
-
-  public setCreationStamps(userId: string): void {
-    this.createdBy = userId;
-  }
-
-  public setUpdateStamps(userId: string): void {
-    this.updatedBy = userId;
-  }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
   }
 }
 

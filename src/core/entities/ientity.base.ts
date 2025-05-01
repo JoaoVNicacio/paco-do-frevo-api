@@ -10,7 +10,7 @@ interface IEntity<TId> {
   createdAt: Date;
   updatedAt: Date;
   isValid(): Promise<boolean> | boolean;
-  validateCreation(): Promise<Array<ValidationError>> | Array<ValidationError>;
+  validateEntity(): Promise<Array<ValidationError>> | Array<ValidationError>;
 }
 
 export default IEntity;

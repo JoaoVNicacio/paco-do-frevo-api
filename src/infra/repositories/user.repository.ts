@@ -3,12 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import User from 'src/domain/aggregates/userAggregate/user.entity';
 import IUserRepository from 'src/domain/repositories/iuser.repository';
+import UserDBSchema from '../schemas/userAggregate/user.schema';
 
 @Injectable()
 class UserRepository implements IUserRepository {
   constructor(
     @InjectModel('User')
-    private readonly _userModel: Model<User>,
+    private readonly _userModel: Model<UserDBSchema>,
   ) {}
 
   public async createUser(user: User): Promise<User> {

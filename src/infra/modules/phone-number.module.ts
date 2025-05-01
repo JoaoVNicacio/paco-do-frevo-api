@@ -1,9 +1,7 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 import PhoneNumberService from 'src/application/services/phone-number.service';
 import PhoneNumberRepository from '../repositories/phone-number.repository';
-import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 import ContactRepository from '../repositories/contact.repository';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
@@ -16,9 +14,11 @@ import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IPhoneNumberService from 'src/application/contracts/services/iphone-number.service';
 import mapper from 'src/application/mapping/mapper';
 import PhoneNumberController from 'src/api/controllers/phone-number.controller';
+import PhoneNumberDBSchema from '../schemas/associationAggregate/phone-number.schema';
+import ContactDBSchema from '../schemas/associationAggregate/contact.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PhoneNumber, Contact])],
+  imports: [TypeOrmModule.forFeature([PhoneNumberDBSchema, ContactDBSchema])],
   controllers: [PhoneNumberController],
   providers: [
     // Services:

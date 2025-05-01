@@ -22,7 +22,7 @@ describe('Association', () => {
       association.associationHistoryNotes = 'Test history';
 
       // Act
-      const errors = await association.validateCreation();
+      const errors = await association.validateEntity();
 
       // Assert
       expect(errors).toHaveLength(0);
@@ -33,7 +33,7 @@ describe('Association', () => {
       // Here we're not setting any required fields intentionally to make the association invalid
 
       // Act
-      const errors = await association.validateCreation();
+      const errors = await association.validateEntity();
 
       // Assert
       expect(errors).not.toHaveLength(0);

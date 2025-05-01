@@ -3,12 +3,13 @@ import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
 import Event from 'src/domain/aggregates/associationAggregate/event.entity';
 import IEventRepository from 'src/domain/repositories/ievent.repository';
 import { Repository as DBAccessor } from 'typeorm';
+import EventDBSchema from '../schemas/associationAggregate/event.schema';
 
 @Injectable()
 class EventRepository implements IEventRepository {
   constructor(
-    @InjectDBAccessor(Event)
-    private readonly _eventDBAccessor: DBAccessor<Event>,
+    @InjectDBAccessor(EventDBSchema)
+    private readonly _eventDBAccessor: DBAccessor<EventDBSchema>,
   ) {}
 
   public async createEvent(event: Event): Promise<Event> {
@@ -26,11 +27,13 @@ class EventRepository implements IEventRepository {
   public async updateEvent(id: string, event: Event): Promise<Event> {
     const existingEvent = await this.findById(id);
 
-    if (!existingEvent) {
+    if (!existingEvent)
       throw new NotFoundException('Número de telefone não encontrado.');
-    }
 
-    this._eventDBAccessor.merge(existingEvent, event);
+    this._eventDBAccessor.merge(
+      EventDBSchema.fromDomainEntity(existingEvent),
+      event,
+    );
 
     return await this._eventDBAccessor.save(existingEvent);
   }
@@ -38,9 +41,8 @@ class EventRepository implements IEventRepository {
   public async deleteEvent(id: string): Promise<void> {
     const result = await this._eventDBAccessor.delete(id);
 
-    if (result.affected === 0) {
+    if (result.affected === 0)
       throw new NotFoundException('Número de telefone não encontrado.');
-    }
   }
 }
 

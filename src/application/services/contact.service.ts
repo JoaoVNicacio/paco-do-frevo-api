@@ -14,6 +14,7 @@ import { Cache } from 'cache-manager';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IContactService from '../contracts/services/icontact.service';
+import ContactValidator from '../validation/contact.validator';
 
 @Injectable()
 class ContactService implements IContactService {
@@ -60,6 +61,10 @@ class ContactService implements IContactService {
 
     contact.association = association;
 
+    contact.validationDelegate = new ContactValidator().validate.bind(
+      new ContactValidator(),
+    );
+
     const isValid = await contact.isValid();
 
     if (!isValid) {
@@ -67,7 +72,7 @@ class ContactService implements IContactService {
         `<⛔️> ➤ The Contact: ${contactDTO.addressTo} didn't pass validation.`,
       );
 
-      return new ValidationResponse(contact, await contact.validateCreation());
+      return new ValidationResponse(contact, await contact.validateEntity());
     }
 
     const insertResponse = await this._contactRepository.createContact(contact);
@@ -78,7 +83,7 @@ class ContactService implements IContactService {
 
     return new ValidationResponse(
       insertResponse,
-      await contact.validateCreation(),
+      await contact.validateEntity(),
     );
   }
 
@@ -94,6 +99,10 @@ class ContactService implements IContactService {
 
     contact.sanitizeEntityProperties();
 
+    contact.validationDelegate = new ContactValidator().validate.bind(
+      new ContactValidator(),
+    );
+
     const isValid = await contact.isValid();
 
     if (!isValid) {
@@ -101,7 +110,7 @@ class ContactService implements IContactService {
         `<⛔️> ➤ The update for the contact ${id} didn't pass validation.`,
       );
 
-      return new ValidationResponse(contact, await contact.validateCreation());
+      return new ValidationResponse(contact, await contact.validateEntity());
     }
 
     const updateResponse = await this._contactRepository.updateContact(
@@ -115,7 +124,7 @@ class ContactService implements IContactService {
 
     return new ValidationResponse(
       updateResponse,
-      await contact.validateCreation(),
+      await contact.validateEntity(),
     );
   }
 

@@ -14,22 +14,19 @@ import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IOtherFrevoEntityService from '../contracts/services/iother-frevo-entity.service';
 import NormalizeZipCodePipe from '../pipes/normalize-zipcode.pipe';
+import OtherFrevoEntityValidator from '../validation/other-frevo-entity.validator';
 
 @Injectable()
 class OtherFrevoEntityService implements IOtherFrevoEntityService {
   constructor(
     @Inject(IOtherFrevoEntityRepository)
     private readonly _otherFrevoEntityRepository: IOtherFrevoEntityRepository,
-
     @Inject(Mapper)
     private readonly _mapper: IMapper,
-
     @Inject(CacheManager)
     private readonly _cacheManager: Cache,
-
     @Inject(Logger)
     private readonly _logger: ILogger,
-
     private readonly _normalizeZipCodePipe: NormalizeZipCodePipe,
   ) {}
 
@@ -50,6 +47,11 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     otherFrevoEntity.sanitizeEntityProperties();
 
+    otherFrevoEntity.validationDelegate =
+      new OtherFrevoEntityValidator().validate.bind(
+        new OtherFrevoEntityValidator(),
+      );
+
     const isValid = await otherFrevoEntity.isValid();
 
     if (!isValid) {
@@ -59,12 +61,12 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
       return new ValidationResponse(
         otherFrevoEntity,
-        await otherFrevoEntity.validateCreation(),
+        await otherFrevoEntity.validateEntity(),
       );
     }
 
     const [insertResponse] = await Promise.all([
-      this._otherFrevoEntityRepository.createResume(otherFrevoEntity),
+      this._otherFrevoEntityRepository.createOtherFrevoEntity(otherFrevoEntity),
       this._cacheManager.del(`other-frevo-entities`),
     ]);
 
@@ -77,7 +79,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     return new ValidationResponse(
       insertResponse,
-      await otherFrevoEntity.validateCreation(),
+      await otherFrevoEntity.validateEntity(),
     );
   }
 
@@ -123,12 +125,17 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     otherFrevoEntity.sanitizeEntityProperties();
 
+    otherFrevoEntity.validationDelegate =
+      new OtherFrevoEntityValidator().validate.bind(
+        new OtherFrevoEntityValidator(),
+      );
+
     const isValid = await otherFrevoEntity.isValid();
 
     if (!isValid) {
       return new ValidationResponse(
         otherFrevoEntity,
-        await otherFrevoEntity.validateCreation(),
+        await otherFrevoEntity.validateEntity(),
       );
     }
 
@@ -151,7 +158,7 @@ class OtherFrevoEntityService implements IOtherFrevoEntityService {
 
     return new ValidationResponse(
       updateResponse,
-      await otherFrevoEntity.validateCreation(),
+      await otherFrevoEntity.validateEntity(),
     );
   }
 

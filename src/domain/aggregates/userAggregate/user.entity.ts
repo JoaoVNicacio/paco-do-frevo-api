@@ -1,73 +1,31 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { v4 as generateUUIDv4 } from 'uuid';
 import EUserRoles from './enums/euser-roles';
 import { AutoMap } from '@automapper/classes';
-import {
-  IsEmail,
-  IsNotEmpty,
-  Matches,
-  ValidationError,
-  validate,
-} from 'class-validator';
 import IEntity from 'src/core/entities/ientity.base';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
-@Schema({
-  toJSON: {
-    getters: true,
-    virtuals: true,
-    transform: function (doc, ret) {
-      delete ret._password;
-      return ret;
-    },
-  },
-  timestamps: true,
-})
 class User implements IEntity<string> {
-  @Prop({
-    type: String,
-    unique: true,
-    default: () => generateUUIDv4(),
-  })
   public id: string;
 
-  @Prop({ required: true })
-  @IsNotEmpty()
   @AutoMap()
   public firstName: string;
 
-  @Prop({ required: true })
-  @IsNotEmpty()
   @AutoMap()
   public lastName: string;
 
-  @Prop({ type: String, enum: EUserRoles, default: EUserRoles.DataVisualizer })
-  @IsNotEmpty()
   @AutoMap()
   public role: EUserRoles;
 
-  @Prop({ required: true, unique: true })
-  @IsEmail({}, { message: 'Invalid email format' })
   @AutoMap()
   public email: string;
 
-  @IsNotEmpty()
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
   private _password: string;
 
-  @Prop({ required: true })
   public passwordHash: string;
 
-  @Prop({
-    required: false,
-    default: () => Date.now(),
-  })
   public createdAt: Date;
 
-  @Prop({
-    required: false,
-    default: () => Date.now(),
-  })
   public updatedAt: Date;
 
   /**
@@ -93,6 +51,26 @@ class User implements IEntity<string> {
     this._password = value;
   }
 
+  public get password() {
+    return this._password;
+  }
+
+  public validationDelegate: ValidationDelegate<User> | null | undefined = null;
+
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
+
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
+  }
+
   public sanitizeEntityProperties(): void {
     this.firstName = this.firstName
       ? CleanStringBuilder.fromString(this.firstName)
@@ -110,18 +88,6 @@ class User implements IEntity<string> {
           .build()
       : this.lastName;
   }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
-  }
 }
-
-export const UserSchema = SchemaFactory.createForClass(User);
 
 export default User;

@@ -3,12 +3,13 @@ import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
 import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 import IPhoneNumberRepository from 'src/domain/repositories/iphone-number.repository';
 import { Repository as DBAccessor } from 'typeorm';
+import PhoneNumberDBSchema from '../schemas/associationAggregate/phone-number.schema';
 
 @Injectable()
 class PhoneNumberRepository implements IPhoneNumberRepository {
   constructor(
-    @InjectDBAccessor(PhoneNumber)
-    private readonly _phoneNumberDBAccessor: DBAccessor<PhoneNumber>,
+    @InjectDBAccessor(PhoneNumberDBSchema)
+    private readonly _phoneNumberDBAccessor: DBAccessor<PhoneNumberDBSchema>,
   ) {}
 
   public async createPhoneNumber(
@@ -36,11 +37,13 @@ class PhoneNumberRepository implements IPhoneNumberRepository {
   ): Promise<PhoneNumber> {
     const existingPhoneNumber = await this.getById(id);
 
-    if (!existingPhoneNumber) {
+    if (!existingPhoneNumber)
       throw new NotFoundException('Número de telefone não encontrado.');
-    }
 
-    this._phoneNumberDBAccessor.merge(existingPhoneNumber, phoneNumber);
+    this._phoneNumberDBAccessor.merge(
+      PhoneNumberDBSchema.fromDomainEntity(existingPhoneNumber),
+      phoneNumber,
+    );
 
     return await this._phoneNumberDBAccessor.save(existingPhoneNumber);
   }
@@ -48,9 +51,8 @@ class PhoneNumberRepository implements IPhoneNumberRepository {
   public async deletePhoneNumber(id: string): Promise<void> {
     const result = await this._phoneNumberDBAccessor.delete(id);
 
-    if (result.affected === 0) {
+    if (result.affected === 0)
       throw new NotFoundException('Número de telefone não encontrado.');
-    }
   }
 }
 
