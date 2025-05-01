@@ -3,12 +3,13 @@ import { Repository as DBAccessor } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import Contact from 'src/domain/aggregates/associationAggregate/contact.entity';
 import IContactRepository from 'src/domain/repositories/icontact.repository';
+import ContactDBSchema from '../schemas/associationAggregate/contact.schema';
 
 @Injectable()
 class ContactRepository implements IContactRepository {
   constructor(
-    @InjectDBAccessor(Contact)
-    private readonly _contactDBAccessor: DBAccessor<Contact>,
+    @InjectDBAccessor(ContactDBSchema)
+    private readonly _contactDBAccessor: DBAccessor<ContactDBSchema>,
   ) {}
 
   public async createContact(contact: Contact): Promise<Contact> {
@@ -43,11 +44,13 @@ class ContactRepository implements IContactRepository {
   public async updateContact(id: string, contact: Contact): Promise<Contact> {
     const existingContact = await this.getById(id);
 
-    if (!existingContact) {
+    if (!existingContact)
       throw new NotFoundException('Contato não encontrado.');
-    }
 
-    this._contactDBAccessor.merge(existingContact, contact);
+    this._contactDBAccessor.merge(
+      ContactDBSchema.fromDomainEntity(existingContact),
+      contact,
+    );
 
     return this._contactDBAccessor.save(existingContact);
   }
@@ -55,9 +58,8 @@ class ContactRepository implements IContactRepository {
   public async deleteContact(id: string): Promise<void> {
     const result = await this._contactDBAccessor.delete(id);
 
-    if (result.affected === 0) {
+    if (result.affected === 0)
       throw new NotFoundException('Contato não encontrado.');
-    }
   }
 }
 

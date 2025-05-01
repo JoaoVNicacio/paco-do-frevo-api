@@ -3,15 +3,16 @@ import { InjectRepository as InjectDBAccessor } from '@nestjs/typeorm';
 import OtherFrevoEntity from 'src/domain/aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import { Repository as DBAccessor } from 'typeorm';
+import OtherFrevoEntityDBSchema from '../schemas/otherFrevoMakersAggregate/other-frevo-entity.schema';
 
 @Injectable()
 class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
   constructor(
-    @InjectDBAccessor(OtherFrevoEntity)
-    private _otherFrevoEntityDBAccessor: DBAccessor<OtherFrevoEntity>,
+    @InjectDBAccessor(OtherFrevoEntityDBSchema)
+    private _otherFrevoEntityDBAccessor: DBAccessor<OtherFrevoEntityDBSchema>,
   ) {}
 
-  public async createResume(
+  public async createOtherFrevoEntity(
     otherFrevoEntity: OtherFrevoEntity,
   ): Promise<OtherFrevoEntity> {
     const createdOtherFrevoEntity =
@@ -72,9 +73,8 @@ class OtherFrevoEntityRepository implements IOtherFrevoEntityRepository {
   public async deleteOtherFrevoEntity(id: string): Promise<void> {
     const result = await this._otherFrevoEntityDBAccessor.delete(id);
 
-    if (result.affected === 0) {
+    if (result.affected === 0)
       throw new NotFoundException('Entidade do frevo não encontrada.');
-    }
   }
 }
 

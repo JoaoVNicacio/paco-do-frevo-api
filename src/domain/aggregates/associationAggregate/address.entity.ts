@@ -1,121 +1,49 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToOne,
-} from 'typeorm';
 import Association from './association.entity';
-import {
-  IsNotEmpty,
-  IsOptional,
-  IsUUID,
-  IsPostalCode,
-  ValidationError,
-  validate,
-  Length,
-  Validate,
-  IsIn,
-  Equals,
-} from 'class-validator';
 import IAddress from '../../entityInterfaces/iaddress.entity-base';
-import AddressConstants from './constants/address.constants';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
-@Entity({ name: 'AssociationAddresses' })
 class AssociationAddress extends UserStampedEntity<string> implements IAddress {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
-  public id: string;
-
-  @Column('text')
-  @IsNotEmpty({ message: 'Address site is required' })
   @AutoMap()
   @ApiProperty()
   public addressSite: string;
 
-  @Column({ type: 'text' })
-  @IsNotEmpty({ message: 'Number is required' })
-  @Validate(
-    (value: string, args) => {
-      const sn = args.object['SN'];
-      return value === sn || /\d/.test(value);
-    },
-    { message: 'Number must be equal to SN or contain at least one number' },
-  )
   @AutoMap()
   @ApiProperty()
   public number: string;
 
-  @Column('text', { nullable: true })
-  @IsOptional()
   @AutoMap()
   @ApiProperty()
   public complement: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'District is required' })
   @AutoMap()
   @ApiProperty()
   public district: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'City is required' })
   @AutoMap()
   @ApiProperty()
   public city: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'State is required' })
-  @Length(2)
-  @IsIn(AddressConstants.brazilianStates)
   @AutoMap()
   @ApiProperty()
   public state: string;
 
-  @Column('text')
-  @IsNotEmpty({ message: 'Country is required' })
-  @Length(2)
-  @Equals('BR')
   @AutoMap()
   @ApiProperty()
   public country: string;
 
-  @Column('text')
-  @IsPostalCode('BR', { message: 'Invalid ZIP code format' })
   @AutoMap()
   @ApiProperty()
   public zipCode: string;
 
-  @OneToOne(() => Association, (address) => address.address, {
-    onDelete: 'CASCADE',
-  })
   public association: Association;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  @AutoMap()
-  @ApiProperty()
-  public updatedAt: Date;
-
-  @Column('uuid', { nullable: true })
-  @IsUUID()
-  @IsOptional()
-  @ApiProperty()
-  public createdBy: string;
-
-  @Column('uuid', { nullable: true })
-  @IsUUID()
-  @IsOptional()
-  @ApiProperty()
-  public updatedBy: string;
+  public validationDelegate: ValidationDelegate<IAddress> | null | undefined =
+    null;
 
   public sanitizeEntityProperties(): void {
     this.addressSite = this.addressSite
@@ -158,22 +86,18 @@ class AssociationAddress extends UserStampedEntity<string> implements IAddress {
       : this.complement;
   }
 
-  public setCreationStamps(userId: string): void {
-    this.createdBy = userId;
-  }
-
-  public setUpdateStamps(userId: string): void {
-    this.updatedBy = userId;
-  }
-
   public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
   }
 
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
   }
 }
 

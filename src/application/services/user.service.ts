@@ -11,6 +11,7 @@ import { Mapper } from 'src/application/symbols/dependency-injection.symbols';
 import { LoggerService as ILogger } from '@nestjs/common';
 import { Logger } from 'src/application/symbols/dependency-injection.symbols';
 import IUserService from '../contracts/services/iuser.service';
+import UserValidator from '../validation/user.validator';
 
 @Injectable()
 class UserService implements IUserService {
@@ -35,8 +36,12 @@ class UserService implements IUserService {
 
     newUser.sanitizeEntityProperties();
 
+    newUser.validationDelegate = new UserValidator().validate.bind(
+      new UserValidator(),
+    );
+
     const isValid = await newUser.isValid();
-    const validationResult = await newUser.validateCreation();
+    const validationResult = await newUser.validateEntity();
 
     if (!isValid) {
       this._logger.log(

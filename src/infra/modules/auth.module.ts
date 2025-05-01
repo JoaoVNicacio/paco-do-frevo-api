@@ -1,7 +1,6 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import HashingPipe from 'src/application/pipes/hashing.pipe';
-import { UserSchema } from 'src/domain/aggregates/userAggregate/user.entity';
 import IHashingHandler from 'src/application/contracts/handlers/ihashing.handler';
 import HashingHandler from '../handlers/hashing.handler';
 import AuthService from 'src/application/services/auth.service';
@@ -17,6 +16,7 @@ import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IAuthService from 'src/application/contracts/services/iauth.service';
 import mapper from 'src/application/mapping/mapper';
 import AuthController from 'src/api/controllers/auth.controller';
+import { UserSchema } from '../schemas/userAggregate/user.schema';
 
 dotenv.config();
 

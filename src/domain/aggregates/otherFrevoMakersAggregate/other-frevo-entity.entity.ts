@@ -1,86 +1,51 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  JoinColumn,
-  OneToOne,
-} from 'typeorm';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  ValidateNested,
-  ValidationError,
-  validate,
-} from 'class-validator';
 import OtherFrevoEntityAddress from './other-frevo-entity-address.entity';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';
 import CleanStringBuilder from 'src/shared/utils/clean-string.builder';
+import { ValidationDelegate } from '../../../shared/validation/validators/validation.types';
+import ValidationErrorSignature from '../../../shared/validation/responses/validation-error.signature';
 
-/** This class represents an Carnival Association with its various properties, relationships and behaviour. */
-@Entity({ name: 'OtherFrevoEntities' })
+/** This class represents a Frevo entity that isn't an Association with its various properties, relationships and behaviour. */
 class OtherFrevoEntity extends UserStampedEntity<string> {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
-  public id: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @Column('text')
   @AutoMap()
   @ApiProperty()
   public name: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @Column('text')
   @AutoMap()
   @ApiProperty()
   public type: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @Column('text')
   @AutoMap()
   @ApiProperty()
   public entityHistoryNotes: string;
 
-  @IsInt()
-  @Column('int')
   @AutoMap()
   @ApiProperty()
   public actuationTimeInMonths: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  @ApiProperty()
-  public updatedAt: Date;
-
-  @Column('uuid', { nullable: true })
-  @ApiProperty()
-  public createdBy: string;
-
-  @Column('uuid', { nullable: true })
-  @ApiProperty()
-  public updatedBy: string;
-
-  @OneToOne(
-    () => OtherFrevoEntityAddress,
-    (address) => address.otherFrevoEntity,
-    { cascade: true, onDelete: 'CASCADE' },
-  )
-  @JoinColumn()
-  @ValidateNested()
   @AutoMap()
   @ApiProperty()
   public address: OtherFrevoEntityAddress | null | undefined;
+
+  public validationDelegate:
+    | ValidationDelegate<OtherFrevoEntity>
+    | null
+    | undefined = null;
+
+  public async isValid(): Promise<boolean> {
+    return (
+      (await this.validateEntity()).length === 0 &&
+      this.validationDelegate !== null &&
+      this.validationDelegate !== undefined
+    );
+  }
+
+  public async validateEntity(): Promise<Array<ValidationErrorSignature>> {
+    if (this.validationDelegate) return this.validationDelegate(this);
+
+    return [];
+  }
 
   public sanitizeEntityProperties(): void {
     this.name = this.name
@@ -105,24 +70,6 @@ class OtherFrevoEntity extends UserStampedEntity<string> {
       : this.entityHistoryNotes;
 
     this.address?.sanitizeEntityProperties();
-  }
-
-  public setCreationStamps(userId: string): void {
-    this.createdBy = userId;
-  }
-
-  public setUpdateStamps(userId: string): void {
-    this.updatedBy = userId;
-  }
-
-  public async isValid(): Promise<boolean> {
-    const errors = await this.validateCreation();
-
-    return errors.length === 0;
-  }
-
-  public async validateCreation(): Promise<Array<ValidationError>> {
-    return await validate(this);
   }
 }
 

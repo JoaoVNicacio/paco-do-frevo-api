@@ -7,12 +7,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiInternalServerErrorResponse } from '@nestjs/swagger';
-import ValidationErrorCopy from 'src/application/dtos/validationErrorsDTOs/validation-error-signature.dto';
 import ValidationErrorDTO from 'src/application/dtos/validationErrorsDTOs/validation-error.dto';
 import PagedResults from 'src/shared/responseObjects/paged.results';
 import ValidationResponse from 'src/shared/responseObjects/validation.response';
 import { Mapper } from 'src/application/symbols/dependency-injection.symbols';
 import NoContentException from 'src/shared/exceptions/no-content.exception';
+import ValidationErrorSignature from '../../shared/validation/responses/validation-error.signature';
 
 /** The `ControllerBase` is a base class for the project's NestJS controllers.
 it provides methods for sending custom validation and response messages, as
@@ -59,8 +59,8 @@ class ControllerBase {
     if (response instanceof ValidationResponse) {
       if (!response.isValid) {
         const formattedErrors = this._mapper.mapArray(
-          response.validationResult as Array<ValidationErrorCopy>,
-          ValidationErrorCopy,
+          response.validationResult as Array<ValidationErrorSignature>,
+          ValidationErrorSignature,
           ValidationErrorDTO,
         );
 

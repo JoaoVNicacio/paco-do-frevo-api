@@ -18,9 +18,7 @@ export function getStringWithSubstringAtIndex(
   substring: string,
   index: number,
 ): string {
-  if (index < 0 || index > input.length) {
-    throw new Error('Index out of range');
-  }
+  if (index < 0 || index > input.length) throw new Error('Index out of range');
 
   return `${input.slice(0, index)}${substring}${input.slice(index)}`;
 }

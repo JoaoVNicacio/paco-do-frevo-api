@@ -5,12 +5,13 @@ import Association from 'src/domain/aggregates/associationAggregate/association.
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
 import AssociationFilteringParam from 'src/shared/requestObjects/params/association.filtering-param';
 import EOrderingParam from 'src/shared/requestObjects/params/enums/eordering.param';
+import AssociationDBSchema from '../schemas/associationAggregate/association.schema';
 
 @Injectable()
 class AssociationRepository implements IAssociationRepository {
   constructor(
-    @InjectDBAccessor(Association)
-    private readonly _associationDBAccessor: DBAccessor<Association>,
+    @InjectDBAccessor(AssociationDBSchema)
+    private readonly _associationDBAccessor: DBAccessor<AssociationDBSchema>,
   ) {}
 
   public async createAssociation(
@@ -83,11 +84,13 @@ class AssociationRepository implements IAssociationRepository {
   ): Promise<Association> {
     const existingAssociation = await this.getById(id);
 
-    if (!existingAssociation) {
+    if (!existingAssociation)
       throw new NotFoundException('Associação não encontrada.');
-    }
 
-    this._associationDBAccessor.merge(existingAssociation, association);
+    this._associationDBAccessor.merge(
+      AssociationDBSchema.fromDomainEntity(existingAssociation),
+      association,
+    );
 
     return await this._associationDBAccessor.save(existingAssociation);
   }
@@ -95,14 +98,13 @@ class AssociationRepository implements IAssociationRepository {
   public async deleteAssociation(id: string): Promise<void> {
     const result = await this._associationDBAccessor.delete(id);
 
-    if (result.affected === 0) {
+    if (result.affected === 0)
       throw new NotFoundException('Associação não encontrada.');
-    }
   }
 
   private orderingFactory(
     ordering: EOrderingParam | null | undefined,
-    queryBuilder: SelectQueryBuilder<Association>,
+    queryBuilder: SelectQueryBuilder<AssociationDBSchema>,
   ): void {
     switch (ordering) {
       case EOrderingParam.cronologicalDecending:
@@ -129,57 +131,50 @@ class AssociationRepository implements IAssociationRepository {
 
   private handleAssociationFilteringParams(
     filterParams: AssociationFilteringParam | null | undefined,
-    queryBuilder: SelectQueryBuilder<Association>,
-  ) {
-    if (filterParams) {
-      if (filterParams.searchParam?.trim()) {
-        queryBuilder.andWhere('UPPER(association.name) LIKE :name', {
-          name: `%${filterParams.searchParam.toUpperCase().trim()}%`,
-        });
-      }
+    queryBuilder: SelectQueryBuilder<AssociationDBSchema>,
+  ): void {
+    if (!filterParams) return;
 
-      if (filterParams.associationType) {
-        queryBuilder.andWhere(
-          'association.associationType = :associationType',
-          { associationType: filterParams.associationType },
-        );
-      }
+    if (filterParams.searchParam?.trim()) {
+      queryBuilder.andWhere('UPPER(association.name) LIKE :name', {
+        name: `%${filterParams.searchParam.toUpperCase().trim()}%`,
+      });
+    }
 
-      if (filterParams.district?.trim()) {
-        queryBuilder.andWhere('UPPER(address.district) LIKE :district', {
-          district: `%${filterParams.district.toUpperCase().trim()}%`,
-        });
-      }
+    if (filterParams.associationType) {
+      queryBuilder.andWhere('association.associationType = :associationType', {
+        associationType: filterParams.associationType,
+      });
+    }
 
-      if (filterParams.state?.trim()) {
-        queryBuilder.andWhere('UPPER(address.state) LIKE :state', {
-          state: `%${filterParams.state.toUpperCase().trim()}%`,
-        });
-      }
+    if (filterParams.district?.trim()) {
+      queryBuilder.andWhere('UPPER(address.district) LIKE :district', {
+        district: `%${filterParams.district.toUpperCase().trim()}%`,
+      });
+    }
 
-      if (filterParams.city?.trim()) {
-        queryBuilder.andWhere('UPPER(address.city) LIKE :city', {
-          city: `%${filterParams.city.toUpperCase().trim()}%`,
-        });
-      }
+    if (filterParams.state?.trim()) {
+      queryBuilder.andWhere('UPPER(address.state) LIKE :state', {
+        state: `%${filterParams.state.toUpperCase().trim()}%`,
+      });
+    }
 
-      if (filterParams.minMemberAmmount) {
-        queryBuilder.andWhere(
-          'association.activeMembers <= :minMemberAmmount',
-          {
-            minMemberAmmount: filterParams.minMemberAmmount,
-          },
-        );
-      }
+    if (filterParams.city?.trim()) {
+      queryBuilder.andWhere('UPPER(address.city) LIKE :city', {
+        city: `%${filterParams.city.toUpperCase().trim()}%`,
+      });
+    }
 
-      if (filterParams.maxMemberAmmount) {
-        queryBuilder.andWhere(
-          'association.activeMembers <= :maxMemberAmmount',
-          {
-            maxMemberAmmount: filterParams.maxMemberAmmount,
-          },
-        );
-      }
+    if (filterParams.minMemberAmmount) {
+      queryBuilder.andWhere('association.activeMembers <= :minMemberAmmount', {
+        minMemberAmmount: filterParams.minMemberAmmount,
+      });
+    }
+
+    if (filterParams.maxMemberAmmount) {
+      queryBuilder.andWhere('association.activeMembers <= :maxMemberAmmount', {
+        maxMemberAmmount: filterParams.maxMemberAmmount,
+      });
     }
   }
 }

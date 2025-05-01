@@ -1,7 +1,9 @@
 import OtherFrevoEntity from '../aggregates/otherFrevoMakersAggregate/other-frevo-entity.entity';
 
 interface IOtherFrevoEntityRepository {
-  createResume(otherFrevoEntity: OtherFrevoEntity): Promise<OtherFrevoEntity>;
+  createOtherFrevoEntity(
+    otherFrevoEntity: OtherFrevoEntity,
+  ): Promise<OtherFrevoEntity>;
   getAll(): Promise<Array<OtherFrevoEntity> | any>;
   getById(id: string): Promise<OtherFrevoEntity | undefined>;
   getPagedOtherFrevoEntities(

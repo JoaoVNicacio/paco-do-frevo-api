@@ -4,12 +4,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import ISocialNetworkRepository from 'src/domain/repositories/isocial-network.repository';
 import SocialNetworkDTO from 'src/application/dtos/associationDtos/social-network.dto';
 import SocialNetwork from 'src/domain/aggregates/associationAggregate/social-network.entity';
+import SocialNetworkDBSchema from '../schemas/associationAggregate/social-network.schema';
 
 @Injectable()
 class SocialNetworkRepository implements ISocialNetworkRepository {
   constructor(
-    @InjectDBAccessor(SocialNetwork)
-    private readonly _socialNetworkDBAccessor: DBAccessor<SocialNetwork>,
+    @InjectDBAccessor(SocialNetworkDBSchema)
+    private readonly _socialNetworkDBAccessor: DBAccessor<SocialNetworkDBSchema>,
   ) {}
 
   public async createSocialNetwork(
@@ -60,7 +61,10 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
       throw new NotFoundException('Rede social não encontrada.');
     }
 
-    this._socialNetworkDBAccessor.merge(existingSocialNetwork, socialNetwork);
+    this._socialNetworkDBAccessor.merge(
+      SocialNetworkDBSchema.fromDomainEntity(existingSocialNetwork),
+      socialNetwork,
+    );
 
     return this._socialNetworkDBAccessor.save(existingSocialNetwork);
   }
@@ -68,9 +72,8 @@ class SocialNetworkRepository implements ISocialNetworkRepository {
   public async deleteSocialNetwork(id: string): Promise<void> {
     const result = await this._socialNetworkDBAccessor.delete(id);
 
-    if (result.affected === 0) {
+    if (result.affected === 0)
       throw new NotFoundException('Rede social não encontrada.');
-    }
   }
 }
 

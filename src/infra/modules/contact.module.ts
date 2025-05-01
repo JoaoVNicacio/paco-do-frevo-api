@@ -1,10 +1,7 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import Contact from 'src/domain/aggregates/associationAggregate/contact.entity'; // Certifique-se de importar a entidade Contact corretamente
-import ContactService from 'src/application/services/contact.service'; // Certifique-se de importar o serviço correto
-import Association from 'src/domain/aggregates/associationAggregate/association.entity';
+import ContactService from 'src/application/services/contact.service';
 import ContactRepository from '../repositories/contact.repository';
-import PhoneNumber from 'src/domain/aggregates/associationAggregate/phone-number.entity';
 import { PhoneNumberModule } from './phone-number.module';
 import AssociationRepository from '../repositories/association.repository';
 import IAssociationRepository from 'src/domain/repositories/iassociation.repository';
@@ -18,11 +15,18 @@ import { CACHE_MANAGER as cacheManager } from '@nestjs/cache-manager';
 import IContactService from 'src/application/contracts/services/icontact.service';
 import mapper from 'src/application/mapping/mapper';
 import ContactController from 'src/api/controllers/contact.controller';
+import AssociationDBSchema from '../schemas/associationAggregate/association.schema';
+import ContactDBSchema from '../schemas/associationAggregate/contact.schema';
+import PhoneNumberDBSchema from '../schemas/associationAggregate/phone-number.schema';
 
 @Module({
   imports: [
     PhoneNumberModule,
-    TypeOrmModule.forFeature([Contact, Association, PhoneNumber]),
+    TypeOrmModule.forFeature([
+      ContactDBSchema,
+      AssociationDBSchema,
+      PhoneNumberDBSchema,
+    ]),
   ],
   controllers: [ContactController],
   providers: [
