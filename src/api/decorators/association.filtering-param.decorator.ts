@@ -65,28 +65,28 @@ export function StateQuery(): PropertyDecorator &
 }
 
 /**
- * Decorator for the 'minMemberAmmount' parameter as a Query Param
+ * Decorator for the 'minMemberAmount' parameter as a Query Param
  * @returns PropertyDecorator & MethodDecorator & ParameterDecorator
  */
-export function MinMemberAmmountQuery(): PropertyDecorator &
+export function MinMemberAmountQuery(): PropertyDecorator &
   MethodDecorator &
   ParameterDecorator {
   return ApiQuery({
-    name: 'minMemberAmmount',
+    name: 'minMemberAmount',
     required: false,
     description: 'Minimum member amount',
   });
 }
 
 /**
- * Decorator for the 'maxMemberAmmount' parameter as a Query Param
+ * Decorator for the 'maxMemberAmount' parameter as a Query Param
  * @returns PropertyDecorator & MethodDecorator & ParameterDecorator
  */
-export function MaxMemberAmmountQuery(): PropertyDecorator &
+export function MaxMemberAmountQuery(): PropertyDecorator &
   MethodDecorator &
   ParameterDecorator {
   return ApiQuery({
-    name: 'maxMemberAmmount',
+    name: 'maxMemberAmount',
     required: false,
     description: 'Maximum member amount',
   });

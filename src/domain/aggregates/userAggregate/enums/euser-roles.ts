@@ -1,7 +1,7 @@
 enum EUserRoles {
-  ApplicationAdmin = 'Application Admin',
-  AssociationAdmin = 'Association Admin',
-  DataVisualizer = 'Data Visualizer',
+  applicationAdmin = 'Application Admin',
+  associationAdmin = 'Association Admin',
+  dataVisualizer = 'Data Visualizer',
 }
 
 export default EUserRoles;

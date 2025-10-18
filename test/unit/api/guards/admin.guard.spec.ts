@@ -51,7 +51,7 @@ describe('AppAdminGuard', () => {
     it('should set user on request and return true if user is an admin', async () => {
       // Arrange:
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.ApplicationAdmin,
+        userRole: EUserRoles.applicationAdmin,
         sub: '',
         userName: '',
       };
@@ -74,7 +74,7 @@ describe('AppAdminGuard', () => {
     it('should throw ForbiddenException if user is not an admin', async () => {
       // Arrange:
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.DataVisualizer,
+        userRole: EUserRoles.dataVisualizer,
         sub: '',
         userName: '',
       };
@@ -96,7 +96,7 @@ describe('AppAdminGuard', () => {
       // Arrange:
       const guard = new AppAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.DataVisualizer,
+        userRole: EUserRoles.dataVisualizer,
         sub: '',
         userName: '',
       };
@@ -110,7 +110,7 @@ describe('AppAdminGuard', () => {
     it('should not throw error if user role is ApplicationAdmin', () => {
       const guard = new AppAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.ApplicationAdmin,
+        userRole: EUserRoles.applicationAdmin,
         sub: '',
         userName: '',
       };

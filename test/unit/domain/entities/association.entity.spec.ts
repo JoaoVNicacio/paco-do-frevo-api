@@ -1,4 +1,5 @@
 import Association from 'src/domain/aggregates/associationAggregate/association.entity';
+import AssociationValidator from '../../../../src/application/validation/association.validator';
 
 describe('Association', () => {
   let association: Association;
@@ -22,6 +23,10 @@ describe('Association', () => {
       association.associationHistoryNotes = 'Test history';
 
       // Act
+      association.validationDelegate = new AssociationValidator().validate.bind(
+        new AssociationValidator(),
+      );
+
       const errors = await association.validateEntity();
 
       // Assert
@@ -33,6 +38,10 @@ describe('Association', () => {
       // Here we're not setting any required fields intentionally to make the association invalid
 
       // Act
+      association.validationDelegate = new AssociationValidator().validate.bind(
+        new AssociationValidator(),
+      );
+
       const errors = await association.validateEntity();
 
       // Assert
@@ -55,6 +64,10 @@ describe('Association', () => {
       association.associationHistoryNotes = 'Test history';
 
       // Act
+      association.validationDelegate = new AssociationValidator().validate.bind(
+        new AssociationValidator(),
+      );
+
       const isValid = await association.isValid();
 
       // Assert
@@ -66,6 +79,10 @@ describe('Association', () => {
       // Here we're not setting any required fields intentionally to make the association invalid
 
       // Act
+      association.validationDelegate = new AssociationValidator().validate.bind(
+        new AssociationValidator(),
+      );
+
       const isValid = await association.isValid();
 
       // Assert

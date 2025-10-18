@@ -26,12 +26,13 @@ abstract class DocumentNumberValidatorTemplate {
     return this.validateSpecificRules(number);
   }
 
-  /* The line `protected abstract validateSpecificRules(number: string): boolean;` is declaring an
- abstract method called `validateSpecificRules` in the `DocumentNumberValidatorTemplate` class. */
+  /* The method validateSpecificRules is declaring an
+ abstract method in the `DocumentNumberValidatorTemplate` class.
+  This is defined in each implementation*/
   protected abstract validateSpecificRules(number: string): boolean;
 
   /**
-   * The function checks if all the digits in a given number are the same.
+   * The method checks if all the digits in a given number are the same.
    * @param {string} number - The `number` parameter is a string representing a number.
    * @returns a boolean value. It returns true if all the digits in the input number are the same, and
    * false otherwise.

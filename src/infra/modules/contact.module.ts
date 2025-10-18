@@ -1,4 +1,4 @@
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { ConsoleLogger, Module, Scope } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import ContactService from 'src/application/services/contact.service';
 import ContactRepository from '../repositories/contact.repository';
@@ -34,16 +34,19 @@ import PhoneNumberDBSchema from '../schemas/associationAggregate/phone-number.sc
     {
       provide: IContactService,
       useClass: ContactService,
+      scope: Scope.REQUEST,
     },
 
     // Repositories:
     {
       provide: IContactRepository,
       useClass: ContactRepository,
+      scope: Scope.REQUEST,
     },
     {
       provide: IAssociationRepository,
       useClass: AssociationRepository,
+      scope: Scope.REQUEST,
     },
 
     // Mappers:

@@ -2,7 +2,7 @@
 string and build a clean version of the string. */
 class CleanStringBuilder {
   private stringForEdition: string;
-  private readonly prepositions: Array<string> = [
+  private readonly _prepositions: Array<string> = [
     'de',
     'da',
     'das',
@@ -117,7 +117,7 @@ class CleanStringBuilder {
       (match) => {
         const wordLowerCase = match.toLowerCase();
         if (shouldIgnorePrepositions) {
-          return this.prepositions.includes(wordLowerCase)
+          return this._prepositions.includes(wordLowerCase)
             ? wordLowerCase
             : match.charAt(0).toUpperCase() + match.slice(1);
         }

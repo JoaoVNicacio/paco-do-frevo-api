@@ -1,19 +1,15 @@
-import {
-  ValidationArguments,
-  ValidationOptions,
-  registerDecorator,
-} from 'class-validator';
 import DocumentNumberValidatorTemplate from './document-number.validator';
 
 /** The `CnpjNumberValidator` class is class that validates a given number against specific
 rules for a CNPJ (Brazilian company identification number). */
 class CnpjNumberValidator extends DocumentNumberValidatorTemplate {
-  private readonly _cnpjLength: number = 14;
-  private readonly _firstChecksumStartIndex: number = 12;
-  private readonly _firstChecksumFactor: number = 5;
-  private readonly _secondChecksumStartIndex: number = 13;
-  private readonly _secondChecksumFactor: number = 6;
-  private readonly _checksumModulus: number = 11;
+  private readonly CNPJ_LENGTH: number = 14;
+  private readonly FIRST_CHECKSUM_START_INDEX: number = 12;
+  private readonly FIRST_CHECKSUM_FACTOR: number = 5;
+  private readonly SECOND_CHECKSUM_START_INDEX: number = 13;
+  private readonly SECOND_CHECKSUM_FACTOR: number = 6;
+  private readonly CHECKSUM_MODULUS: number = 11;
+  private readonly CNPJ_REGEX: RegExp = /^\d{14}$/;
 
   /**
    * The method validates a given number against specific rules for a CNPJ (Brazilian company
@@ -22,26 +18,26 @@ class CnpjNumberValidator extends DocumentNumberValidatorTemplate {
    * @returns The method is returning a boolean value.
    */
   protected override validateSpecificRules(number: string): boolean {
-    if (!/^\d{14}$/.test(number)) {
+    if (!this.CNPJ_REGEX.test(number)) {
       return false;
     }
 
-    const digits = new Array<number>(this._cnpjLength);
+    const digits = new Array<number>(this.CNPJ_LENGTH);
 
-    for (let i = 0; i < this._cnpjLength; i++) {
+    for (let i = 0; i < this.CNPJ_LENGTH; i++) {
       digits[i] = parseInt(number[i]);
     }
 
     if (
       !this.ValidateCNPJChecksum(
         digits,
-        this._firstChecksumStartIndex,
-        this._firstChecksumFactor,
+        this.FIRST_CHECKSUM_START_INDEX,
+        this.FIRST_CHECKSUM_FACTOR,
       ) ||
       !this.ValidateCNPJChecksum(
         digits,
-        this._secondChecksumStartIndex,
-        this._secondChecksumFactor,
+        this.SECOND_CHECKSUM_START_INDEX,
+        this.SECOND_CHECKSUM_FACTOR,
       )
     ) {
       return false;
@@ -64,56 +60,14 @@ to validate the checksum of a CNPJ number. */
       factor = factor === 2 ? 9 : factor - 1;
     }
 
-    const remainder = sum % this._checksumModulus;
+    const remainder = sum % this.CHECKSUM_MODULUS;
 
     if (remainder < 2) {
       return digits[startIndex] === 0;
     }
 
-    return digits[startIndex] === this._checksumModulus - remainder;
+    return digits[startIndex] === this.CHECKSUM_MODULUS - remainder;
   }
-}
-
-/**
- * The ValidCnpjNumber function is a decorator that can be used to validate if a given value is a valid
- * CNPJ number.
- * @param {ValidationOptions} [validationOptions] - The `validationOptions` parameter is an optional
- * object that allows you to customize the validation behavior. It can include properties such as
- * `message` (a custom error message to be displayed when validation fails), `groups` (an array of
- * validation groups to which this decorator belongs), and other options specific to
- * @returns The function `ValidCnpjNumber` is returning a decorator function.
- */
-export function ValidCnpjNumber(validationOptions?: ValidationOptions) {
-  return function (object: unknown, propertyName: string) {
-    registerDecorator({
-      name: 'validCnpjNumber',
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      validator: {
-        validate(value: any | undefined | null, args: ValidationArguments) {
-          const isLegalEntity =
-            'isLegalEntity' in args.object ? args.object.isLegalEntity : false;
-
-          value = 'cnpj' in args.object ? args.object.cnpj : null;
-
-          if (!isLegalEntity && (value === null || value == undefined)) {
-            return false;
-          }
-
-          if (isLegalEntity) {
-            if (!value || typeof value !== 'string') {
-              return false;
-            }
-
-            return new CnpjNumberValidator().validate(value);
-          }
-
-          return true;
-        },
-      },
-    });
-  };
 }
 
 export default CnpjNumberValidator;

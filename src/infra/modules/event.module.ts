@@ -1,4 +1,4 @@
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { ConsoleLogger, Module, Scope } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import EventService from 'src/application/services/event.service';
 import EventRepository from '../repositories/event.repository';
@@ -25,34 +25,40 @@ import EventDBSchema from '../schemas/associationAggregate/event.schema';
     {
       provide: IEventService,
       useClass: EventService,
+      scope: Scope.REQUEST,
     },
 
     // Repositories:
     {
       provide: IEventRepository,
       useClass: EventRepository,
+      scope: Scope.REQUEST,
     },
     {
       provide: IAssociationRepository,
       useClass: AssociationRepository,
+      scope: Scope.REQUEST,
     },
 
     // Mappers:
     {
       provide: Mapper,
       useValue: mapper,
+      scope: Scope.DEFAULT,
     },
 
     // CacheManager:
     {
       provide: CacheManager,
       useExisting: cacheManager,
+      scope: Scope.DEFAULT,
     },
 
     // Loggers:
     {
       provide: Logger,
       useClass: ConsoleLogger,
+      scope: Scope.DEFAULT,
     },
   ],
 })

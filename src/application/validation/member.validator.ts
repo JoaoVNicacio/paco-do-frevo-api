@@ -18,7 +18,7 @@ class MemberValidation extends AsyncBaseValidator<Member> {
   private surname: string;
 
   @IsNotEmpty({ message: 'Role is required' })
-  @IsIn(MemberConstants.memberTypes)
+  @IsIn(MemberConstants.MEMBER_TYPES)
   private role: string;
 
   @IsInt({ message: 'Actuation time must be an integer' })

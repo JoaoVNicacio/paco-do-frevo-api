@@ -50,7 +50,7 @@ class AddressValidator extends AsyncBaseValidator<IAddress> {
 
   @IsNotEmpty({ message: 'State is required' })
   @Length(2)
-  @IsIn(AddressConstants.brazilianStates)
+  @IsIn(AddressConstants.BRAZILIAN_STATES)
   private state: string;
 
   @IsNotEmpty({ message: 'Country is required' })
