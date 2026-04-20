@@ -10,17 +10,12 @@ import GlobalRouteAccessLoggingInterceptor from './api/interceptors/global-route
 
 async function bootstrap() {
   const server = express();
-
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
   app.enableCors();
-
   app.useGlobalPipes(new ValidationPipe());
-
   app.useLogger(new ConsoleLogger());
-
   app.useGlobalFilters(new GeneralExceptionsFilter(new ConsoleLogger()));
-
   app.useGlobalInterceptors(
     new GlobalRouteAccessLoggingInterceptor(new ConsoleLogger()),
   );

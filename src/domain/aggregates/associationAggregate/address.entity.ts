@@ -1,5 +1,5 @@
 import Association from './association.entity';
-import IAddress from '../../entityInterfaces/iaddress.entity-base';
+import IAddress from '../../entityInterfaces/iaddress.base';
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserStampedEntity } from 'src/core/entities/user-stamped.entity';

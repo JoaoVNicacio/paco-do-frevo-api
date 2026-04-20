@@ -1,5 +1,5 @@
 import AsyncBaseValidator from './base/base.validator';
-import IAddress from '../../domain/entityInterfaces/iaddress.entity-base';
+import IAddress from '../../domain/entityInterfaces/iaddress.base';
 import {
   Equals,
   IsIn,
