@@ -1,130 +1,144 @@
 <p align="center">
-  <a href="https://pacodofrevo.org.br/" target="blank"><img src="https://pacodofrevo.org.br/wp-content/uploads/2021/10/logo-paco.jpg" width="200" alt="Paço do Frevo Logo" /></a>
+  <a href="https://pacodofrevo.org.br/" target="blank">
+    <img src="https://pacodofrevo.org.br/wp-content/uploads/2021/10/logo-paco.jpg" width="200" alt="Paço do Frevo Logo" />
+  </a>
 </p>
 
-<h1 align="center"> PAÇO DO FREVO - API </h1>
+<h1 align="center">PAÇO DO FREVO — API</h1>
 
-<br></br>
+<br>
 
 <p align="justify">
-Our software is like a trusted friend for frevo, the heartbeat of Pernambuco's culture and an intangible heritage of humanity. It's here to preserve all the magic of frevo, from its colorful history to the vibrant community that keeps it alive and kicking.
 
-Imagine it as a digital treasure chest, holding onto every little detail about frevo associations and the fantastic folks who make them tick. We're talking about everything from the stories behind each group to the nuts and bolts of how they run, even the nitty-gritty place of frevo in their finances. Our mission? To make sure that all this cultural richness is not only kept safe but also super easy to explore and enjoy.
+This repository contains the source code of a proof of concept developed in partnership with Paço do Frevo, a cultural institution dedicated to the preservation, documentation, and promotion of Frevo.
 
-But it's not just about looking back. By lending a digital hand to the iconic Paço do Frevo institution, we're helping frevo stay as fresh and exciting as ever. Because traditions like these aren't just about the past, they're the heartbeat of our future.
+The project explores a software-based approach to mapping and documenting Frevo associations and the people involved in their activities, covering information about their history, organization, operations, and related data.
+
+The solution was developed as part of a university research project, exploring architectural decisions, data modeling, persistence strategies, and communication between application layers.
+
 </p>
 
 ---
 
-## Technical Decisions:
+## Project Status
 
-### Architecture:
-> ---
-> #### Clean Architecture:
->Our software adopts the Clean Architecture paradigm, which provides a robust level of abstraction and decoupling across its implementation and various layers. This approach ensures a clear separation of concerns, delineating distinct realms for business rules, application logic, and infrastructure within the API.
-> #### Aggregates:
->To enhance organization and clarity, our architecture employs the concept of Aggregates, which clusters related entities into cohesive units. For instance, entities like Association and User are encapsulated within separate Aggregates, facilitating streamlined management and maintenance of business rules.
->
-> ---
+This repository contains a proof of concept developed as part of a university research project in partnership with Paço do Frevo.
 
-### Databases:
-> ---
->> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1985px-Postgresql_elephant.svg.png" height="30" alt="PostgreSQL Logo" /></img>
-> - <h5>PostgreSQL</h5> → For storing the associations, the frevo entities and its related data.
->
->> <img src="https://seeklogo.com/images/M/mongodb-logo-655F7D542D-seeklogo.com.png" height="30" alt="MongoDB Logo" /></img>
-> - <h5>MongoDB</h5> → For storing the users data, since it is a little bit more volatile on its rules.
->
->> <img src="https://static-00.iconduck.com/assets.00/redis-plain-icon-2048x1748-fmvimw1g.png" width="25" alt="Redis Logo" /></img>
-> - <h5>Redis</h5> → For caching data for a defined span of time give more performance.
-> <hr></hr>
-
-
-### Key Tools and dependencies:
-> ---
-> - **Typescript**: We leverage Typescript to bring strong typing, good use of design patterns and enhanced tooling support to our development process, enhancing code quality and developer productivity.<br></br>
-> - **NestJS**: By utilizing NestJS, a powerful Node.js framework, we ensure scalable and maintainable server-side applications with its modular architecture and dependency injection system.<br></br>
-> - **TypeORM**: TypeORM simplifies database interactions by providing a flexible and intuitive ORM for TypeScript and JavaScript, streamlining database operations and reducing development time but also giving strong relations on the database and speedy queries.<br></br>
-> - **Mongoose**: Mongoose offers elegant MongoDB object modeling for Node.js applications, allowing us to work seamlessly with MongoDB databases and leverage its schema-based solution for data validation and manipulation.<br></br>
-> - **NestJS/JWT**: With NestJS/JWT, we can easily integrate JSON Web Tokens (JWT) authentication into our NestJS applications, ensuring secure access control and user authentication.<br></br>
-> - **NestJS/CacheManager**: The NestJS/CacheManager module enables efficient caching mechanisms in our NestJS applications, improving performance and scalability by reducing database load and response times.<br></br>
-> - **Automapper**: Automapper automates object-to-object mapping, simplifying data transformations and reducing boilerplate code, thus enhancing maintainability and readability of our codebase.<br></br>
-> - **bcrypt**: By utilizing bcrypt for password hashing and encryption, we enhance the security of user credentials, protecting sensitive data from unauthorized access and potential breaches.<br></br>
-> - **class-validator**: Class-validator provides a straightforward and declarative way to implement input validation and data transformation in our application, ensuring data integrity and consistency across the system.
-> ---
+The proposed solution was presented to researchers and stakeholders and validated as a feasible approach. It was not intended as a production-ready system.
 
 ---
-<br></br>
-<h2 align="center"> About the Framework we use: </h2>
-<br></br>
 
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## Technical Decisions
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### Architecture
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> ---
 
+#### Clean Architecture
 
-## Installation
+The solution adopts the Clean Architecture approach to establish clear boundaries between the different layers of the application.
+
+This structure promotes separation of concerns and decouples business rules and application logic from infrastructure and external frameworks, making the system easier to understand, maintain, and evolve.
+
+#### Aggregates
+
+The architecture also applies the concept of Aggregates to organize related domain entities into cohesive units and establish clear boundaries for business rules.
+
+For example, entities related to associations and users are organized into separate Aggregates, providing a structured approach to managing their respective responsibilities.
+
+> ---
+
+### Layer Communication
+
+The application was designed around a layered structure, with each layer having a specific responsibility and communicating with the others through defined boundaries.
+
+This approach helps keep business rules independent from infrastructure concerns while providing a clear flow for requests and data throughout the application.
+
+---
+
+## Key Tools and Dependencies
+
+> ---
+
+* **TypeScript** — Used as the primary programming language, providing static typing and improved tooling for building and maintaining the application.
+
+* **NestJS** — A Node.js framework used to structure the API through modular architecture, dependency injection, and separation of responsibilities.
+
+* **TypeORM** — Used to handle object-relational mapping and interactions with relational data.
+
+* **Mongoose** — Used for object modeling and interaction with MongoDB.
+
+* **NestJS JWT** — Used to implement JWT-based authentication and access control.
+
+* **NestJS Cache Manager** — Used to implement application-level caching and reduce unnecessary data access.
+
+* **AutoMapper** — Used to handle object-to-object mappings between application models and domain-related representations, reducing repetitive mapping code.
+
+* **bcrypt** — Used for securely hashing user passwords before persistence.
+
+* **class-validator** — Used for declarative validation of incoming data and request objects.
+
+> ---
+
+## Project Outcome
+
+The proof of concept demonstrated the feasibility of the proposed architecture and provided a technical foundation for discussing the digitization and organization of information related to Frevo associations.
+
+The project was subsequently submitted to the VI Encontro de Pesquisadores do Frevo.
+
+---
+
+## Running the Project
+
+### Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Running the app
+### Running the application
 
 ```bash
 # development
-$ npm run start
+npm run start
 
 # watch mode
-$ npm run start:dev
+npm run start:dev
 
-# production mode
-$ npm run start:prod
+# production
+npm run start:prod
 ```
 
-## Test
+### Tests
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
 # test coverage
-$ npm run test:cov
+npm run test:cov
 ```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Technologies
 
-## Stay in touch
+* TypeScript
+* Node.js
+* NestJS
+* TypeORM
+* Mongoose
+* JWT
+* Redis
+* AutoMapper
+* bcrypt
+* class-validator
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is part of an academic research initiative developed in partnership with Paço do Frevo.
