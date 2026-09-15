@@ -11,6 +11,8 @@ class HashingHandler implements IHashingHandler {
     private readonly _logger: ILogger,
   ) {}
 
+  private readonly SALT_ROUNDS: number = 10;
+
   public comparePlainTextToHash(plainText: string, hash: string): boolean {
     this._logger.log('<#️⃣🔍> ➤ Comparing plain text to hash.');
     const startTime = Date.now();
@@ -23,13 +25,11 @@ class HashingHandler implements IHashingHandler {
   }
 
   public hashValue(value: string): string {
-    const saltRounds = 10;
-
     this._logger.log('<🔐#️⃣> ➤ hashing provided value.');
 
     const startTime = Date.now();
 
-    const hashedValue = bcrypt.hashSync(value, saltRounds);
+    const hashedValue = bcrypt.hashSync(value, this.SALT_ROUNDS);
 
     this._logger.log(`<⌛️> ➤ hashing done in: ${Date.now() - startTime}ms.`);
 

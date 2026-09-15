@@ -13,12 +13,12 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import AssociationConstants from '../../domain/aggregates/associationAggregate/constants/association.constants';
-import { ValidCnpjNumber } from '../../domain/validators/cnpj-number.validator';
 import AddressValidator from './address.validator';
 import ContactValidator from './contact.validator';
 import EventValidator from './event.validator';
 import SocialNetworkValidator from './social-network.validator';
 import MemberValidator from './member.validator';
+import { ValidCnpjNumber } from './decorators/cnpj.validator.decorator';
 
 class AssociationValidator extends AsyncBaseValidator<Association> {
   protected mapPropsFromOrigin(origin: Association): void {
@@ -37,12 +37,21 @@ class AssociationValidator extends AsyncBaseValidator<Association> {
     this.updatedBy = origin.updatedBy;
 
     this.address = origin.address ? new AddressValidator(origin.address) : null;
-    this.socialNetworks = origin.socialNetworks.map(
-      (e) => new SocialNetworkValidator(e),
-    );
-    this.events = origin.events.map((e) => new EventValidator(e));
-    this.members = origin.members.map((e) => new MemberValidator(e));
-    this.contacts = origin.contacts.map((e) => new ContactValidator(e));
+
+    this.socialNetworks = origin.socialNetworks
+      ? origin.socialNetworks?.map((e) => new SocialNetworkValidator(e))
+      : null;
+
+    this.events = origin.events
+      ? origin.events?.map((e) => new EventValidator(e))
+      : null;
+
+    this.members = origin.members
+      ? origin.members?.map((e) => new MemberValidator(e))
+      : null;
+    this.contacts = origin.contacts
+      ? origin.contacts?.map((e) => new ContactValidator(e))
+      : null;
   }
 
   @IsNotEmpty()
@@ -58,7 +67,7 @@ class AssociationValidator extends AsyncBaseValidator<Association> {
 
   @IsNotEmpty()
   @IsString()
-  @IsIn(AssociationConstants.associationTypes)
+  @IsIn(AssociationConstants.ASSOCIATION_TYPES)
   private associationType: string;
 
   @IsInt()

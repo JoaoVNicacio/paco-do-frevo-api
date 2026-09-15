@@ -1,10 +1,12 @@
+import ESocialNetworkType from '../enums/esocial-network-type.enum';
+
 class SocialNetworkConstants {
-  public static readonly socialNetworkTypes: Array<string> = [
-    'Facebook',
-    'Twitter',
-    'Instagram',
-    'LinkedIn',
-    'WhatsApp',
+  public static readonly SOCIAL_NETWORK_TYPES: Array<string> = [
+    ESocialNetworkType.facebook,
+    ESocialNetworkType.instagram,
+    ESocialNetworkType.twitter,
+    ESocialNetworkType.tiktok,
+    ESocialNetworkType.linkedin,
   ];
 }
 

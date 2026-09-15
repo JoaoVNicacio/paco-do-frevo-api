@@ -43,20 +43,20 @@ class AssociationFilteringParamPipe implements PipeTransform {
           String(value.state) == '' ? null : String(value.state);
       }
 
-      if ('minMemberAmmount' in value) {
-        possibleValue.minMemberAmmount =
-          isNaN(Number(value?.minMemberAmmount)) ||
-          Number(value?.minMemberAmmount) < 1
+      if ('minMemberAmount' in value) {
+        possibleValue.minMemberAmount =
+          isNaN(Number(value?.minMemberAmount)) ||
+          Number(value?.minMemberAmount) < 1
             ? undefined
-            : Number(value?.minMemberAmmount);
+            : Number(value?.minMemberAmount);
       }
 
-      if ('maxMemberAmmount' in value) {
-        possibleValue.maxMemberAmmount =
-          isNaN(Number(value?.maxMemberAmmount)) ||
-          Number(value?.maxMemberAmmount) < 1
+      if ('maxMemberAmount' in value) {
+        possibleValue.maxMemberAmount =
+          isNaN(Number(value?.maxMemberAmount)) ||
+          Number(value?.maxMemberAmount) < 1
             ? undefined
-            : Number(value?.maxMemberAmmount);
+            : Number(value?.maxMemberAmount);
       }
 
       return possibleValue;

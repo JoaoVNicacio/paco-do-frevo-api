@@ -1,7 +1,7 @@
 import OtherFrevoEntityService from 'src/application/services/other-frevo-entity.service';
 import OtherFrevoEntityRepository from '../repositories/other-frevo-entity.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { ConsoleLogger, Module, Scope } from '@nestjs/common';
 import IOtherFrevoEntityRepository from 'src/domain/repositories/iother-frevo-entity.repository';
 import {
   CacheManager,
@@ -29,34 +29,43 @@ import OtherFrevoEntityAddressDBSchema from '../schemas/otherFrevoMakersAggregat
     {
       provide: IOtherFrevoEntityService,
       useClass: OtherFrevoEntityService,
+      scope: Scope.REQUEST,
     },
 
     // Repositories:
     {
       provide: IOtherFrevoEntityRepository,
       useClass: OtherFrevoEntityRepository,
+      scope: Scope.REQUEST,
     },
 
     // Mappers:
     {
       provide: Mapper,
       useValue: mapper,
+      scope: Scope.DEFAULT,
     },
 
     // CacheManager:
     {
       provide: CacheManager,
       useExisting: cacheManager,
+      scope: Scope.DEFAULT,
     },
 
     // Loggers:
     {
       provide: Logger,
       useClass: ConsoleLogger,
+      scope: Scope.DEFAULT,
     },
 
     // Pipes:
-    NormalizeZipCodePipe,
+    {
+      provide: NormalizeZipCodePipe,
+      useClass: NormalizeZipCodePipe,
+      scope: Scope.TRANSIENT,
+    },
   ],
 })
 export class OtherFrevoEntityModule {}

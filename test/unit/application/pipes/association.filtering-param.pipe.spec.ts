@@ -17,8 +17,8 @@ describe('AssociationFilteringParamPipe', () => {
     associationFilteringParam.district = 'Downtown';
     associationFilteringParam.city = 'Metropolis';
     associationFilteringParam.state = 'Wonderland';
-    associationFilteringParam.minMemberAmmount = 5;
-    associationFilteringParam.maxMemberAmmount = 100;
+    associationFilteringParam.minMemberAmount = 5;
+    associationFilteringParam.maxMemberAmount = 100;
 
     // Act
     const transformedParam = pipe.transform(associationFilteringParam);
@@ -51,8 +51,8 @@ describe('AssociationFilteringParamPipe', () => {
       district: 123,
       city: true,
       state: ['State1', 'State2'],
-      minMemberAmmount: 'abc',
-      maxMemberAmmount: {},
+      minMemberAmount: 'abc',
+      maxMemberAmount: {},
     };
 
     // Act
@@ -64,7 +64,7 @@ describe('AssociationFilteringParamPipe', () => {
     expect(transformedParam.district).toBeUndefined();
     expect(transformedParam.city).toBeUndefined();
     expect(transformedParam.state).toBeUndefined();
-    expect(transformedParam.minMemberAmmount).toBeUndefined();
-    expect(transformedParam.maxMemberAmmount).toBeUndefined();
+    expect(transformedParam.minMemberAmount).toBeUndefined();
+    expect(transformedParam.maxMemberAmount).toBeUndefined();
   });
 });

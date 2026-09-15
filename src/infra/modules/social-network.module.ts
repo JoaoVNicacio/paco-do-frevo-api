@@ -1,4 +1,4 @@
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { ConsoleLogger, Module, Scope } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import SocialNetworkRepository from '../repositories/social-network.repository';
 import SocialNetworkService from 'src/application/services/social-network.service';
@@ -27,34 +27,40 @@ import SocialNetworkDBSchema from '../schemas/associationAggregate/social-networ
     {
       provide: ISocialNetworkService,
       useClass: SocialNetworkService,
+      scope: Scope.REQUEST,
     },
 
     // Repositories:
     {
       provide: ISocialNetworkRepository,
       useClass: SocialNetworkRepository,
+      scope: Scope.REQUEST,
     },
     {
       provide: IAssociationRepository,
       useClass: AssociationRepository,
+      scope: Scope.REQUEST,
     },
 
     // Mappers:
     {
       provide: Mapper,
       useValue: mapper,
+      scope: Scope.DEFAULT,
     },
 
     // CacheManager:
     {
       provide: CacheManager,
       useExisting: cacheManager,
+      scope: Scope.DEFAULT,
     },
 
     // Loggers:
     {
       provide: Logger,
       useClass: ConsoleLogger,
+      scope: Scope.DEFAULT,
     },
   ],
 })

@@ -28,7 +28,7 @@ class UserDBSchema extends User {
   @Prop({ required: true })
   public override lastName: string;
 
-  @Prop({ type: String, enum: EUserRoles, default: EUserRoles.DataVisualizer })
+  @Prop({ type: String, enum: EUserRoles, default: EUserRoles.dataVisualizer })
   public override role: EUserRoles;
 
   @Prop({ required: true, unique: true })

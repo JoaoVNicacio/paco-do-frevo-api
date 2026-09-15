@@ -1,4 +1,4 @@
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { ConsoleLogger, Module, Scope } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import UserRepository from '../repositories/user.repository';
 import UserService from 'src/application/services/user.service';
@@ -32,39 +32,49 @@ import { UserSchema } from '../schemas/userAggregate/user.schema';
     {
       provide: IUserRepository,
       useClass: UserRepository,
+      scope: Scope.REQUEST,
     },
 
     // Services:
     {
       provide: IUserService,
       useClass: UserService,
+      scope: Scope.REQUEST,
     },
 
     // Handlers:
     {
       provide: IHashingHandler,
       useClass: HashingHandler,
+      scope: Scope.REQUEST,
     },
 
     // Mappers:
     {
       provide: Mapper,
       useValue: mapper,
+      scope: Scope.DEFAULT,
     },
 
     // CacheManager:
     {
       provide: CacheManager,
       useExisting: cacheManager,
+      scope: Scope.DEFAULT,
     },
 
     // Pipes:
-    HashingPipe,
+    {
+      provide: HashingPipe,
+      useClass: HashingPipe,
+      scope: Scope.TRANSIENT,
+    },
 
     // Loggers:
     {
       provide: Logger,
       useClass: ConsoleLogger,
+      scope: Scope.DEFAULT,
     },
   ],
   exports: [
@@ -72,12 +82,14 @@ import { UserSchema } from '../schemas/userAggregate/user.schema';
     {
       provide: IUserRepository,
       useClass: UserRepository,
+      scope: Scope.REQUEST,
     },
 
     // Services:
     {
       provide: IUserService,
       useClass: UserService,
+      scope: Scope.REQUEST,
     },
   ],
 })

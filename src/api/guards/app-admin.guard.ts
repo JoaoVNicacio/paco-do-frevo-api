@@ -6,7 +6,7 @@ import EUserRoles from 'src/domain/aggregates/userAggregate/enums/euser-roles';
 @Injectable()
 class AppAdminGuard extends RoleGuardBase implements CanActivate {
   protected override readonly _allowedRoles: Array<string> = [
-    EUserRoles.ApplicationAdmin,
+    EUserRoles.applicationAdmin,
   ];
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {

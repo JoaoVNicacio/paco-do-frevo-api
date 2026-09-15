@@ -14,6 +14,8 @@ by returning appropriate responses based on the type of exception. */
 class GeneralExceptionsFilter implements ExceptionFilter {
   constructor(private readonly _logger: ILogger) {}
 
+  private readonly DEFAULT_MESSAGE: string = `Oops, houve um erro na operação. Por favor, relate ao suporte.`;
+
   /**
    * Handles exceptions by returning appropriate responses based on the type of exception.
    * @param {any} exception - The error or exception that occurred during request execution.
@@ -30,7 +32,7 @@ class GeneralExceptionsFilter implements ExceptionFilter {
       this._logger.error(exception.message, exception.stack, exception.name);
 
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        message: `Oops, houve um erro na operação. Por favor, relate ao suporte.`,
+        message: this.DEFAULT_MESSAGE,
         error: { ...exception, stack: exception.stack },
       });
 

@@ -53,8 +53,8 @@ import {
   DistrictQuery,
   CityQuery,
   StateQuery,
-  MinMemberAmmountQuery,
-  MaxMemberAmmountQuery,
+  MinMemberAmountQuery,
+  MaxMemberAmountQuery,
 } from '../decorators/association.filtering-param.decorator';
 import {
   PageIndexQuery,
@@ -114,8 +114,8 @@ class AssociationController extends ControllerBase {
   @DistrictQuery()
   @CityQuery()
   @StateQuery()
-  @MinMemberAmmountQuery()
-  @MaxMemberAmmountQuery()
+  @MinMemberAmountQuery()
+  @MaxMemberAmountQuery()
   @ApiQuery({ name: 'ordering', enum: EOrderingParam, required: false })
   public async getAllAssociations(
     @Query(AssociationFilteringParamPipe)
@@ -146,8 +146,8 @@ class AssociationController extends ControllerBase {
   @DistrictQuery()
   @CityQuery()
   @StateQuery()
-  @MinMemberAmmountQuery()
-  @MaxMemberAmmountQuery()
+  @MinMemberAmountQuery()
+  @MaxMemberAmountQuery()
   @ApiQuery({ name: 'ordering', enum: EOrderingParam, required: false })
   public async getPagedAssociations(
     @Query(PagingParamsPipe)

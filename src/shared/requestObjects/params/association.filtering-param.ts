@@ -21,12 +21,12 @@ class AssociationFilteringParam {
   @ApiPropertyOptional()
   @Min(1)
   @IsOptional()
-  public minMemberAmmount?: number | null | undefined;
+  public minMemberAmount?: number | null | undefined;
 
   @ApiPropertyOptional()
   @Min(1)
   @IsOptional()
-  public maxMemberAmmount?: number | null | undefined;
+  public maxMemberAmount?: number | null | undefined;
 }
 
 export default AssociationFilteringParam;
