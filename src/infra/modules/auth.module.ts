@@ -1,4 +1,4 @@
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { ConsoleLogger, Module, Scope } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import HashingPipe from 'src/application/pipes/hashing.pipe';
 import IHashingHandler from 'src/application/contracts/handlers/ihashing.handler';
@@ -45,6 +45,7 @@ dotenv.config();
     {
       provide: IAuthService,
       useClass: AuthService,
+      scope: Scope.REQUEST,
     },
 
     // Handlers:
@@ -66,7 +67,11 @@ dotenv.config();
     },
 
     // Pipes:
-    HashingPipe,
+    {
+      provide: HashingPipe,
+      useClass: HashingPipe,
+      scope: Scope.TRANSIENT,
+    },
 
     // Loggers:
     {

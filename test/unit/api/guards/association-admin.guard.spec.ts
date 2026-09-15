@@ -51,7 +51,7 @@ describe('AssociationAdminGuard', () => {
     it('should set user on request and return true if user is an admin', async () => {
       // Arrange:
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.ApplicationAdmin,
+        userRole: EUserRoles.applicationAdmin,
         sub: '',
         userName: '',
       };
@@ -74,7 +74,7 @@ describe('AssociationAdminGuard', () => {
     it('should throw ForbiddenException if user is not an app or association admin', async () => {
       // Arrange:
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.DataVisualizer,
+        userRole: EUserRoles.dataVisualizer,
         sub: '',
         userName: '',
       };
@@ -96,7 +96,7 @@ describe('AssociationAdminGuard', () => {
       // Arrange:
       const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.DataVisualizer,
+        userRole: EUserRoles.dataVisualizer,
         sub: '',
         userName: '',
       };
@@ -110,7 +110,7 @@ describe('AssociationAdminGuard', () => {
     it('should not throw error if user role is ApplicationAdmin', () => {
       const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.ApplicationAdmin,
+        userRole: EUserRoles.applicationAdmin,
         sub: '',
         userName: '',
       };
@@ -123,7 +123,7 @@ describe('AssociationAdminGuard', () => {
       // Arrange:
       const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.DataVisualizer,
+        userRole: EUserRoles.dataVisualizer,
         sub: '',
         userName: '',
       };
@@ -137,7 +137,7 @@ describe('AssociationAdminGuard', () => {
     it('should not throw error if user role is AssociationAdmin', () => {
       const guard = new AssociationAdminGuard(jwtService, new ConsoleLogger());
       const mockPayload: IJwtPayload = {
-        userRole: EUserRoles.AssociationAdmin,
+        userRole: EUserRoles.associationAdmin,
         sub: '',
         userName: '',
       };

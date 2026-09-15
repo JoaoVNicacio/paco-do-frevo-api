@@ -165,15 +165,15 @@ class AssociationRepository implements IAssociationRepository {
       });
     }
 
-    if (filterParams.minMemberAmmount) {
-      queryBuilder.andWhere('association.activeMembers <= :minMemberAmmount', {
-        minMemberAmmount: filterParams.minMemberAmmount,
+    if (filterParams.minMemberAmount) {
+      queryBuilder.andWhere('association.activeMembers <= :minMemberAmount', {
+        minMemberAmount: filterParams.minMemberAmount,
       });
     }
 
-    if (filterParams.maxMemberAmmount) {
-      queryBuilder.andWhere('association.activeMembers <= :maxMemberAmmount', {
-        maxMemberAmmount: filterParams.maxMemberAmmount,
+    if (filterParams.maxMemberAmount) {
+      queryBuilder.andWhere('association.activeMembers <= :maxMemberAmount', {
+        maxMemberAmount: filterParams.maxMemberAmount,
       });
     }
   }

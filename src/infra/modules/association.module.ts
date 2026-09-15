@@ -1,4 +1,4 @@
-import { ConsoleLogger, Module } from '@nestjs/common';
+import { ConsoleLogger, Module, Scope } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import AssociationService from 'src/application/services/association.service';
 import AssociationRepository from '../repositories/association.repository';
@@ -50,36 +50,55 @@ import SocialNetworkDBSchema from '../schemas/associationAggregate/social-networ
     {
       provide: IAssociationService,
       useClass: AssociationService,
+      scope: Scope.REQUEST,
     },
 
     // Repositories:
     {
       provide: IAssociationRepository,
       useClass: AssociationRepository,
+      scope: Scope.REQUEST,
     },
 
     // Mappers:
     {
       provide: Mapper,
       useValue: mapper,
+      scope: Scope.DEFAULT,
     },
 
     // CacheManager:
     {
       provide: CacheManager,
       useExisting: cacheManager,
+      scope: Scope.DEFAULT,
     },
 
     // Loggers:
     {
       provide: Logger,
       useClass: ConsoleLogger,
+      scope: Scope.DEFAULT,
     },
 
     // Pipes:
-    NormalizeZipCodePipe,
-    PagingParamsPipe,
-    AssociationFilteringParamPipe,
+    {
+      provide: NormalizeZipCodePipe,
+      useClass: NormalizeZipCodePipe,
+      scope: Scope.TRANSIENT,
+    },
+
+    {
+      provide: PagingParamsPipe,
+      useClass: PagingParamsPipe,
+      scope: Scope.TRANSIENT,
+    },
+
+    {
+      provide: AssociationFilteringParamPipe,
+      useClass: AssociationFilteringParamPipe,
+      scope: Scope.TRANSIENT,
+    },
   ],
 })
 export class AssociationModule {}
